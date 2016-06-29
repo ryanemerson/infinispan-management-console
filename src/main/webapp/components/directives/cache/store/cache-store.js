@@ -1,9 +1,9 @@
 (function () {
   'use strict';
 
-  var module = angular.module('ispn.directives.cache.jdbcstore', ['ispn.services.utils']);
+  var module = angular.module('ispn.directives.cache.cachestore', ['ispn.services.utils']);
 
-  module.directive('jdbcstore', ['utils', '$modal', function (utils, modal) {
+  module.directive('cachestore', ['utils', '$modal', function (utils, modal) {
       return {
         restrict: 'E',
         scope: {
@@ -14,7 +14,7 @@
           outsideController: '='
         },
         replace: true,
-        templateUrl: 'components/directives/cache/jdbcstore/jdbcstore.html',
+        templateUrl: 'components/directives/cache/store/cache-store.html',
         link: function (scope) {
           if (utils.isNotNullOrUndefined(scope.outsideController)){
             if (utils.isArray(scope.outsideController)){
@@ -200,7 +200,7 @@
           scope.openModal = function (keyType) {
             scope.metadata['key-type'] = keyType;
             var modalInstance = modal.open({
-              templateUrl: 'components/directives/cache/jdbcstore/keyed-table-modal.html',
+              templateUrl: 'components/directives/cache/store/keyed-table-modal.html',
               controller: KeyedTableModalInstanceCtrl,
               scope: scope,
               resolve: function () {
