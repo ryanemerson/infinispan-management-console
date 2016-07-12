@@ -325,6 +325,20 @@
         } else {
           return 'Unavailable';
         }
+      },
+
+      removeEmptyFieldsFromObject: function removeEmptyFieldsFromObject(object, recursive) {
+        angular.forEach(object, function (value, key) {
+          if (recursive && this.isObject(value)) {
+            var nestedObject = this.removeEmptyFieldsFromObject(value, true);
+            if (this.isEmptyObject(nestedObject)) {
+              delete object[key];
+            }
+          } else if(value === "" || this.isNullOrUndefined(value)) {
+            delete object[key];
+          }
+        }, this);
+        return object;
       }
     };
   });

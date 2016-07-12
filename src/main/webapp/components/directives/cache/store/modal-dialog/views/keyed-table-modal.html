@@ -19,7 +19,7 @@
         </div>
 
         <div class="col-md-4 pull-left">
-          <i class="fa fa-info-circle" tooltip="{{metadata['prefix'].description}}"
+          <i class="fa fa-info-circle" tooltip="{{resolveFieldDescription('prefix')}}"
              tooltip-trigger tooltip-animation="true" tooltip-placement="top"></i>
           <span ng-if="isFieldValueModified('prefix')"><a ng-click="undoFieldChange('prefix')">(Undo)</a>
           <span ng-if="fieldChangeRequiresRestart('prefix')">Restart needed</span></span>
@@ -35,7 +35,7 @@
         </div>
 
         <div class="col-md-4 pull-left">
-          <i class="fa fa-info-circle" tooltip="{{metadata['batch-size'].description}}"
+          <i class="fa fa-info-circle" tooltip="{{resolveFieldDescription('batch-size')}}"
              tooltip-trigger tooltip-animation="true" tooltip-placement="top"></i>
           <span ng-if="isFieldValueModified('batch-size')"><a ng-click="undoFieldChange('batch-size')">(Undo)</a>
           <span ng-if="fieldChangeRequiresRestart('batch-size')">Restart needed</span></span>
@@ -51,7 +51,7 @@
         </div>
 
         <div class="col-md-4 pull-left">
-          <i class="fa fa-info-circle" tooltip="{{metadata['fetch-size'].description}}"
+          <i class="fa fa-info-circle" tooltip="{{resolveFieldDescription('fetch-size')}}"
              tooltip-trigger tooltip-animation="true" tooltip-placement="top"></i>
           <span ng-if="isFieldValueModified('fetch-size')"><a ng-click="undoFieldChange('fetch-size')">(Undo)</a>
           <span ng-if="fieldChangeRequiresRestart('fetch-size')">Restart needed</span></span>
@@ -163,7 +163,7 @@
         </div>
 
         <div class="col-md-4 pull-left">
-          <i class="fa fa-info-circle" tooltip="{{metadata['create-on-start'].description}}"
+          <i class="fa fa-info-circle" tooltip="{{resolveFieldDescription('create-on-start')}}"
              tooltip-trigger tooltip-animation="true" tooltip-placement="top"></i>
           <span ng-if="isFieldValueModified('create-on-start')"><a ng-click="undoFieldChange('create-on-start')">(Undo)</a>
           <span ng-if="fieldChangeRequiresRestart('create-on-start')">Restart needed</span></span>
@@ -179,7 +179,7 @@
         </div>
 
         <div class="col-md-4 pull-left">
-          <i class="fa fa-info-circle" tooltip="{{metadata['drop-on-exit'].description}}"
+          <i class="fa fa-info-circle" tooltip="{{resolveFieldDescription('drop-on-exit')}}"
              tooltip-trigger tooltip-animation="true" tooltip-placement="top"></i>
           <span ng-if="isFieldValueModified('drop-on-exit')"><a ng-click="undoFieldChange('drop-on-exit')">(Undo)</a>
           <span ng-if="fieldChangeRequiresRestart('drop-on-exit')">Restart needed</span></span>

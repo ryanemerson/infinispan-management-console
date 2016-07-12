@@ -20,7 +20,7 @@
 
     <div class="col-md-4">
       <select class="form-control" ng-model="store['dialect']"
-              ng-options="item as item for item in metadata.dialect.allowed"
+              ng-options="item as item for item in metadata.currentStore.dialect.allowed"
               ng-disabled="readOnly" ng-change="fieldValueModified('dialect')"
               ng-style="getStyle('dialect')"/>
     </div>
@@ -38,10 +38,9 @@
     <label class="col-md-4 control-label">String keyed table</label>
 
     <div class="col-md-4">
-      <button type="button" class="btn btn-link" ng-click="openModal('string-keyed-table')"
-              ng-style="getStyle('string-keyed-table')">
-        <span class="glyphicon glyphicon-option-horizontal"/>
-      </button>
+      <modal-dialog data="store" field="string-keyed-table" metadata="getFieldMetaObject('string-keyed-table')"
+                    outside-controller="internalController" previous-values="prevData['string-keyed-table']"
+                    title="String Keyed Table" view="keyed-table-modal" />
     </div>
     <div class="col-md-4 pull-left">
       <i class="fa fa-info-circle" tooltip="{{metadata.currentStore['string-keyed-table'].description}}"
@@ -57,10 +56,9 @@
     <label class="col-md-4 control-label">Binary keyed table</label>
 
     <div class="col-md-4">
-      <button type="button" class="btn btn-link" ng-click="openModal('binary-keyed-table')"
-              ng-style="getStyle('binary-keyed-table')">
-        <span class="glyphicon glyphicon-option-horizontal"/>
-      </button>
+      <modal-dialog data="store" field="binary-keyed-table" metadata="getFieldMetaObject('binary-keyed-table')"
+                    outside-controller="internalController" previous-values="prevData['binary-keyed-table']"
+                    title="Binary Keyed Table" view="keyed-table-modal" />
     </div>
 
     <div class="col-md-4 pull-left">

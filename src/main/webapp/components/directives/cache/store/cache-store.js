@@ -44,9 +44,9 @@
             }
             var storeType = scope.getStoreType();
             scope.data['store-type'] = storeType;
+            scope.data['is-new-node'] = scope.isNoStoreSelected();
             scope.metadata.currentStore = scope.resolveDescription(storeType);
             scope.store = scope.getStoreObject();
-            scope.store['is-new-node'] = scope.isNoStoreSelected();
             scope.storeView = scope.getStoreView(storeType);
             scope.prevData = {};
             scope.cleanMetadata();
@@ -147,7 +147,6 @@
             scope.data[storeType][storeKey] = utils.isNotNullOrUndefined(previousStore) ? previousStore : {};
             scope.data['is-new-node'] = storeTypeChanged;
             scope.store = scope.data[storeType][storeKey];
-            scope.store['is-new-node'] = storeTypeChanged;
             scope.metadata.currentStore = scope.resolveDescription(storeType);
           };
 
@@ -208,8 +207,20 @@
             }
           };
 
+          scope.makeAllFieldsClean = function (metadata) {
+            if (utils.isNotNullOrUndefined(metadata.uiModified)) {
+              scope.makeFieldClean(metadata);
+            }
+
+            if (metadata.hasOwnProperty('value-type')) {
+              angular.forEach(metadata['value-type'], function (value) {
+                  scope.makeAllFieldsClean(value);
+              });
+            }
+          };
+
           scope.isFieldValueModified = function (field) {
-            var fieldMeta = scope.isGenericField(field) ? scope.metadata[field] : scope.metadata.currentStore[field];
+            var fieldMeta = scope.metadata.hasOwnProperty(field) ? scope.metadata[field] : scope.metadata.currentStore[field];
             return utils.isNotNullOrUndefined(fieldMeta) && fieldMeta.uiModified === true;
           };
 
@@ -232,14 +243,14 @@
             return false;
           };
 
-          // True if the field is stored as part of the generic metadata, not metadata.currentStore
-          scope.isGenericField = function (field) {
-            return scope.metadata.hasOwnProperty(field);
-          };
-
           scope.undoFieldChange = function (field) {
-            scope.store[field] = scope.prevData[field];
-            scope.makeFieldClean(scope.metadata.currentStore[field], field, true);
+            scope.store[field] = angular.copy(scope.prevData[field]);
+            var meta = scope.getFieldMetaObject(field);
+            scope.makeFieldClean(meta, field, false);
+
+            if (meta.type.TYPE_MODEL_VALUE === 'OBJECT') {
+              scope.makeAllFieldsClean(meta);
+            }
           };
 
           scope.undoTypeChange = function () {
@@ -280,7 +291,7 @@
           };
 
           scope.getStyle = function (field) {
-            var fieldMeta = scope.isGenericField(field) ? scope.metadata[field] : scope.metadata.currentStore[field];
+            var fieldMeta = scope.metadata.hasOwnProperty(field) ? scope.metadata[field] : scope.metadata.currentStore[field];
             return utils.isNotNullOrUndefined(fieldMeta) ? fieldMeta.style : '';
           };
 
@@ -294,126 +305,12 @@
             }
           };
 
-          scope.openModal = function (keyType) {
-            scope.metadata['key-type'] = keyType;
-            var modalInstance = modal.open({
-              templateUrl: 'components/directives/cache/store/keyed-table-modal.html',
-              controller: KeyedTableModalInstanceCtrl,
-              scope: scope,
-              resolve: function () {
-                return $scope.data;
-              }
-            });
-
-            modalInstance.result.then(function (newKeyedTable) {
-              scope.store[keyType] = newKeyedTable;
-              scope.fieldValueModified(keyType);
-            });
+          scope.getFieldMetaObject = function (field) {
+            return scope.metadata.currentStore[field];
           };
 
           // Initialise scope variables
           scope.init();
-
-
-
-
-
-
-
-
-          var KeyedTableModalInstanceCtrl = function ($scope, utils, $modalInstance) {
-            $scope.keyType = $scope.$parent.metadata['key-type'];
-            $scope.data = $scope.$parent.store[$scope.keyType];
-            $scope.title = $scope.$parent.resolveFieldName($scope.keyType);
-            $scope.metadata = $scope.$parent.metadata[$scope.keyType]['value-type'];
-
-            if (utils.isNullOrUndefined($scope.$parent.prevData[$scope.keyType])) {
-              $scope.$parent.prevData[$scope.keyType] = {};
-            }
-            $scope.prevData = $scope.$parent.prevData[$scope.keyType];
-
-            $scope.cancelModal = function () {
-              delete $scope.metadata['key-type'];
-              $modalInstance.dismiss('cancel');
-            };
-
-            $scope.submitModal = function () {
-              delete $scope.metadata['key-type'];
-              $modalInstance.close($scope.data);
-            };
-
-            $scope.resolveFieldDescription = function (field, parent) {
-              if (utils.isNotNullOrUndefined(parent)) {
-                return $scope.metadata[parent]['value-type'][field].description;
-              } else {
-                return $scope.metadata[field].description;
-              }
-            };
-
-            $scope.getStyle = function (field, parent) {
-              var meta = $scope.getMetadataObject(field, parent);
-              return utils.isNotNullOrUndefined(meta) ? meta.style : '';
-            };
-
-            $scope.getObject = function (object, field, parent) {
-              if (utils.isNullOrUndefined(object)) {
-                return null
-              }
-
-              if (utils.isNotNullOrUndefined(parent)) {
-                if (utils.isNullOrUndefined(object[parent])) {
-                  object[parent] = {
-                    field: null
-                  };
-                }
-                return object[parent][field];
-              } else {
-                return object[field];
-              }
-            };
-
-            $scope.getMetadataObject = function (field, parent) {
-              if (utils.isNotNullOrUndefined(parent)) {
-                return $scope.metadata[parent]['value-type'][field];
-              } else {
-                return $scope.metadata[field];
-              }
-            };
-
-            $scope.fieldValueModified = function (field, parent) {
-              var currentVal = $scope.getObject($scope.data, field, parent);
-              var previousVal = $scope.getObject($scope.prevData, field, parent);
-              var meta = $scope.getMetadataObject(field, parent);
-
-              if (currentVal !== previousVal) {
-                meta.uiModified = true;
-                meta.style = {'background-color': '#fbeabc'};
-              } else {
-                meta.uiModified = false;
-                meta.style = null;
-              }
-            };
-
-            $scope.undoFieldChange = function (field, parent) {
-              var meta = $scope.getMetadataObject(field, parent);
-              meta.uiModified = false;
-              meta.style = null;
-
-              if (utils.isNotNullOrUndefined(parent)) {
-                $scope.data[parent][field] = $scope.prevData[parent][field];
-              } else {
-                $scope.data[field] = $scope.prevData[field];
-              }
-            };
-
-            $scope.isFieldValueModified = function (field, parent) {
-              return $scope.getMetadataObject(field, parent).uiModified === true;
-            };
-
-            $scope.fieldChangeRequiresRestart = function (field, parent) {
-              return $scope.getMetadataObject(field, parent)['restart-required'] !== 'no-services';
-            };
-          };
         }
       };
     }
