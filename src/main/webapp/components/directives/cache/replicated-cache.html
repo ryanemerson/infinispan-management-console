@@ -84,7 +84,7 @@
                              init-defaults="initDefaults" read-only="readOnly"
                              outside-controller="outsideController"/>
     </uib-tab>
-    <uib-tab heading="JDBC store">
+    <uib-tab heading="Store">
       <cachestore data="data" metadata="resolveDescription('jdbcstore')"
                   init-defaults="initDefaults" read-only="readOnly"
                   outside-controller="outsideController"/>
@@ -93,7 +93,7 @@
     <uib-tab heading="LevelDB store">
       <configuration-section fields="[{name: 'LevelDB store', fields: ['path', 'cache-size', 'block-size', 'clear-threshold', 'fetch-state', 'passivation',
             'preload', 'purge', 'read-only', 'shared', 'singleton']}]" data="data['leveldb-store'].LEVELDB_STORE"
-                             metadata="resolveDescription('leveldbstore')" init-defaults="initDefaults" read-only="readOnly"
+                             metadata="resolveDescription('leveldb-store')" init-defaults="initDefaults" read-only="readOnly"
                              outside-controller="outsideController"/>
     </uib-tab>
   </uib-tabset>

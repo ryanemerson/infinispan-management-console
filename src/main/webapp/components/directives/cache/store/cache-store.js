@@ -3,12 +3,15 @@
 
   var module = angular.module('ispn.directives.cache.cachestore', ['ispn.services.utils']);
 
+// TODO change cachestore to cacheStore so that the directive is called as cache-store
   module.directive('cachestore', ['utils', '$modal', function (utils, modal) {
-      return {
+    var customStoreFields = ['is-new-node', 'store-original-type'];
+    return {
         restrict: 'E',
         scope: {
           data: '=',
           metadata: '=',
+          cacheType: '=',
           initDefaults: '=',
           readOnly:'=',
           outsideController: '='
@@ -16,32 +19,73 @@
         replace: true,
         templateUrl: 'components/directives/cache/store/cache-store.html',
         link: function (scope) {
-          if (utils.isNotNullOrUndefined(scope.outsideController)){
-            if (utils.isArray(scope.outsideController)){
-              var handle = {};
-              scope.outsideController.push(handle);
-              scope.internalController = handle;
+
+          scope.init = function () {
+            if (utils.isNotNullOrUndefined(scope.outsideController)){
+              if (utils.isArray(scope.outsideController)){
+                var handle = {};
+                scope.outsideController.push(handle);
+                scope.internalController = handle;
+              } else {
+                scope.internalController = scope.outsideController;
+              }
             } else {
-              scope.internalController = scope.outsideController;
+              scope.internalController = {};
             }
-          } else {
-            scope.internalController = {};
-          }
+
+            scope.metadata.storeTypes = ['None', 'string-keyed-jdbc-store','mixed-keyed-jdbc-store', 'binary-keyed-jdbc-store',
+              'leveldb-store', 'file-store', 'remote-store', 'rest-store'];
+            scope.resourceDescriptionMap = {};
+            utils.makeResourceDescriptionMap(scope.resourceDescriptionMap);
+            scope.metadata.checkboxes = scope.getCommonStoreCheckboxes();
+
+            if (utils.isNullOrUndefined(scope.data)){
+              scope.data = {};
+            }
+            var storeType = scope.getStoreType();
+            scope.data['store-type'] = storeType;
+            scope.metadata.currentStore = scope.resolveDescription(storeType);
+            scope.store = scope.getStoreObject();
+            scope.store['is-new-node'] = scope.isNoStoreSelected();
+            scope.storeView = scope.getStoreView(storeType);
+            scope.prevData = {};
+            scope.cleanMetadata();
+
+            if (scope.initDefaults) {
+              scope.data['store-type'] = 'None';
+
+              scope.metadata.checkboxes.forEach(function (attrName) {
+                scope.store[attrName] = scope.metadata[attrName].default;
+              });
+            }
+
+            scope.internalController.requiresRestart = scope.requiresRestart;
+            scope.internalController.cleanMetadata = scope.cleanMetadata;
+          };
 
           scope.getStoreType = function () {
             var array = scope.metadata.storeTypes;
             for (var i = 0; i < array.length; i++) {
               var store = scope.data[array[i]];
               if (utils.isNotNullOrUndefined(store)) {
-                return array[i];
+              if (array[i] === undefined) {
+              }
+                var storeObject = store[scope.getStoreObjectKey(array[i])];
+                if (Object.keys(storeObject).length > 1) {
+                  return array[i];
+                }
               }
             }
-            return '';
+            return 'None';
+          };
+
+          scope.isNoStoreSelected = function () {
+            return scope.data['store-type'] === 'None';
           };
 
           scope.getStoreObject = function () {
-            var storeKey = scope.data['jdbc-type'];
-            if (utils.isNullOrUndefined(scope.data[storeKey])) {
+            var storeKey = scope.data['store-type'];
+            if (scope.isNoStoreSelected()) {
               return {};
             }
 
@@ -64,13 +108,15 @@
             return utils.isNotNullOrUndefined(scope.data) && utils.isNotNullOrUndefined(scope.data['binary-keyed-table']);
           };
 
-          scope.getCheckBoxes = function () {
+          scope.getCommonStoreCheckboxes = function () {
             var boxes = [];
-            angular.forEach(scope.metadata, function (value, key) {
+            var genericStoreMeta = scope.resolveDescription('store');
+            angular.forEach(genericStoreMeta, function (value, key) {
               var type = value['type'];
+              var deprecated = utils.isNotNullOrUndefined(value['deprecated']);
               if (utils.isNotNullOrUndefined(type)) {
                 var modelType = type['TYPE_MODEL_VALUE'];
-                if (utils.isNotNullOrUndefined(modelType) && modelType === 'BOOLEAN') {
+                if (utils.isNotNullOrUndefined(modelType) && modelType === 'BOOLEAN' && !deprecated) {
                   boxes.push(key);
                 }
               }
@@ -79,123 +125,174 @@
           };
 
           scope.updateStoreType = function (previousType) {
-            var type = scope.data['jdbc-type'];
+            var storeType = scope.data['store-type'];
             var previousStore = scope.store;
-            if (utils.isNonEmptyString(previousType)) {
-              if (utils.isNotNullOrUndefined(previousStore)) {
-                switch (type) {
-                  case 'string-keyed-jdbc-store':
-                    delete previousStore['binary-keyed-table'];
-                    break;
-                  case 'binary-keyed-jdbc-store':
-                    delete previousStore['string-keyed-table'];
-                }
-              }
-              scope.data[previousType] = null;
+            var storeTypeChanged = scope.prevData['store-type'] !== storeType;
+
+            if (storeTypeChanged) {
+              scope.makeFieldDirty(scope.metadata['store-type'], 'store-type', true);
+            } else {
+              scope.makeFieldClean(scope.metadata['store-type'], 'store-type', true);
             }
 
-            var objectKey = scope.getStoreObjectKey(type);
-            scope.data[type] = {};
-            scope.data[type][objectKey] = previousStore;
-            scope.store = scope.data[type][objectKey];
-            var newNode =  scope.prevData['jdbc-type'] !== scope.data['jdbc-type'];
-            scope.store['is-new-node'] = newNode;
+            scope.storeView = scope.getStoreView(storeType);
+            if (scope.isNoStoreSelected()) {
+              scope.metadata.currentStore = {};
+              return;
+            }
 
-            if (newNode) {
-              scope.metadata['jdbc-type'].uiModified = true;
-              scope.metadata['jdbc-type'].style = {'background-color': '#fbeabc'};
-              scope.$emit('configurationFieldDirty', 'jdbc-type');
+            var storeKey = scope.getStoreObjectKey(storeType);
+            scope.updateStoreAttributesAndMeta(storeType, previousType);
+            scope.data[storeType] = {};
+            scope.data[storeType][storeKey] = utils.isNotNullOrUndefined(previousStore) ? previousStore : {};
+            scope.data['is-new-node'] = storeTypeChanged;
+            scope.store = scope.data[storeType][storeKey];
+            scope.store['is-new-node'] = storeTypeChanged;
+            scope.metadata.currentStore = scope.resolveDescription(storeType);
+          };
+
+          scope.getStoreView = function (storeType) {
+          var viewDir = 'components/directives/cache/store/views/';
+            switch (storeType) {
+              case 'None':
+                return null;
+              case 'string-keyed-jdbc-store':
+              case 'binary-keyed-jdbc-store':
+              case 'mixed-keyed-jdbc-store':
+                return viewDir + 'jdbc-store.html';
+              default:
+                return viewDir + storeType + '.html';
             }
           };
 
           scope.cleanMetadata = function () {
-            angular.forEach(scope.metadata, function (value, key) {
+            angular.forEach(scope.metadata.currentStore, function (value, key) {
               if (utils.isObject(value)) {
-                value.uiModified = false;
-                value.style = null;
+                scope.makeFieldClean(value);
                 scope.prevData[key] = angular.copy(scope.store[key]);
               }
             });
 
-            scope.prevData['jdbc-type'] = scope.data['jdbc-type'];
-            scope.metadata['jdbc-type'] = {
+            scope.prevData['store-type'] = scope.data['store-type'];
+            scope.metadata['store-type'] = {
               uiModified: false,
               style: null
             };
-            scope.store['jdbc-original-type'] = scope.prevData['jdbc-type'];
+            scope.data['store-original-type'] = scope.prevData['store-type'];
           };
 
           scope.fieldValueModified = function (field) {
-            if (scope.prevData[field] !== scope.store[field]) {
-              scope.metadata[field].uiModified = true;
-              scope.metadata[field].style = {'background-color': '#fbeabc'};
-              scope.$emit('configurationFieldDirty', field);
+            var original = scope.prevData[field];
+            var latest = scope.store[field];
+
+            if ((utils.isNullOrUndefined(original) && !latest) || original === latest) {
+              scope.makeFieldClean(scope.metadata.currentStore[field], field, true);
             } else {
-              scope.$emit('configurationFieldClean', field);
-              scope.metadata[field].uiModified = false;
-              scope.metadata[field].style = null;
+              scope.makeFieldDirty(scope.metadata.currentStore[field], field, true);
+            }
+          };
+
+          scope.makeFieldDirty = function (field, fieldName, emit) {
+            field.uiModified = true;
+            field.style = {'background-color': '#fbeabc'};
+            if (emit) {
+              scope.$emit('configurationFieldDirty', fieldName);
+            }
+          };
+
+          scope.makeFieldClean = function (field, fieldName, emit) {
+            field.uiModified = false;
+            field.style = null;
+            if (emit) {
+              scope.$emit('configurationFieldClean', fieldName);
             }
           };
 
           scope.isFieldValueModified = function (field) {
-            return utils.isNotNullOrUndefined(scope.metadata[field]) && scope.metadata[field].uiModified === true;
+            var fieldMeta = scope.isGenericField(field) ? scope.metadata[field] : scope.metadata.currentStore[field];
+            return utils.isNotNullOrUndefined(fieldMeta) && fieldMeta.uiModified === true;
           };
 
           scope.fieldChangeRequiresRestart = function (field) {
-            if (field === 'string-keyed-table' || field === 'binary-keyed-table') {
-              return true;
-            }
-            return utils.isNotNullOrUndefined(scope.metadata[field]) && scope.metadata[field]['restart-required'] !== 'no-services';
+            var fieldMeta = scope.metadata.currentStore[field];
+            return utils.isNotNullOrUndefined(fieldMeta) && fieldMeta['restart-required'] !== 'no-services';
           };
 
           scope.requiresRestart = function () {
-            return Object.keys(scope.metadata).some(function(field){
+            var restartRequired = scope.prevData['store-type'] !== scope.data['store-type'];
+            if (restartRequired) {
+              return true;
+            }
+
+            if (utils.isNotNullOrUndefined(scope.metadata.currentStore)) {
+              return Object.keys(scope.metadata.currentStore).some(function (field) {
                 return scope.isFieldValueModified(field) && scope.fieldChangeRequiresRestart(field);
-            });
+              });
+            }
+            return false;
+          };
+
+          // True if the field is stored as part of the generic metadata, not metadata.currentStore
+          scope.isGenericField = function (field) {
+            return scope.metadata.hasOwnProperty(field);
           };
 
           scope.undoFieldChange = function (field) {
             scope.store[field] = scope.prevData[field];
-            scope.metadata[field].uiModified = false;
-            scope.metadata[field].style = null;
+            scope.makeFieldClean(scope.metadata.currentStore[field], field, true);
           };
 
           scope.undoTypeChange = function () {
-            scope.data['jdbc-type'] = scope.prevData['jdbc-type'];
-            scope.metadata['jdbc-type'].uiModified = false;
-            scope.metadata['jdbc-type'].style = null;
+            var currentStoreType = scope.data['store-type'];
+            var originalStoreType = scope.prevData['store-type'];
+            scope.data[originalStoreType] = originalStoreType === 'None' ? {} : scope.store;
+            scope.data['store-type'] = originalStoreType;
+            scope.data['is-new-node'] = false;
+            scope.storeView = scope.getStoreView(originalStoreType);
+
+            scope.updateStoreAttributesAndMeta(originalStoreType, currentStoreType);
+            scope.makeFieldClean(scope.metadata['store-type'], 'store-type', true);
+          };
+
+          scope.updateStoreAttributesAndMeta = function (newStoreType, oldStoreType) {
+            if (utils.isNotNullOrUndefined(oldStoreType) && oldStoreType === 'None') {
+              return;
+            }
+
+            var oldMeta = scope.metadata.currentStore;
+            var newMeta = scope.resolveDescription(newStoreType);
+            if (utils.isNotNullOrUndefined(newMeta)) {
+              angular.forEach(scope.store, function (value, key) {
+                if (customStoreFields.indexOf(key) < 0) {
+                  if (!newMeta.hasOwnProperty(key)) {
+                    delete scope.store[key];
+                  } else if (utils.isNotNullOrUndefined(oldMeta)) {
+                    newMeta[key] = oldMeta[key];
+                  }
+                }
+              });
+              scope.metadata.currentStore = newMeta;
+            }
+
+            if (utils.isNotNullOrUndefined(oldStoreType) && oldStoreType !== 'None') {
+              scope.data[oldStoreType] = null;
+            }
           };
 
           scope.getStyle = function (field) {
-            return utils.isNotNullOrUndefined(scope.metadata[field]) ? scope.metadata[field].style : '';
+            var fieldMeta = scope.isGenericField(field) ? scope.metadata[field] : scope.metadata.currentStore[field];
+            return utils.isNotNullOrUndefined(fieldMeta) ? fieldMeta.style : '';
           };
 
           scope.resolveFieldName = function (field) {
             return utils.convertCacheAttributeIntoFieldName(field);
           };
 
-          if (!utils.isNotNullOrUndefined(scope.data)){
-            scope.data = {};
-          }
-          scope.metadata.storeTypes = ['string-keyed-jdbc-store','mixed-keyed-jdbc-store', 'binary-keyed-jdbc-store'];
-          scope.metadata.checkboxes = scope.getCheckBoxes();
-          scope.data['jdbc-type'] = scope.getStoreType();
-          scope.store = scope.getStoreObject();
-          scope.store['is-new-node'] = scope.getStoreType() === '';
-          scope.prevData = {};
-          scope.cleanMetadata();
-
-          if (scope.initDefaults) {
-            scope.data['jdbc-type'] = null;
-
-            ['fetch-state', 'passivation', 'preload', 'purge', 'read-only',
-              'shared', 'singleton'].forEach(function (attrName) {
-              scope.store[attrName] = scope.metadata[attrName].default;
-            });
-          }
-
-          scope.internalController.requiresRestart = scope.requiresRestart;
-          scope.internalController.cleanMetadata = scope.cleanMetadata;
+          scope.resolveDescription = function (elementPath) {
+            if (utils.isNotNullOrUndefined(elementPath) && elementPath !== 'None') {
+              return utils.resolveDescription(scope.metadata, scope.resourceDescriptionMap, elementPath, scope.cacheType);
+            }
+          };
 
           scope.openModal = function (keyType) {
             scope.metadata['key-type'] = keyType;
@@ -213,6 +310,16 @@
               scope.fieldValueModified(keyType);
             });
           };
+
+          // Initialise scope variables
+          scope.init();
+
+
+
+
+
+
+
 
           var KeyedTableModalInstanceCtrl = function ($scope, utils, $modalInstance) {
             $scope.keyType = $scope.$parent.metadata['key-type'];
