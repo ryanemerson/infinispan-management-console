@@ -48,6 +48,17 @@
             scope.metadata.currentStore = scope.resolveDescription(storeType);
             scope.store = scope.getStoreObject();
             scope.storeView = scope.getStoreView(storeType);
+
+            // Create write-behind meta object as it is a child of stores, not an attribute, so it is not in metadata by default
+            scope.metadata.currentStore['write-behind'] = scope.getWriteBehindMetadata();
+            if (utils.isNullOrUndefined(scope.store['write-behind'])) {
+              scope.store['write-behind'] = {
+                'WRITE_BEHIND': {
+                  'is-new-node': true
+                  }
+              };
+            }
+
             scope.prevData = {};
             scope.cleanMetadata();
 
@@ -61,6 +72,15 @@
 
             scope.internalController.requiresRestart = scope.requiresRestart;
             scope.internalController.cleanMetadata = scope.cleanMetadata;
+          };
+
+          scope.getWriteBehindMetadata = function () {
+            var meta = utils.resolveDescription(scope.metadata, scope.resourceDescriptionMap, 'write-behind', scope.cacheType);
+            meta.description = 'Configures a cache store as write-behind instead of write-through.';
+            meta.type = {
+              TYPE_MODEL_VALUE: 'OBJECT'
+            };
+            return meta;
           };
 
           scope.getStoreType = function () {
@@ -147,6 +167,8 @@
             scope.data[storeType][storeKey] = utils.isNotNullOrUndefined(previousStore) ? previousStore : {};
             scope.data['is-new-node'] = storeTypeChanged;
             scope.store = scope.data[storeType][storeKey];
+            scope.store['is-new-node'] = storeTypeChanged;
+            utils.deepSet(scope.store, 'write-behind.WRITE_BEHIND.is-new-node', true);
             scope.metadata.currentStore = scope.resolveDescription(storeType);
           };
 
@@ -172,6 +194,7 @@
               }
             });
 
+            scope.prevData['write-behind'] = scope.data['write-behind'];
             scope.prevData['store-type'] = scope.data['store-type'];
             scope.metadata['store-type'] = {
               uiModified: false,
@@ -256,7 +279,10 @@
           scope.undoTypeChange = function () {
             var currentStoreType = scope.data['store-type'];
             var originalStoreType = scope.prevData['store-type'];
-            scope.data[originalStoreType] = originalStoreType === 'None' ? {} : scope.store;
+            var originalStoreKey = scope.getStoreObjectKey(originalStoreType);
+
+            scope.data[originalStoreType] = {};
+            scope.data[originalStoreType][originalStoreKey] = originalStoreType === 'None' ? {} : scope.store;
             scope.data['store-type'] = originalStoreType;
             scope.data['is-new-node'] = false;
             scope.storeView = scope.getStoreView(originalStoreType);
@@ -275,7 +301,7 @@
             if (utils.isNotNullOrUndefined(newMeta)) {
               angular.forEach(scope.store, function (value, key) {
                 if (customStoreFields.indexOf(key) < 0) {
-                  if (!newMeta.hasOwnProperty(key)) {
+                  if (key !== 'write-behind' && !newMeta.hasOwnProperty(key)) {
                     delete scope.store[key];
                   } else if (utils.isNotNullOrUndefined(oldMeta)) {
                     newMeta[key] = oldMeta[key];
@@ -307,6 +333,10 @@
 
           scope.getFieldMetaObject = function (field) {
             return scope.metadata.currentStore[field];
+          };
+
+          scope.getFieldMetaValues = function (field) {
+            return scope.getFieldMetaObject(field)['value-type'];
           };
 
           // Initialise scope variables

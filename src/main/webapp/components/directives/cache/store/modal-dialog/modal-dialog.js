@@ -9,9 +9,10 @@
       scope: {
         data: '=',
         field: '@',
-        metadata: '=',
+        fieldMeta: '=',
         outsideController: '=',
         previousValues: '=',
+        parentMeta: '=',
         title: '@',
         view: '@'
       },
@@ -20,17 +21,28 @@
       link: function (scope) {
 
         scope.getStyle = function () {
-          return scope.metadata.style;
+          return utils.isNullOrUndefined(scope.parentMeta) ? '' : scope.parentMeta.style;
+        };
+
+        scope.resolveDataField = function (data, field) {
+          if (utils.isNotNullOrUndefined(data)) {
+              return utils.deepGet(data, field);
+          } else {
+            var data = {};
+            data[field] = {};
+            return data;
+          }
         };
 
         scope.openModal = function () {
+
           var modalInstance = modal.open({
             templateUrl: 'components/directives/cache/store/modal-dialog/views/' + scope.view + '.html',
             resolve: {
               store: function () {
                 return {
-                  data: utils.isNullOrUndefined(scope.data[scope.field]) ? {} : scope.data[scope.field],
-                  meta: scope.metadata['value-type'],
+                  data: scope.resolveDataField(scope.data, scope.field),
+                  metadata : scope.fieldMeta,
                   prevData: utils.isNullOrUndefined(scope.previousValues) ? {} : scope.previousValues,
                   title: scope.title
                 };
@@ -38,8 +50,7 @@
             },
             controller: ['$scope', 'utils', '$modalInstance', 'store', function ($scope, utils, $modalInstance, store) {
               $scope.title = store.title;
-              $scope.field = store.field;
-              $scope.metadata = store.meta;
+              $scope.metadata = store.metadata;
               $scope.data = store.data;
               $scope.prevData = store.prevData;
 
@@ -141,20 +152,20 @@
                 }
               };
 
-              $scope.undoAllFieldChanges = function (object) {
+              $scope.undoAllFieldChanges = function (object, parent) {
                 for (var key in object) {
                   var val = object[key];
                   if (utils.isObject(val)) {
-                    $scope.undoAllFieldChanges(val);
+                    $scope.undoAllFieldChanges(val, key);
                   } else {
-                    $scope.undoFieldChange(key);
+                    $scope.undoFieldChange(key, parent);
                   }
                 }
               };
             }]
           });
 
-          modalInstance.result.then(function (storeObject) {
+          var modalSuccessCallback = function (storeObject) {
             // We still need to do this if !modified, as a user may have entered something and then deleted it,
             // thus setting the field to an empty string which will result in a WFLY error from the DMR.
             utils.removeEmptyFieldsFromObject(storeObject, true);
@@ -162,8 +173,8 @@
               delete storeObject.modified;
 
               scope.data[scope.field] = storeObject;
-              scope.metadata.uiModified = true;
-              scope.metadata.style = {'background-color': '#fbeabc'};
+              scope.parentMeta.uiModified = true;
+              scope.parentMeta.style = {'background-color': '#fbeabc'};
               scope.$emit('configurationFieldDirty', scope.field);
 
               if (utils.isNotNullOrUndefined(scope.outsideController)) {
@@ -172,10 +183,14 @@
                 }
               }
             }
-          });
+          };
 
-          // TODO need to tell outer directive/constructor that field has been modified
-          // We have the metadata here, so just set/unset fields as required
+          var modalCancelledCallback = function() {
+            scope.parentMeta.uiModified = false;
+            scope.parentMeta.style = null;
+          };
+
+          modalInstance.result.then(modalSuccessCallback, modalCancelledCallback);
         };
       }
     };

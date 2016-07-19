@@ -222,8 +222,14 @@ angular.module('managementConsole.api')
 
         // Add step to create/update JDBC store
         if (newStoreType !== 'None') {
+          // We update both the store and write-behind as the latter is a child element of the former.
           var objectKey = newStoreType.toUpperCase().replace(/-/g, '_');
           this.updateHelper(steps, address.concat(newStoreType, objectKey), configuration[newStoreType]);
+          var writeBehind = configuration[newStoreType][objectKey]['write-behind'];
+          if (utils.isNotNullOrUndefined(writeBehind)) {
+            var wbAddress = address.concat(newStoreType, objectKey, 'write-behind', 'WRITE_BEHIND');
+            this.updateHelper(steps, wbAddress, writeBehind);
+          }
         }
 
         // If a new Store type has been specified (can be None), then remove the previous store's configuration

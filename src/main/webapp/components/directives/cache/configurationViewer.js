@@ -71,6 +71,7 @@
 
           scope.resourceDescriptionMap = {};
           utils.makeResourceDescriptionMap(scope.resourceDescriptionMap);
+          metadataRoot['write-behind'] = utils.resolveDescription(scope.metadata, scope.resourceDescriptionMap, 'write-behind', attrs.cacheType);
 
 
           scope.resolveOverridenDescription = function (elementPath) {

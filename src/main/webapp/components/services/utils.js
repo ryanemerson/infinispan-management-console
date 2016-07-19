@@ -160,7 +160,6 @@
         map.statetransfer = 'children.state-transfer.model-description.STATE_TRANSFER.attributes';
         map.filestore = 'children.file-store.model-description.*.attributes';
         map.remotestore = 'children.remote-store.model-description.*.attributes';
-        // map.jdbcstore = 'children.mixed-keyed-jdbc-store.model-description.*.attributes';
         map['mixed-keyed-jdbc-store'] = 'children.mixed-keyed-jdbc-store.model-description.*.attributes';
         map['binary-keyed-jdbc-store'] = 'children.binary-keyed-jdbc-store.model-description.*.attributes';
         map['string-keyed-jdbc-store'] = 'children.string-keyed-jdbc-store.model-description.*.attributes';
@@ -172,6 +171,7 @@
         map.backup = 'children.backup.model-description.*.attributes';
         map.loader = 'children.loader.model-description.*.attributes';
         map.authorization = 'children.security.model-description.*.children.authorization.model-description.*.attributes';
+        map['write-behind'] = 'children.store.model-description.*.children.write-behind.model-description.WRITE_BEHIND.attributes';
       },
 
       resolveDescription: function resolveDescription(metadata, resourceDescriptionMap, elementPath, cacheType) {

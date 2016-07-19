@@ -9,10 +9,30 @@
     </div>
 
     <div class="col-md-4 pull-left">
-      <i class="fa fa-info-circle" tooltip="{{metadata.currentStore[field].description}}"
+      <i class="fa fa-info-circle" tooltip="{{getFieldMetaObject(field).description}}"
          tooltip-trigger tooltip-animation="true" tooltip-placement="top"></i>
               <span ng-if="isFieldValueModified(field)"><a ng-click="undoFieldChange(field)">(Undo)</a>
               <span ng-if="fieldChangeRequiresRestart(field)">Restart needed</span></span>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-md-4 control-label">Write Behind</label>
+
+    <div class="col-md-4">
+      <modal-dialog data="store" field="write-behind.WRITE_BEHIND" field-meta="getFieldMetaObject('write-behind')"
+                    outside-controller="internalController" parent-meta="getFieldMetaObject('write-behind')"
+                    previous-values="prevData['write-behind']['WRITE_BEHIND']" title="Write Behind"
+                    view="write-behind-modal" />
+    </div>
+
+    <div class="col-md-4 pull-left">(
+      <i class="fa fa-info-circle" tooltip="{{getFieldMetaObject('write-behind').description}}"
+         tooltip-trigger tooltip-animation="true" tooltip-placement="top"></i>
+      <span ng-if="isFieldValueModified('write-behind')">
+        <a ng-click="undoFieldChange('write-behind')">(Undo)</a>
+        <span ng-if="fieldChangeRequiresRestart('write-behind')">Restart needed</span>
+      </span>
     </div>
   </div>
 </div>
