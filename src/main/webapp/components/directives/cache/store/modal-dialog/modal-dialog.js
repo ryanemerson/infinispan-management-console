@@ -37,14 +37,15 @@
         scope.openModal = function () {
 
           var modalInstance = modal.open({
-            templateUrl: 'components/directives/cache/store/modal-dialog/views/' + scope.view + '.html',
+            templateUrl: 'components/directives/cache/store/modal-dialog/views/modal-template.html',
             resolve: {
               store: function () {
                 return {
                   data: scope.resolveDataField(scope.data, scope.field),
                   metadata : scope.fieldMeta,
                   prevData: utils.isNullOrUndefined(scope.previousValues) ? {} : scope.previousValues,
-                  title: scope.title
+                  title: scope.title,
+                  view: 'components/directives/cache/store/modal-dialog/views/' + scope.view + '.html'
                 };
               }
             },
@@ -53,6 +54,7 @@
               $scope.metadata = store.metadata;
               $scope.data = store.data;
               $scope.prevData = store.prevData;
+              $scope.view = store.view;
 
               $scope.cancelModal = function () {
                 $scope.undoAllFieldChanges($scope.data);

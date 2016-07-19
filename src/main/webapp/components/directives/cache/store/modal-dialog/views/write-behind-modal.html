@@ -1,53 +1,38 @@
-<div class="modal-content">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="cancelModal()">
-      <span class="pficon pficon-close"></span>
-    </button>
-    <h4 class="modal-title" id="myModalLabel">{{title}}</h4>
-  </div>
-  <div class="modal-body">
-    <div class="form-horizontal">
+<div class="form-horizontal">
 
-      <div class="form-group">
-        <label class="col-md-4 control-label">Modification Queue Size</label>
+  <div class="form-group">
+    <label class="col-md-4 control-label">Modification Queue Size</label>
 
-        <div class="col-md-4">
-          <input type="text" ng-change="fieldValueModified('modification-queue-size')"
-                 ng-style="getStyle('modification-queue-size')" ng-model="data['modification-queue-size']"/>
-        </div>
+    <div class="col-md-4">
+      <input type="text" ng-change="fieldValueModified('modification-queue-size')"
+             ng-style="getStyle('modification-queue-size')" ng-model="data['modification-queue-size']"/>
+    </div>
 
-        <div class="col-md-4 pull-left">
-          <i class="fa fa-info-circle" tooltip="{{resolveFieldDescription('modification-queue-size')}}"
-             tooltip-trigger tooltip-animation="true" tooltip-placement="top"></i>
-          <span ng-if="isFieldValueModified('modification-queue-size')"><a
-            ng-click="undoFieldChange('modification-queue-size')">(Undo)</a>
+    <div class="col-md-4 pull-left">
+      <i class="fa fa-info-circle" tooltip="{{resolveFieldDescription('modification-queue-size')}}"
+         tooltip-trigger tooltip-animation="true" tooltip-placement="top"></i>
+      <span ng-if="isFieldValueModified('modification-queue-size')"><a
+        ng-click="undoFieldChange('modification-queue-size')">(Undo)</a>
       <span ng-if="fieldChangeRequiresRestart('modification-queue-size')">Restart needed</span></span>
-        </div>
-      </div>
-
-
-      <div class="form-group">
-        <label class="col-md-4 control-label">Thread Pool Size</label>
-
-        <div class="col-md-4">
-          <input type="text" ng-change="fieldValueModified('thread-pool-size')"
-                 ng-style="getStyle('thread-pool-size')" ng-model="data['thread-pool-size']"/>
-        </div>
-
-        <div class="col-md-4 pull-left">
-          <i class="fa fa-info-circle" tooltip="{{resolveFieldDescription('thread-pool-size')}}"
-             tooltip-trigger tooltip-animation="true" tooltip-placement="top"></i>
-          <span ng-if="isFieldValueModified('thread-pool-size')"><a
-            ng-click="undoFieldChange('thread-pool-size')">(Undo)</a>
-      <span ng-if="fieldChangeRequiresRestart('thread-pool-size')">Restart needed</span></span>
-        </div>
-      </div>
-
     </div>
   </div>
 
-  <div class="modal-footer">
-    <button id="cancelButton" type="button" class="btn btn-default" ng-click="cancelModal()">Cancel</button>
-    <button id="okButton" type="button" class="btn btn-primary" ng-click="submitModal()">Ok</button>
+
+  <div class="form-group">
+    <label class="col-md-4 control-label">Thread Pool Size</label>
+
+    <div class="col-md-4">
+      <input type="text" ng-change="fieldValueModified('thread-pool-size')"
+             ng-style="getStyle('thread-pool-size')" ng-model="data['thread-pool-size']"/>
+    </div>
+
+    <div class="col-md-4 pull-left">
+      <i class="fa fa-info-circle" tooltip="{{resolveFieldDescription('thread-pool-size')}}"
+         tooltip-trigger tooltip-animation="true" tooltip-placement="top"></i>
+      <span ng-if="isFieldValueModified('thread-pool-size')"><a
+        ng-click="undoFieldChange('thread-pool-size')">(Undo)</a>
+      <span ng-if="fieldChangeRequiresRestart('thread-pool-size')">Restart needed</span></span>
+    </div>
   </div>
+
 </div>
