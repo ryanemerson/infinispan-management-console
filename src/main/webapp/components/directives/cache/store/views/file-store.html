@@ -1,0 +1,47 @@
+<div class="form-group">
+  <label class="col-md-4 control-label">Max Entries</label>
+
+  <div class="col-md-4">
+    <input class="form-control" type="text" ng-model="store['max-entries']" ng-disabled="readOnly"
+           ng-change="fieldValueModified('max-entries')" ng-style="getStyle('max-entries')"/>
+  </div>
+
+  <div class="col-md-4 pull-left">
+    <i class="fa fa-info-circle" tooltip="{{getFieldMetaObject('max-entries').description}}"
+       tooltip-trigger tooltip-animation="true" tooltip-placement="top"></i>
+    <span ng-if="isFieldValueModified('max-entries')"><a ng-click="undoFieldChange('max-entries')">(Undo)</a>
+              <span ng-if="fieldChangeRequiresRestart('max-entries')">Restart needed</span></span>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-md-4 control-label">Path</label>
+
+  <div class="col-md-4">
+    <input class="form-control" type="text" ng-model="store['path']" ng-disabled="readOnly"
+           ng-change="fieldValueModified('path')" ng-style="getStyle('path')"/>
+  </div>
+
+  <div class="col-md-4 pull-left">
+    <i class="fa fa-info-circle" tooltip="{{getFieldMetaObject('path').description}}"
+       tooltip-trigger tooltip-animation="true" tooltip-placement="top"></i>
+    <span ng-if="isFieldValueModified('path')"><a ng-click="undoFieldChange('path')">(Undo)</a>
+              <span ng-if="fieldChangeRequiresRestart('path')">Restart needed</span></span>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-md-4 control-label">Relative To</label>
+
+  <div class="col-md-4">
+    <input class="form-control" type="text" ng-model="store['relative-to']" ng-disabled="readOnly"
+           ng-change="fieldValueModified('relative-to')" ng-style="getStyle('relative-to')"/>
+  </div>
+
+  <div class="col-md-4 pull-left">
+    <i class="fa fa-info-circle" tooltip="{{getFieldMetaObject('relative-to').description}}"
+       tooltip-trigger tooltip-animation="true" tooltip-placement="top"></i>
+    <span ng-if="isFieldValueModified('relative-to')"><a ng-click="undoFieldChange('relative-to')">(Undo)</a>
+              <span ng-if="fieldChangeRequiresRestart('relative-to')">Restart needed</span></span>
+  </div>
+</div>
