@@ -1,4 +1,23 @@
 <!--Expiration-->
+<div class="form-group">
+  <label class="col-md-4 control-label">Expiration</label>
+
+  <div class="col-md-4">
+    <modal-dialog data="store" field="expiration.EXPIRATION" field-meta="getFieldMetaObject('expiration')"
+                  outside-controller="internalController" parent-meta="getFieldMetaObject('expiration')"
+                  previous-values="prevData['expiration']['EXPIRATION']" title="Expiration"
+                  modal-fields="[{name: 'path'}, {name: 'queue-size'}]"/>
+  </div>
+
+  <div class="col-md-4 pull-left">(
+    <i class="fa fa-info-circle" tooltip="{{getFieldMetaObject('expiration').description}}"
+       tooltip-trigger tooltip-animation="true" tooltip-placement="top"></i>
+    <span ng-if="isFieldValueModified('expiration')">
+        <a ng-click="undoFieldChange('expiration')">(Undo)</a>
+        <span ng-if="fieldChangeRequiresRestart('expiration')">Restart needed</span>
+      </span>
+  </div>
+</div>
 
 <!--Implementation-->
 

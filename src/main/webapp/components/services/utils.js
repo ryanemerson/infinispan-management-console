@@ -172,6 +172,7 @@
         map.loader = 'children.loader.model-description.*.attributes';
         map.authorization = 'children.security.model-description.*.children.authorization.model-description.*.attributes';
         map['write-behind'] = 'children.store.model-description.*.children.write-behind.model-description.WRITE_BEHIND.attributes';
+        map['leveldb-children'] = 'children.leveldb-store.model-description.*.children';
       },
 
       resolveDescription: function resolveDescription(metadata, resourceDescriptionMap, elementPath, cacheType) {
@@ -339,6 +340,17 @@
           }
         }, this);
         return object;
+      },
+
+      createPath: function createPath(separator, args) {
+        if (this.isArray(args)) {
+          var path = '';
+          for (var i = 0; i < args.length; i++) {
+            path += i == 0 ? args[i] : separator + args[i];
+          }
+          return path;
+        }
+        return null;
       }
     };
   });

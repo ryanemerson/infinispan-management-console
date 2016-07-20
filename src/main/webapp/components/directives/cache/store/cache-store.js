@@ -61,14 +61,17 @@
             scope.store = scope.getStoreObject();
             scope.storeView = scope.getStoreView(storeType);
 
-            // Create write-behind meta object as it is a child of stores, not an attribute, so it is not in metadata by default
-            scope.metadata.currentStore['write-behind'] = scope.getWriteBehindMetadata();
-            if (utils.isNullOrUndefined(scope.store['write-behind'])) {
-              scope.store['write-behind'] = {
-                'WRITE_BEHIND': {
-                  'is-new-node': true
+            // Create children meta objects as they are not in the metadata by default
+            if (!utils.isEmptyObject(scope.store)) {
+              scope.metadata.currentStore['write-behind'] = scope.getWriteBehindMetadata();
+              if (utils.isNullOrUndefined(scope.store['write-behind'])) {
+                scope.store['write-behind'] = {
+                  'WRITE_BEHIND': {
+                    'is-new-node': true
                   }
-              };
+                };
+              }
+              scope.initLevelDbChildrenAndMeta(storeType, true);
             }
 
             scope.prevData = {};
@@ -89,10 +92,38 @@
           scope.getWriteBehindMetadata = function () {
             var meta = utils.resolveDescription(scope.metadata, scope.resourceDescriptionMap, 'write-behind', scope.cacheType);
             meta.description = 'Configures a cache store as write-behind instead of write-through.';
+            // Do we need this?
             meta.type = {
               TYPE_MODEL_VALUE: 'OBJECT'
             };
             return meta;
+          };
+
+          scope.initLevelDbChildrenAndMeta = function (storeType, newNode) {
+            if (storeType === 'leveldb-store') {
+              var meta = utils.resolveDescription(scope.metadata, scope.resourceDescriptionMap, 'leveldb-children', scope.cacheType);
+              delete meta['write-behind']; // Remove so we don't overwrite existing field on merge
+              delete meta['property'];
+
+              // Get the required meta and add to store meta
+              var newMeta = {};
+              for (var key in meta) {
+                var objectKey = scope.getStoreObjectKey(key);
+                var path = utils.createPath('.', [key, 'model-description', objectKey]);
+                var innerMeta = utils.deepGet(meta, path);
+                var description = innerMeta.description;
+                innerMeta.attributes.description = innerMeta.description;
+                newMeta[key] = innerMeta.attributes;
+
+                // If no existing values for field, create empty objects
+                var store = scope.store;
+                if (utils.isNullOrUndefined(store[key]) || utils.isNullOrUndefined(store[key][objectKey])) {
+                  scope.store[key] = {};
+                  scope.store[key][objectKey] = {'is-new-node': true};
+                }
+              }
+              angular.merge(scope.metadata.currentStore, newMeta);
+            }
           };
 
           scope.getStoreType = function () {
@@ -174,14 +205,13 @@
             }
 
             var storeKey = scope.getStoreObjectKey(storeType);
-            scope.updateStoreAttributesAndMeta(storeType, previousType);
+            scope.updateStoreAttributesAndMeta(storeType, previousType, storeTypeChanged);
             scope.data[storeType] = {};
             scope.data[storeType][storeKey] = utils.isNotNullOrUndefined(previousStore) ? previousStore : {};
             scope.data['is-new-node'] = storeTypeChanged;
             scope.store = scope.data[storeType][storeKey];
             scope.store['is-new-node'] = storeTypeChanged;
             utils.deepSet(scope.store, 'write-behind.WRITE_BEHIND.is-new-node', true);
-            scope.metadata.currentStore = scope.resolveDescription(storeType);
           };
 
           scope.getStoreView = function (storeType) {
@@ -303,7 +333,7 @@
             scope.makeFieldClean(scope.metadata['store-type'], 'store-type', true);
           };
 
-          scope.updateStoreAttributesAndMeta = function (newStoreType, oldStoreType) {
+          scope.updateStoreAttributesAndMeta = function (newStoreType, oldStoreType, storeTypeChanged) {
             if (utils.isNotNullOrUndefined(oldStoreType) && oldStoreType === 'None') {
               return;
             }
@@ -321,6 +351,8 @@
                 }
               });
               scope.metadata.currentStore = newMeta;
+              scope.metadata.currentStore['write-behind'] = scope.getWriteBehindMetadata();
+              scope.initLevelDbChildrenAndMeta(newStoreType, storeTypeChanged);
             }
             scope.fields = storeFields[newStoreType];
 
