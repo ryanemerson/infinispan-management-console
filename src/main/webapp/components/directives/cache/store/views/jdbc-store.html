@@ -1,36 +1,4 @@
-<div class="form-group">
-  <label class="col-md-4 control-label">Datasource</label>
-
-  <div class="col-md-4">
-    <input class="form-control" type="text" ng-model="store['datasource']" ng-disabled="readOnly"
-           ng-change="fieldValueModified('datasource')" ng-style="getStyle('datasource')"/>
-  </div>
-
-  <div class="col-md-4 pull-left">
-    <i class="fa fa-info-circle" tooltip="{{metadata.currentStore.datasource.description}}"
-       tooltip-trigger tooltip-animation="true" tooltip-placement="top"></i>
-    <span ng-if="isFieldValueModified('datasource')"><a ng-click="undoFieldChange('datasource')">(Undo)</a>
-              <span ng-if="fieldChangeRequiresRestart('datasource')">Restart needed</span></span>
-  </div>
-</div>
-
-<div class="form-group">
-  <label class="col-md-4 control-label">Dialect</label>
-
-  <div class="col-md-4">
-    <select class="form-control" ng-model="store['dialect']"
-            ng-options="item as item for item in metadata.currentStore.dialect.allowed"
-            ng-disabled="readOnly" ng-change="fieldValueModified('dialect')"
-            ng-style="getStyle('dialect')"/>
-  </div>
-
-  <div class="col-md-4 pull-left">
-    <i class="fa fa-info-circle" tooltip="{{metadata.currentStore.dialect.description}}"
-       tooltip-trigger tooltip-animation="true" tooltip-placement="top"></i>
-    <span ng-if="isFieldValueModified('dialect')"><a ng-click="undoFieldChange('dialect')">(Undo)</a>
-              <span ng-if="fieldChangeRequiresRestart('dialect')">Restart needed</span></span>
-  </div>
-</div>
+<div ng-include="'components/directives/cache/store/views/generic-fields.html'"></div>
 
 <div class="form-group"
      ng-if="data['store-type'] === 'string-keyed-jdbc-store' || data['store-type'] === 'mixed-keyed-jdbc-store' || hasStringKeyedTable()">

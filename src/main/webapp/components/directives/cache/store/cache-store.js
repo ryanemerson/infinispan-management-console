@@ -6,6 +6,17 @@
 // TODO change cachestore to cacheStore so that the directive is called as cache-store
   module.directive('cachestore', ['utils', '$modal', function (utils, modal) {
     var customStoreFields = ['is-new-node', 'store-original-type'];
+    // These are the default fields which are loaded for each store in the order of the array
+    var storeFields = {
+      'binary-keyed-jdbc-store': ['datasource', 'dialect'],
+      'file-store': ['max-entries', 'path', 'relative-to'],
+      'leveldb-store': ['path', 'block-size', 'cache-size', 'clear-threshold'],
+      'mixed-keyed-jdbc-store': ['datasource', 'dialect'],
+      'remote-store': ['cache', 'hotrod-wrapping', 'socket-timeout', 'protocol-version', 'raw-values', 'tcp-no-delay'],
+      'rest-store': ['path', 'append-cache-name-to-path'],
+      'store': ['class'],
+      'string-keyed-jdbc-store': ['datasource', 'dialect']
+    };
     return {
         restrict: 'E',
         scope: {
@@ -34,7 +45,7 @@
             }
 
             scope.metadata.storeTypes = ['None', 'string-keyed-jdbc-store','mixed-keyed-jdbc-store', 'binary-keyed-jdbc-store',
-              'leveldb-store', 'file-store', 'remote-store', 'rest-store'];
+              'leveldb-store', 'file-store', 'remote-store', 'rest-store', 'store'];
             scope.resourceDescriptionMap = {};
             utils.makeResourceDescriptionMap(scope.resourceDescriptionMap);
             scope.metadata.checkboxes = scope.getCommonStoreCheckboxes();
@@ -45,6 +56,7 @@
             var storeType = scope.getStoreType();
             scope.data['store-type'] = storeType;
             scope.data['is-new-node'] = scope.isNoStoreSelected();
+            scope.fields = storeFields[storeType];
             scope.metadata.currentStore = scope.resolveDescription(storeType);
             scope.store = scope.getStoreObject();
             scope.storeView = scope.getStoreView(storeType);
@@ -310,6 +322,7 @@
               });
               scope.metadata.currentStore = newMeta;
             }
+            scope.fields = storeFields[newStoreType];
 
             if (utils.isNotNullOrUndefined(oldStoreType) && oldStoreType !== 'None') {
               scope.data[oldStoreType] = null;
@@ -325,6 +338,10 @@
             return utils.convertCacheAttributeIntoFieldName(field);
           };
 
+          scope.resolveFieldType = function (field) {
+            return utils.resolveFieldType(scope.metadata.currentStore, field);
+          };
+
           scope.resolveDescription = function (elementPath) {
             if (utils.isNotNullOrUndefined(elementPath) && elementPath !== 'None') {
               return utils.resolveDescription(scope.metadata, scope.resourceDescriptionMap, elementPath, scope.cacheType);
@@ -338,6 +355,13 @@
           scope.getFieldMetaValues = function (field) {
             return scope.getFieldMetaObject(field)['value-type'];
           };
+
+          scope.isMultiValue = function (field) {
+            var meta = scope.getFieldMetaObject(field);
+            var hasField = utils.has(meta, 'allowed');
+            return hasField ? utils.isNotNullOrUndefined(meta.allowed) : false;
+          };
+
 
           // Initialise scope variables
           scope.init();
