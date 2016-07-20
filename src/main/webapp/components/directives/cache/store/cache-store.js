@@ -206,7 +206,7 @@
               }
             });
 
-            scope.prevData['write-behind'] = scope.data['write-behind'];
+            scope.prevData['write-behind'] = angular.copy(scope.store['write-behind']);
             scope.prevData['store-type'] = scope.data['store-type'];
             scope.metadata['store-type'] = {
               uiModified: false,

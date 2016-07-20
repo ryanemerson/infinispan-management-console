@@ -10,11 +10,11 @@
         data: '=',
         field: '@',
         fieldMeta: '=',
+        modalFields: '=',
         outsideController: '=',
         previousValues: '=',
         parentMeta: '=',
         title: '@',
-        view: '@'
       },
       replace: true,
       templateUrl: 'components/directives/cache/store/modal-dialog/views/modal-button.html',
@@ -26,12 +26,15 @@
 
         scope.resolveDataField = function (data, field) {
           if (utils.isNotNullOrUndefined(data)) {
-              return utils.deepGet(data, field);
-          } else {
-            var data = {};
-            data[field] = {};
-            return data;
+            var object = field.indexOf('.') > -1 ? utils.deepGet(data, field) : data[field];
+
+            if (utils.isNotNullOrUndefined(object)) {
+              return object;
+            }
           }
+          var newData = {};
+          newData[field] = {};
+          return newData;
         };
 
         scope.openModal = function () {
@@ -45,7 +48,7 @@
                   metadata : scope.fieldMeta,
                   prevData: utils.isNullOrUndefined(scope.previousValues) ? {} : scope.previousValues,
                   title: scope.title,
-                  view: 'components/directives/cache/store/modal-dialog/views/' + scope.view + '.html'
+                  fields: scope.modalFields
                 };
               }
             },
@@ -54,7 +57,7 @@
               $scope.metadata = store.metadata;
               $scope.data = store.data;
               $scope.prevData = store.prevData;
-              $scope.view = store.view;
+              $scope.fields = store.fields;
 
               $scope.cancelModal = function () {
                 $scope.undoAllFieldChanges($scope.data);
@@ -83,6 +86,14 @@
                   }
                 }
                 return false;
+              };
+
+              $scope.getMetadata = function (parent) {
+                if (utils.isNotNullOrUndefined(parent)) {
+                  return $scope.metadata[parent]['value-type'];
+                } else {
+                  return $scope.metadata;
+                }
               };
 
               $scope.getMetadataObject = function (field, parent) {
@@ -163,6 +174,28 @@
                     $scope.undoFieldChange(key, parent);
                   }
                 }
+              };
+
+              $scope.isMultiValue = function(field, parent) {
+                var meta = $scope.getMetadataObject(field, parent);
+                var hasField = utils.has(meta, 'allowed');
+                return hasField ? utils.isNotNullOrUndefined(meta.allowed) : false;
+              };
+
+              $scope.isParentDefined = function (field) {
+                return utils.isNotNullOrUndefined(field.parent);
+              };
+
+              $scope.resolveFieldName = function (field, parent) {
+                var fieldName = utils.convertCacheAttributeIntoFieldName(field);
+                if (utils.isNotNullOrUndefined(parent)) {
+                  fieldName = utils.convertCacheAttributeIntoFieldName(parent) + ' ' + fieldName
+                }
+                return fieldName;
+              };
+
+              $scope.resolveFieldType = function (field, parent) {
+                return utils.resolveFieldType($scope.getMetadata(parent), field);
               };
             }]
           });

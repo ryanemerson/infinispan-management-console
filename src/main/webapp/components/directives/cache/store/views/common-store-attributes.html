@@ -22,7 +22,7 @@
     <modal-dialog data="store" field="write-behind.WRITE_BEHIND" field-meta="getFieldMetaObject('write-behind')"
                   outside-controller="internalController" parent-meta="getFieldMetaObject('write-behind')"
                   previous-values="prevData['write-behind']['WRITE_BEHIND']" title="Write Behind"
-                  view="write-behind-modal"/>
+                  modal-fields="[{name: 'modification-queue-size'}, {name: 'thread-pool-size'}]"/>
   </div>
 
   <div class="col-md-4 pull-left">(

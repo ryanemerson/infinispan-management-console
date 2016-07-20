@@ -7,7 +7,12 @@
   <div class="col-md-4">
     <modal-dialog data="store" field="string-keyed-table" field-meta="getFieldMetaValues('string-keyed-table')"
                   outside-controller="internalController" parent-meta="getFieldMetaObject('string-keyed-table')"
-                  previous-values="prevData['string-keyed-table']" title="String Keyed Table" view="keyed-table-modal"/>
+                  previous-values="prevData['string-keyed-table']" title="String Keyed Table"
+                  modal-fields="[{name: 'prefix'}, {name: 'batch-size'}, {name: 'fetch-size'},
+                  {name: 'name', parent: 'id-column'}, {name: 'type', parent: 'id-column'},
+                  {name: 'name', parent: 'data-column'}, {name: 'type', parent: 'data-column'},
+                  {name: 'name', parent: 'timestamp-column'}, {name: 'type', parent: 'timestamp-column'},
+                  {name: 'create-on-start'}, {name: 'drop-on-exit'}]"/>
   </div>
   <div class="col-md-4 pull-left">
     <i class="fa fa-info-circle" tooltip="{{metadata.currentStore['string-keyed-table'].description}}"
@@ -25,7 +30,12 @@
   <div class="col-md-4">
     <modal-dialog data="store" field="binary-keyed-table" field-meta="getFieldMetaValues('binary-keyed-table')"
                   outside-controller="internalController" parent-meta="getFieldMetaObject('binary-keyed-table')"
-                  previous-values="prevData['binary-keyed-table']" title="Binary Keyed Table" view="keyed-table-modal"/>
+                  previous-values="prevData['binary-keyed-table']" title="Binary Keyed Table"
+                  modal-fields="[{name: 'prefix'}, {name: 'batch-size'}, {name: 'fetch-size'},
+                  {name: 'name', parent: 'id-column'}, {name: 'type', parent: 'id-column'},
+                  {name: 'name', parent: 'data-column'}, {name: 'type', parent: 'data-column'},
+                  {name: 'name', parent: 'timestamp-column'}, {name: 'type', parent: 'timestamp-column'},
+                  {name: 'create-on-start'}, {name: 'drop-on-exit'}]"/>
   </div>
 
   <div class="col-md-4 pull-left">
