@@ -13,7 +13,7 @@
       'leveldb-store': ['path', 'block-size', 'cache-size', 'clear-threshold'],
       'mixed-keyed-jdbc-store': ['datasource', 'dialect'],
       'remote-store': ['cache', 'hotrod-wrapping', 'socket-timeout', 'protocol-version', 'raw-values', 'tcp-no-delay'],
-      'rest-store': ['path', 'append-cache-name-to-path'],
+      'rest-store': ['remote-servers', 'path', 'append-cache-name-to-path'],
       'store': ['class'],
       'string-keyed-jdbc-store': ['datasource', 'dialect']
     };
