@@ -4,6 +4,7 @@
   var module = angular.module('ispn.directives.cache.cachestore', ['ispn.services.utils']);
 
 // TODO change cachestore to cacheStore so that the directive is called as cache-store
+// TODO remove unused modal dependency
   module.directive('cachestore', ['utils', '$modal', function (utils, modal) {
     var customStoreFields = ['is-new-node', 'store-original-type'];
     // These are the default fields which are loaded for each store in the order of the array
@@ -17,6 +18,9 @@
       'store': ['class'],
       'string-keyed-jdbc-store': ['datasource', 'dialect']
     };
+
+    var storeTypes = ['None', 'string-keyed-jdbc-store','mixed-keyed-jdbc-store', 'binary-keyed-jdbc-store',
+      'leveldb-store', 'file-store', 'remote-store', 'rest-store', 'store'];
     return {
         restrict: 'E',
         scope: {
@@ -32,22 +36,11 @@
         link: function (scope) {
 
           scope.init = function () {
-            if (utils.isNotNullOrUndefined(scope.outsideController)){
-              if (utils.isArray(scope.outsideController)){
-                var handle = {};
-                scope.outsideController.push(handle);
-                scope.internalController = handle;
-              } else {
-                scope.internalController = scope.outsideController;
-              }
-            } else {
-              scope.internalController = {};
-            }
+            scope.initInternalcontroller();
 
-            scope.metadata.storeTypes = ['None', 'string-keyed-jdbc-store','mixed-keyed-jdbc-store', 'binary-keyed-jdbc-store',
-              'leveldb-store', 'file-store', 'remote-store', 'rest-store', 'store'];
             scope.resourceDescriptionMap = {};
             utils.makeResourceDescriptionMap(scope.resourceDescriptionMap);
+            scope.metadata.storeTypes = storeTypes;
             scope.metadata.checkboxes = scope.getCommonStoreCheckboxes();
 
             if (utils.isNullOrUndefined(scope.data)){
@@ -57,7 +50,7 @@
             scope.data['store-type'] = storeType;
             scope.data['is-new-node'] = scope.isNoStoreSelected();
             scope.fields = storeFields[storeType];
-            scope.metadata.currentStore = scope.resolveDescription(storeType);
+            scope.metadata.currentStore = scope.isNoStoreSelected() ? {} : scope.resolveDescription(storeType);
             scope.store = scope.getStoreObject();
             scope.storeView = scope.getStoreView(storeType);
 
@@ -74,9 +67,6 @@
               scope.initLevelDbChildrenAndMeta(storeType, true);
             }
 
-            scope.prevData = {};
-            scope.cleanMetadata();
-
             if (scope.initDefaults) {
               scope.data['store-type'] = 'None';
 
@@ -85,8 +75,24 @@
               });
             }
 
+            scope.prevData = {};
+            scope.cleanMetadataAndPrevValues();
+          };
+
+          scope.initInternalcontroller = function () {
+            if (utils.isNotNullOrUndefined(scope.outsideController)){
+              if (utils.isArray(scope.outsideController)){
+                var handle = {};
+                scope.outsideController.push(handle);
+                scope.internalController = handle;
+              } else {
+                scope.internalController = scope.outsideController;
+              }
+            } else {
+              scope.internalController = {};
+            }
             scope.internalController.requiresRestart = scope.requiresRestart;
-            scope.internalController.cleanMetadata = scope.cleanMetadata;
+            scope.internalController.cleanMetadata = scope.cleanMetadataAndPrevValues;
           };
 
           scope.getWriteBehindMetadata = function () {
@@ -211,6 +217,7 @@
             scope.data['is-new-node'] = storeTypeChanged;
             scope.store = scope.data[storeType][storeKey];
             scope.store['is-new-node'] = storeTypeChanged;
+            // TODO, this should be true when WB doesn't already exist
             utils.deepSet(scope.store, 'write-behind.WRITE_BEHIND.is-new-node', true);
           };
 
@@ -228,7 +235,7 @@
             }
           };
 
-          scope.cleanMetadata = function () {
+          scope.cleanMetadataAndPrevValues = function () {
             angular.forEach(scope.metadata.currentStore, function (value, key) {
               if (utils.isObject(value)) {
                 scope.makeFieldClean(value);
@@ -334,13 +341,11 @@
           };
 
           scope.updateStoreAttributesAndMeta = function (newStoreType, oldStoreType, storeTypeChanged) {
-            if (utils.isNotNullOrUndefined(oldStoreType) && oldStoreType === 'None') {
-              return;
-            }
-
+            var noPrevStore = utils.isNotNullOrUndefined(oldStoreType) && oldStoreType === 'None';
             var oldMeta = scope.metadata.currentStore;
             var newMeta = scope.resolveDescription(newStoreType);
-            if (utils.isNotNullOrUndefined(newMeta)) {
+
+            if (!noPrevStore) {
               angular.forEach(scope.store, function (value, key) {
                 if (customStoreFields.indexOf(key) < 0) {
                   if (key !== 'write-behind' && !newMeta.hasOwnProperty(key)) {
@@ -350,15 +355,14 @@
                   }
                 }
               });
-              scope.metadata.currentStore = newMeta;
-              scope.metadata.currentStore['write-behind'] = scope.getWriteBehindMetadata();
-              scope.initLevelDbChildrenAndMeta(newStoreType, storeTypeChanged);
-            }
-            scope.fields = storeFields[newStoreType];
-
-            if (utils.isNotNullOrUndefined(oldStoreType) && oldStoreType !== 'None') {
               scope.data[oldStoreType] = null;
             }
+            scope.fields = storeFields[newStoreType];
+            scope.metadata.currentStore = newMeta;
+
+            // TODO is this irrelevant because of the loop above? It simply copies it across already?
+            scope.metadata.currentStore['write-behind'] = scope.getWriteBehindMetadata();
+            scope.initLevelDbChildrenAndMeta(newStoreType, storeTypeChanged);
           };
 
           scope.getStyle = function (field) {

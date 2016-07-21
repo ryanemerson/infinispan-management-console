@@ -14,7 +14,7 @@
         outsideController: '=',
         previousValues: '=',
         parentMeta: '=',
-        title: '@',
+        title: '@'
       },
       replace: true,
       templateUrl: 'components/directives/cache/store/modal-dialog/views/modal-button.html',
@@ -167,6 +167,9 @@
 
               $scope.undoAllFieldChanges = function (object, parent) {
                 for (var key in object) {
+                  if (key === 'is-new-node') {
+                    continue;
+                  }
                   var val = object[key];
                   if (utils.isObject(val)) {
                     $scope.undoAllFieldChanges(val, key);
