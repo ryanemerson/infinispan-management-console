@@ -222,27 +222,21 @@ angular.module('managementConsole.api')
 
         // Add step to create/update JDBC store
         if (newStoreType !== 'None') {
-          // We update both the store and write-behind as the latter is a child element of the former.
+          // We update the store followed by all of its children
           var objectKey = newStoreType.toUpperCase().replace(/-/g, '_');
           this.updateHelper(steps, address.concat(newStoreType, objectKey), configuration[newStoreType]);
 
-          // Update all nested objects in the store
-          // DOES NOT WORK!!!
-          // var store = configuration[newStoreType][objectKey];
-          // for (var key in store) {
-          //   var nestedObject = store[key];
-          //   if (utils.isObject()) {
-          //     var nestedKey = key.toUpperCase().replace(/-/g, '_');
-          //     if (utils.isNotNullOrUndefined(object[upperKey])) {
-          //       var nestedAddress = address.concat(newStoreType, objectKey, key, upperKey);
-          //       this.updateHelper(steps, nestedAddress, object);
-          //     }
-          //   }
-          // }
-          var writeBehind = configuration[newStoreType][objectKey]['write-behind'];
-          if (utils.isNotNullOrUndefined(writeBehind)) {
-            var wbAddress = address.concat(newStoreType, objectKey, 'write-behind', 'WRITE_BEHIND');
-            this.updateHelper(steps, wbAddress, writeBehind);
+          // Update all children objects
+          var store = configuration[newStoreType][objectKey];
+          for (var key in store) {
+            var nestedObject = store[key];
+            if (utils.isObject(nestedObject)) {
+              var nestedKey = key.toUpperCase().replace(/-/g, '_');
+              if (utils.isNotNullOrUndefined(nestedObject[nestedKey])) {
+                var nestedAddress = address.concat(newStoreType, objectKey, key, nestedKey);
+                this.updateHelper(steps, nestedAddress, nestedObject);
+              }
+            }
           }
         }
 

@@ -54,18 +54,9 @@
             scope.store = scope.getStoreObject();
             scope.storeView = scope.getStoreView(storeType);
 
-            // Create children meta objects as they are not in the metadata by default
-            if (!utils.isEmptyObject(scope.store)) {
-              scope.metadata.currentStore['write-behind'] = scope.getWriteBehindMetadata();
-              if (utils.isNullOrUndefined(scope.store['write-behind'])) {
-                scope.store['write-behind'] = {
-                  'WRITE_BEHIND': {
-                    'is-new-node': true
-                  }
-                };
-              }
-              scope.initLevelDbChildrenAndMeta(storeType, true);
-            }
+            // Create children meta and data objects as they are not in the metadata by default
+            scope.initWriteBehindData();
+            scope.initLevelDbChildrenAndMeta(storeType, true);
 
             if (scope.initDefaults) {
               scope.data['store-type'] = 'None';
@@ -98,38 +89,57 @@
           scope.getWriteBehindMetadata = function () {
             var meta = utils.resolveDescription(scope.metadata, scope.resourceDescriptionMap, 'write-behind', scope.cacheType);
             meta.description = 'Configures a cache store as write-behind instead of write-through.';
-            // Do we need this?
-            meta.type = {
-              TYPE_MODEL_VALUE: 'OBJECT'
-            };
+            meta.type = {TYPE_MODEL_VALUE: 'OBJECT'}; // type Necessary for undoTypeChange check
             return meta;
           };
 
-          scope.initLevelDbChildrenAndMeta = function (storeType, newNode) {
-            if (storeType === 'leveldb-store') {
-              var meta = utils.resolveDescription(scope.metadata, scope.resourceDescriptionMap, 'leveldb-children', scope.cacheType);
-              delete meta['write-behind']; // Remove so we don't overwrite existing field on merge
-              delete meta['property'];
-
-              // Get the required meta and add to store meta
-              var newMeta = {};
-              for (var key in meta) {
-                var objectKey = scope.getStoreObjectKey(key);
-                var path = utils.createPath('.', [key, 'model-description', objectKey]);
-                var innerMeta = utils.deepGet(meta, path);
-                var description = innerMeta.description;
-                innerMeta.attributes.description = innerMeta.description;
-                newMeta[key] = innerMeta.attributes;
-
-                // If no existing values for field, create empty objects
-                var store = scope.store;
-                if (utils.isNullOrUndefined(store[key]) || utils.isNullOrUndefined(store[key][objectKey])) {
-                  scope.store[key] = {};
-                  scope.store[key][objectKey] = {'is-new-node': true};
-                }
-              }
-              angular.merge(scope.metadata.currentStore, newMeta);
+          scope.initWriteBehindData = function () {
+            if (scope.isNoStoreSelected()) {
+              return; // Do nothing as this wb data and meta is not required
             }
+
+            var meta = scope.metadata.currentStore;
+            if (utils.isNullOrUndefined(meta['write-behind'])) {
+              meta['write-behind'] = utils.resolveDescription(scope.metadata, scope.resourceDescriptionMap, 'write-behind', scope.cacheType);
+              meta['write-behind'].description = 'Configures a cache store as write-behind instead of write-through.';
+              meta['write-behind'].type = {TYPE_MODEL_VALUE: 'OBJECT'}; // We need this for undoFieldChange type check
+            }
+
+            if (utils.isNullOrUndefined(scope.store['write-behind'])) {
+              scope.store['write-behind'] = {
+                'WRITE_BEHIND': {
+                  'is-new-node': true
+                }
+              };
+            }
+          };
+
+          scope.initLevelDbChildrenAndMeta = function (storeType, newNode) {
+            if (scope.isNoStoreSelected() || storeType !== 'leveldb-store') {
+              return;
+            }
+            var meta = utils.resolveDescription(scope.metadata, scope.resourceDescriptionMap, 'leveldb-children', scope.cacheType);
+            delete meta['write-behind']; // Remove so we don't overwrite existing field on merge
+            delete meta['property'];
+
+            // Get the required meta and add to store meta
+            var newMeta = {};
+            for (var key in meta) {
+              var objectKey = scope.getStoreObjectKey(key);
+              var path = utils.createPath('.', [key, 'model-description', objectKey]);
+              var innerMeta = utils.deepGet(meta, path);
+              var description = innerMeta.description;
+              innerMeta.attributes.description = innerMeta.description;
+              newMeta[key] = innerMeta.attributes;
+
+              // If no existing values for field, create empty objects
+              var store = scope.store;
+              if (utils.isNullOrUndefined(store[key]) || utils.isNullOrUndefined(store[key][objectKey])) {
+                scope.store[key] = {};
+                scope.store[key][objectKey] = {'is-new-node': true};
+              }
+            }
+            angular.merge(scope.metadata.currentStore, newMeta);
           };
 
           scope.getStoreType = function () {
@@ -217,8 +227,6 @@
             scope.data['is-new-node'] = storeTypeChanged;
             scope.store = scope.data[storeType][storeKey];
             scope.store['is-new-node'] = storeTypeChanged;
-            // TODO, this should be true when WB doesn't already exist
-            utils.deepSet(scope.store, 'write-behind.WRITE_BEHIND.is-new-node', true);
           };
 
           scope.getStoreView = function (storeType) {
@@ -359,9 +367,7 @@
             }
             scope.fields = storeFields[newStoreType];
             scope.metadata.currentStore = newMeta;
-
-            // TODO is this irrelevant because of the loop above? It simply copies it across already?
-            scope.metadata.currentStore['write-behind'] = scope.getWriteBehindMetadata();
+            scope.initWriteBehindData();
             scope.initLevelDbChildrenAndMeta(newStoreType, storeTypeChanged);
           };
 
