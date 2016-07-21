@@ -202,39 +202,43 @@ angular.module('managementConsole.api')
         }.bind(this));
       };
 
-      CacheCreationControllerClient.prototype.updateHelper = function (steps, address, configurationElement) {
+      CacheCreationControllerClient.prototype.updateHelper = function (steps, address, configurationElement, forceExecution) {
         //'is-new-node' is special attribute denoting node being created rather than modified
         //'type' is special attribute denoting type of store
         // all exclusionList elements are not native to DMR
         if (utils.isNotNullOrUndefined(configurationElement)) {
           // ISPN-6587: Exclude type from the exclusion list for EVICTION objects, as EVICTION.type exists.
+          // Same for LevelDB->Compression. TODO need a better way to make exceptions
           var exclusionList = ['is-new-node', 'store-type', 'store-original-type'];
-          if (utils.isNullOrUndefined(configurationElement['EVICTION'])) {
+          if (utils.isNullOrUndefined(configurationElement['EVICTION']) || utils.isNullOrUndefined(configurationElement['COMPRESSION'])) {
             exclusionList.push('type');
           }
-          this.addNodeComposite(steps, address, configurationElement, exclusionList, false);
+          this.addNodeComposite(steps, address, configurationElement, exclusionList, forceExecution);
         }
       };
 
       CacheCreationControllerClient.prototype.updateCacheStore = function(steps, address, configuration) {
         var newStoreType = configuration['store-type'];
         var originalStoreType = configuration['store-original-type'];
+        var newStore = newStoreType !== originalStoreType;
 
         // Add step to create/update JDBC store
         if (newStoreType !== 'None') {
           // We update the store followed by all of its children
           var objectKey = newStoreType.toUpperCase().replace(/-/g, '_');
-          this.updateHelper(steps, address.concat(newStoreType, objectKey), configuration[newStoreType]);
+          this.updateHelper(steps, address.concat(newStoreType, objectKey), configuration[newStoreType], newStore);
 
           // Update all children objects
           var store = configuration[newStoreType][objectKey];
-          for (var key in store) {
-            var nestedObject = store[key];
-            if (utils.isObject(nestedObject)) {
-              var nestedKey = key.toUpperCase().replace(/-/g, '_');
-              if (utils.isNotNullOrUndefined(nestedObject[nestedKey])) {
-                var nestedAddress = address.concat(newStoreType, objectKey, key, nestedKey);
-                this.updateHelper(steps, nestedAddress, nestedObject);
+          if (utils.isNotNullOrUndefined(store)) {
+            for (var key in store) {
+              var nestedObject = store[key];
+              if (utils.isObject(nestedObject)) {
+                var nestedKey = key.toUpperCase().replace(/-/g, '_');
+                if (utils.isNotNullOrUndefined(nestedObject[nestedKey])) {
+                  var nestedAddress = address.concat(newStoreType, objectKey, key, nestedKey);
+                  this.updateHelper(steps, nestedAddress, nestedObject);
+                }
               }
             }
           }
@@ -242,7 +246,7 @@ angular.module('managementConsole.api')
 
         // If a new Store type has been specified (can be None), then remove the previous store's configuration
         if (utils.isNotNullOrUndefined(originalStoreType) && originalStoreType !== 'None'
-        && newStoreType !== originalStoreType) {
+        && newStore) {
           var op = {
             'operation': 'remove',
             'address': address.concat(originalStoreType, originalStoreType.toUpperCase().replace(/-/g, '_'))
@@ -347,7 +351,7 @@ angular.module('managementConsole.api')
         var createAddOperation = forceAdd || prop['is-new-node']; //TODO make is-new-node a constant somewhere
         if (createAddOperation) {
           var op = this.createAddOperation(address, prop, excludeAttributeList);
-          if (Object.keys(op).length > 2) {
+          if (Object.keys(op).length > 2 || forceAdd) {
             //ok cool, we actually have at least address and operation
             //therefore - add this op to composite steps
             steps.push(op);

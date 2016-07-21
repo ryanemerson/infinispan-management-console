@@ -8,12 +8,12 @@
 
     <div class="checkbox" ng-if="!multiValue && type === 'checkbox'">
       <label>
-        <input type="checkbox" ng-class="field" ng-style="getStyle(field)" ng-model="store[field]"
+        <input type="checkbox" ng-style="getStyle(field)" ng-model="store[field]"
                ng-change="fieldValueModified(field)"/>
       </label>
     </div>
 
-    <select class="form-control" ng-class="field" ng-style="getStyle(field)" ng-model="store[field]"
+    <select class="form-control" ng-style="getStyle(field)" ng-model="store[field]"
             ng-options="item as item for item in getFieldMetaObject(field).allowed"
             ng-if="multiValue" ng-change="fieldValueModified(field)"/>
   </div>

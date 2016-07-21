@@ -51,6 +51,7 @@
             scope.fields = storeFields[storeType];
             scope.metadata.currentStore = scope.isNoStoreSelected() ? {} : scope.resolveDescription(storeType);
             scope.store = scope.getStoreObject();
+            scope.store['is-new-node'] = scope.isNoStoreSelected();
             scope.storeView = scope.getStoreView(storeType);
 
             // Create children meta and data objects as they are not in the metadata by default
@@ -85,7 +86,7 @@
             scope.internalController.cleanMetadata = scope.cleanMetadataAndPrevValues;
           };
 
-          scope.initWriteBehindData = function () {
+          scope.initWriteBehindData = function (typeHasChanged) {
             if (scope.isNoStoreSelected()) {
               return; // Do nothing as this wb data and meta is not required
             }
@@ -93,7 +94,11 @@
             var storeMeta = scope.metadata.currentStore;
             if (utils.isNullOrUndefined(storeMeta['write-behind'])) {
               var meta = utils.resolveDescription(scope.metadata, scope.resourceDescriptionMap, 'write-behind', scope.cacheType);
-              scope.addModelChildToMetaAndStore('write-behind', meta, scope.store, storeMeta);
+              scope.addModelChildToMetaAndStore('write-behind', meta, scope.store, storeMeta, typeHasChanged);
+            }
+
+            if (typeHasChanged) {
+              scope.store['write-behind']['WRITE_BEHIND']['is-new-node'] = true;
             }
           };
 
@@ -116,12 +121,26 @@
             var innerMeta = utils.deepGet(childMeta, path);
             var description = innerMeta.description;
             innerMeta.attributes.description = innerMeta.description;
+            if (utils.isNullOrUndefined(innerMeta.attributes.type)) {
+              // We need this for undoFieldChange type check write-behind and other children stored as objects
+              innerMeta.attributes.type = {TYPE_MODEL_VALUE: 'OBJECT'};
+            }
+
             storeMeta[key] = innerMeta.attributes;
 
             // If no existing values for field, create empty objects
             if (utils.isNullOrUndefined(store[key]) || utils.isNullOrUndefined(store[key][objectKey])) {
               store[key] = {};
               store[key][objectKey] = {'is-new-node': true};
+            }
+
+            // Set default values for values shown as list
+            for (var attributeKey in innerMeta.attributes) {
+              var attribute = innerMeta.attributes[attributeKey];
+              if (utils.isNotNullOrUndefined(attribute) && utils.isNotNullOrUndefined(attribute.allowed) &&
+              utils.isNullOrUndefined(store[key][objectKey][attributeKey])) {
+                store[key][objectKey][attributeKey] = attribute.default;
+              }
             }
           };
 
@@ -144,8 +163,9 @@
             }
             scope.fields = storeFields[newStoreType];
             scope.metadata.currentStore = newMeta;
-            scope.initWriteBehindData();
-            scope.initLevelDbChildrenAndMeta(newStoreType);
+            var newType = newStoreType !== oldStoreType;
+            scope.initWriteBehindData(newType);
+            scope.initLevelDbChildrenAndMeta(newStoreType, newType);
           };
 
           scope.cleanMetadataAndPrevValues = function () {
@@ -156,7 +176,6 @@
               }
             });
 
-            scope.prevData['write-behind'] = angular.copy(scope.store['write-behind']);
             scope.prevData['store-type'] = scope.data['store-type'];
             scope.metadata['store-type'] = {
               uiModified: false,
@@ -203,7 +222,7 @@
             scope.storeView = scope.getStoreView(originalStoreType);
 
             scope.updateStoreAttributesAndMeta(originalStoreType, currentStoreType);
-            scope.makeFieldClean(scope.metadata['store-type'], 'store-type', true);
+            scope.makeFieldClean(scope.getFieldMetaObject('store-type'), 'store-type', true);
           };
 
           scope.getStoreType = function () {
@@ -281,14 +300,15 @@
             return utils.isNotNullOrUndefined(scope.data) && utils.isNotNullOrUndefined(scope.data['binary-keyed-table']);
           };
 
-          scope.fieldValueModified = function (field) {
+          scope.fieldValueModified = function (field, parent) {
             var original = scope.prevData[field];
             var latest = scope.store[field];
 
+            var meta = scope.getFieldMetaObject(field, parent);
             if ((utils.isNullOrUndefined(original) && !latest) || original === latest) {
-              scope.makeFieldClean(scope.metadata.currentStore[field], field, true);
+              scope.makeFieldClean(meta, field, true);
             } else {
-              scope.makeFieldDirty(scope.metadata.currentStore[field], field, true);
+              scope.makeFieldDirty(meta, field, true);
             }
           };
 
@@ -320,13 +340,13 @@
             }
           };
 
-          scope.isFieldValueModified = function (field) {
-            var fieldMeta = scope.metadata.hasOwnProperty(field) ? scope.metadata[field] : scope.metadata.currentStore[field];
+          scope.isFieldValueModified = function (field, parent) {
+            var fieldMeta = scope.getFieldMetaObject(field, parent);
             return utils.isNotNullOrUndefined(fieldMeta) && fieldMeta.uiModified === true;
           };
 
-          scope.fieldChangeRequiresRestart = function (field) {
-            var fieldMeta = scope.metadata.currentStore[field];
+          scope.fieldChangeRequiresRestart = function (field, parent) {
+            var fieldMeta = scope.getFieldMetaObject(field, parent)
             return utils.isNotNullOrUndefined(fieldMeta) && fieldMeta['restart-required'] !== 'no-services';
           };
 
@@ -344,9 +364,9 @@
             return false;
           };
 
-          scope.undoFieldChange = function (field) {
+          scope.undoFieldChange = function (field, parent) {
             scope.store[field] = angular.copy(scope.prevData[field]);
-            var meta = scope.getFieldMetaObject(field);
+            var meta = scope.getFieldMetaObject(field, parent);
             scope.makeFieldClean(meta, field, false);
 
             if (meta.type.TYPE_MODEL_VALUE === 'OBJECT') {
@@ -354,8 +374,13 @@
             }
           };
 
-          scope.getStyle = function (field) {
-            var fieldMeta = scope.metadata.hasOwnProperty(field) ? scope.metadata[field] : scope.metadata.currentStore[field];
+          scope.getStyle = function (field, parent) {
+            var fieldMeta;
+            if (utils.isNotNullOrUndefined(parent)) {
+              fieldMeta = scope.metadata.currentStore[parent, field];
+            } else {
+              fieldMeta = scope.metadata.hasOwnProperty(field) ? scope.metadata[field] : scope.metadata.currentStore[field];
+            }
             return utils.isNotNullOrUndefined(fieldMeta) ? fieldMeta.style : '';
           };
 
@@ -373,8 +398,12 @@
             }
           };
 
-          scope.getFieldMetaObject = function (field) {
-            return scope.metadata.currentStore[field];
+          scope.getFieldMetaObject = function (field, parent) {
+            var meta = scope.metadata.currentStore;
+            if (utils.isNotNullOrUndefined(parent)) {
+              return meta[parent][field];
+            }
+            return scope.metadata.hasOwnProperty(field) ? scope.metadata[field] : scope.metadata.currentStore[field];
           };
 
           scope.getFieldMetaValues = function (field) {
@@ -387,6 +416,26 @@
             return hasField ? utils.isNotNullOrUndefined(meta.allowed) : false;
           };
 
+          scope.getFieldDefault = function (field, parent) {
+            var meta = scope.getFieldMetaObject(field, parent);
+            if (utils.isNotNullOrUndefined(meta)) {
+              return meta.default;
+            }
+          };
+
+          // There must be a better way to achieve this!
+          // TODO this still does not work for already selected values!!!!!
+          scope.getOptions = function (field, parent) {
+            var options = [];
+            var allowed = scope.getFieldMetaObject(field, parent).allowed;
+            for (var i = 0; i < allowed.length; i++) {
+              options.push({
+                id: allowed[i],
+                label: allowed[i]
+              });
+            }
+            return options;
+          };
 
           // Initialise scope variables
           scope.init();
