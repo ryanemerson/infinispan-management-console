@@ -123,16 +123,12 @@ angular.module('managementConsole.api')
           this.createHelper(steps, address.concat('transaction', 'TRANSACTION'), configuration.transaction);
           this.createHelper(steps, address.concat('state-transfer', 'STATE_TRANSFER'), configuration['state-transfer']);
           this.createHelper(steps, address.concat('loader', 'LOADER'), configuration.loader);
-          this.createHelper(steps, address.concat('store', 'STORE'), configuration.store);
-          this.createHelper(steps, address.concat('file-store', 'FILE_STORE'), configuration['file-store']);
-          this.createHelper(steps, address.concat('leveldb-store', 'LEVELDB_STORE'), configuration['leveldb-store']);
           this.createHelper(steps, address.concat('backup', 'BACKUP'), configuration.backup);
 
           this.createHelper(steps, address.concat('security', 'SECURITY'), configuration.security);
           this.createHelper(steps, address.concat('security', 'SECURITY', 'authorization', 'AUTHORIZATION'), configuration.security.SECURITY.authorization);
 
-          this.createJDBCStore(steps, address, configuration);
-
+          this.createCacheStore(steps, address, configuration);
           //ok now, lets send composite op to server
           return this.execute(compositeOp);
         }.bind(this));
@@ -145,7 +141,7 @@ angular.module('managementConsole.api')
         if (utils.isNotNullOrUndefined(configurationElement)) {
           // ISPN-6587: Exclude type from the exclusion list for EVICTION objects, as EVICTION.type exists.
           var exclusionList = ['is-new-node', 'store-type', 'store-original-type'];
-          if (utils.isNullOrUndefined(configurationElement['EVICTION'])) {
+          if (utils.isNullOrUndefined(configurationElement['EVICTION']) || utils.isNullOrUndefined(configurationElement['COMPRESSION'])) {
             exclusionList.push('type');
           }
           this.addNodeComposite(steps, address, configurationElement, exclusionList, true);
@@ -153,15 +149,16 @@ angular.module('managementConsole.api')
 
       };
 
-      CacheCreationControllerClient.prototype.createJDBCStore = function(steps, address, configuration) {
-        var jdbcType = configuration['store-type'];
-        if (utils.isNullOrUndefined(jdbcType) || jdbcType.length < 1 || utils.isNullOrUndefined(configuration[jdbcType])) {
+      CacheCreationControllerClient.prototype.createCacheStore = function(steps, address, configuration) {
+        var storeType = configuration['store-type'];
+        if (utils.isNullOrUndefined(storeType) || storeType === 'None' || utils.isNullOrUndefined(configuration[storeType])) {
           return;
         }
 
-        // Add step to create/update JDBC store
-        var objectKey = jdbcType.toUpperCase().replace(/-/g, '_');
-        this.createHelper(steps, address.concat(jdbcType, objectKey), configuration[jdbcType]);
+        // Add step to create/update store
+        var objectKey = storeType.toUpperCase().replace(/-/g, '_');
+        configuration[storeType][objectKey]['required-node'] = true;
+        this.createHelper(steps, address.concat(storeType, objectKey), configuration[storeType]);
       };
 
       /**
@@ -202,7 +199,7 @@ angular.module('managementConsole.api')
         }.bind(this));
       };
 
-      CacheCreationControllerClient.prototype.updateHelper = function (steps, address, configurationElement, forceExecution) {
+      CacheCreationControllerClient.prototype.updateHelper = function (steps, address, configurationElement) {
         //'is-new-node' is special attribute denoting node being created rather than modified
         //'type' is special attribute denoting type of store
         // all exclusionList elements are not native to DMR
@@ -213,7 +210,7 @@ angular.module('managementConsole.api')
           if (utils.isNullOrUndefined(configurationElement['EVICTION']) || utils.isNullOrUndefined(configurationElement['COMPRESSION'])) {
             exclusionList.push('type');
           }
-          this.addNodeComposite(steps, address, configurationElement, exclusionList, forceExecution);
+          this.addNodeComposite(steps, address, configurationElement, exclusionList);
         }
       };
 
@@ -226,6 +223,9 @@ angular.module('managementConsole.api')
         if (newStoreType !== 'None') {
           // We update the store followed by all of its children
           var objectKey = newStoreType.toUpperCase().replace(/-/g, '_');
+          if (newStore) {
+            configuration[newStoreType][objectKey]['required-node'] = true;
+          }
           this.updateHelper(steps, address.concat(newStoreType, objectKey), configuration[newStoreType], newStore);
 
           // Update all children objects
@@ -308,7 +308,7 @@ angular.module('managementConsole.api')
         };
         if (utils.isNotNullOrUndefined(prop)) {
           this.composeWriteAttributeOperations(steps, address, prop, ['name','type','template-name', 'is-new-node',
-          'is-create-with-bare-template', 'is-create-mode', 'store-type', 'store-original-type']);
+          'is-create-with-bare-template', 'is-create-mode', 'store-type', 'store-original-type', 'required-node']);
           this.composeWriteObjectOperations(steps, address, prop, ['indexing-properties', 'string-keyed-table', 'binary-keyed-table']);
         }
         return this.execute(compositeOp);
@@ -351,9 +351,11 @@ angular.module('managementConsole.api')
         var createAddOperation = forceAdd || prop['is-new-node']; //TODO make is-new-node a constant somewhere
         if (createAddOperation) {
           var op = this.createAddOperation(address, prop, excludeAttributeList);
-          if (Object.keys(op).length > 2 || forceAdd) {
+          if (Object.keys(op).length > 2 || prop['required-node']) {
             //ok cool, we actually have at least address and operation
             //therefore - add this op to composite steps
+            // Or if 'required-node' is present, then we know that this node must be forced even if empty
+            // (required for when child nodes may also have been defined without the parent)
             steps.push(op);
           }
         } else {

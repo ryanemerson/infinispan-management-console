@@ -60,10 +60,6 @@
 
             if (scope.initDefaults) {
               scope.data['store-type'] = 'None';
-
-              scope.metadata.checkboxes.forEach(function (attrName) {
-                scope.store[attrName] = scope.metadata[attrName].default;
-              });
             }
 
             scope.prevData = {};
@@ -191,6 +187,7 @@
 
             if (storeTypeChanged) {
               scope.makeFieldDirty(scope.metadata['store-type'], 'store-type', true);
+              // scope.$emit('configurationFieldDirty', storeType);
             } else {
               scope.makeFieldClean(scope.metadata['store-type'], 'store-type', true);
             }
