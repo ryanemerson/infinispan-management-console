@@ -113,7 +113,7 @@
             }
           };
 
-          scope.initLevelDbChildrenAndMeta = function (storeType, newNode) {
+          scope.initLevelDbChildrenAndMeta = function (storeType) {
             if (scope.isNoStoreSelected() || storeType !== 'leveldb-store') {
               return;
             }

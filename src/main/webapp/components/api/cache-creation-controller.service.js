@@ -376,8 +376,11 @@ angular.module('managementConsole.api')
             var propKey = keys[i];
             var propValue = prop[keys[i]];
             if (utils.isNotNullOrUndefined(propValue)) {
-              if (utils.isObject(propValue) && allowedObjects.indexOf(propKey) > -1) {
-                op[propKey] = propValue;
+              if (utils.isObject(propValue)) {
+                // Only process allowed objects, these should be objects which are dmr attributes not children
+                if (allowedObjects.indexOf(propKey) > -1) {
+                  op[propKey] = propValue;
+                }
               } else {
                 //assign only primitives (strings, numbers, integers)
                 // i.e disregard potential branches of prop object tree
