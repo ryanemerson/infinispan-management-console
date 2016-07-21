@@ -85,31 +85,15 @@
             scope.internalController.cleanMetadata = scope.cleanMetadataAndPrevValues;
           };
 
-          scope.getWriteBehindMetadata = function () {
-            var meta = utils.resolveDescription(scope.metadata, scope.resourceDescriptionMap, 'write-behind', scope.cacheType);
-            meta.description = 'Configures a cache store as write-behind instead of write-through.';
-            meta.type = {TYPE_MODEL_VALUE: 'OBJECT'}; // type Necessary for undoTypeChange check
-            return meta;
-          };
-
           scope.initWriteBehindData = function () {
             if (scope.isNoStoreSelected()) {
               return; // Do nothing as this wb data and meta is not required
             }
 
-            var meta = scope.metadata.currentStore;
-            if (utils.isNullOrUndefined(meta['write-behind'])) {
-              meta['write-behind'] = utils.resolveDescription(scope.metadata, scope.resourceDescriptionMap, 'write-behind', scope.cacheType);
-              meta['write-behind'].description = 'Configures a cache store as write-behind instead of write-through.';
-              meta['write-behind'].type = {TYPE_MODEL_VALUE: 'OBJECT'}; // We need this for undoFieldChange type check
-            }
-
-            if (utils.isNullOrUndefined(scope.store['write-behind'])) {
-              scope.store['write-behind'] = {
-                'WRITE_BEHIND': {
-                  'is-new-node': true
-                }
-              };
+            var storeMeta = scope.metadata.currentStore;
+            if (utils.isNullOrUndefined(storeMeta['write-behind'])) {
+              var meta = utils.resolveDescription(scope.metadata, scope.resourceDescriptionMap, 'write-behind', scope.cacheType);
+              scope.addModelChildToMetaAndStore('write-behind', meta, scope.store, storeMeta);
             }
           };
 
@@ -121,24 +105,24 @@
             delete meta['write-behind']; // Remove so we don't overwrite existing field on merge
             delete meta['property'];
 
-            // Get the required meta and add to store meta
-            var newMeta = {};
             for (var key in meta) {
-              var objectKey = scope.getStoreObjectKey(key);
-              var path = utils.createPath('.', [key, 'model-description', objectKey]);
-              var innerMeta = utils.deepGet(meta, path);
-              var description = innerMeta.description;
-              innerMeta.attributes.description = innerMeta.description;
-              newMeta[key] = innerMeta.attributes;
-
-              // If no existing values for field, create empty objects
-              var store = scope.store;
-              if (utils.isNullOrUndefined(store[key]) || utils.isNullOrUndefined(store[key][objectKey])) {
-                scope.store[key] = {};
-                scope.store[key][objectKey] = {'is-new-node': true};
-              }
+              scope.addModelChildToMetaAndStore(key, meta, scope.store, scope.metadata.currentStore);
             }
-            angular.merge(scope.metadata.currentStore, newMeta);
+          };
+
+          scope.addModelChildToMetaAndStore = function (key, childMeta, store, storeMeta) {
+            var objectKey = scope.getStoreObjectKey(key);
+            var path = utils.createPath('.', [key, 'model-description', objectKey]);
+            var innerMeta = utils.deepGet(childMeta, path);
+            var description = innerMeta.description;
+            innerMeta.attributes.description = innerMeta.description;
+            storeMeta[key] = innerMeta.attributes;
+
+            // If no existing values for field, create empty objects
+            if (utils.isNullOrUndefined(store[key]) || utils.isNullOrUndefined(store[key][objectKey])) {
+              store[key] = {};
+              store[key][objectKey] = {'is-new-node': true};
+            }
           };
 
           scope.getStoreType = function () {

@@ -171,7 +171,7 @@
         map.backup = 'children.backup.model-description.*.attributes';
         map.loader = 'children.loader.model-description.*.attributes';
         map.authorization = 'children.security.model-description.*.children.authorization.model-description.*.attributes';
-        map['write-behind'] = 'children.store.model-description.*.children.write-behind.model-description.WRITE_BEHIND.attributes';
+        map['write-behind'] = 'children.store.model-description.*.children';
         map['leveldb-children'] = 'children.leveldb-store.model-description.*.children';
       },
 
