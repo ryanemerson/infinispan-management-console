@@ -125,6 +125,87 @@
             }
           };
 
+          scope.updateStoreAttributesAndMeta = function (newStoreType, oldStoreType) {
+            var noPrevStore = utils.isNotNullOrUndefined(oldStoreType) && oldStoreType === 'None';
+            var oldMeta = scope.metadata.currentStore;
+            var newMeta = scope.resolveDescription(newStoreType);
+
+            if (!noPrevStore) {
+              angular.forEach(scope.store, function (value, key) {
+                if (customStoreFields.indexOf(key) < 0) {
+                  if (key !== 'write-behind' && !newMeta.hasOwnProperty(key)) {
+                    delete scope.store[key];
+                  } else if (utils.isNotNullOrUndefined(oldMeta)) {
+                    newMeta[key] = oldMeta[key];
+                  }
+                }
+              });
+              scope.data[oldStoreType] = null;
+            }
+            scope.fields = storeFields[newStoreType];
+            scope.metadata.currentStore = newMeta;
+            scope.initWriteBehindData();
+            scope.initLevelDbChildrenAndMeta(newStoreType);
+          };
+
+          scope.cleanMetadataAndPrevValues = function () {
+            angular.forEach(scope.metadata.currentStore, function (value, key) {
+              if (utils.isObject(value)) {
+                scope.makeFieldClean(value);
+                scope.prevData[key] = angular.copy(scope.store[key]);
+              }
+            });
+
+            scope.prevData['write-behind'] = angular.copy(scope.store['write-behind']);
+            scope.prevData['store-type'] = scope.data['store-type'];
+            scope.metadata['store-type'] = {
+              uiModified: false,
+              style: null
+            };
+            scope.data['store-original-type'] = scope.prevData['store-type'];
+          };
+
+          scope.updateStoreType = function (previousType) {
+            var storeType = scope.data['store-type'];
+            var previousStore = scope.store;
+            var storeTypeChanged = scope.prevData['store-type'] !== storeType;
+
+            if (storeTypeChanged) {
+              scope.makeFieldDirty(scope.metadata['store-type'], 'store-type', true);
+            } else {
+              scope.makeFieldClean(scope.metadata['store-type'], 'store-type', true);
+            }
+
+            scope.storeView = scope.getStoreView(storeType);
+            if (scope.isNoStoreSelected()) {
+              scope.metadata.currentStore = {};
+              return;
+            }
+
+            var storeKey = scope.getStoreObjectKey(storeType);
+            scope.updateStoreAttributesAndMeta(storeType, previousType);
+            scope.data[storeType] = {};
+            scope.data[storeType][storeKey] = utils.isNotNullOrUndefined(previousStore) ? previousStore : {};
+            scope.data['is-new-node'] = storeTypeChanged;
+            scope.store = scope.data[storeType][storeKey];
+            scope.store['is-new-node'] = storeTypeChanged;
+          };
+
+          scope.undoStoreTypeChange = function () {
+            var currentStoreType = scope.data['store-type'];
+            var originalStoreType = scope.prevData['store-type'];
+            var originalStoreKey = scope.getStoreObjectKey(originalStoreType);
+
+            scope.data[originalStoreType] = {};
+            scope.data[originalStoreType][originalStoreKey] = originalStoreType === 'None' ? {} : scope.store;
+            scope.data['store-type'] = originalStoreType;
+            scope.data['is-new-node'] = false;
+            scope.storeView = scope.getStoreView(originalStoreType);
+
+            scope.updateStoreAttributesAndMeta(originalStoreType, currentStoreType);
+            scope.makeFieldClean(scope.metadata['store-type'], 'store-type', true);
+          };
+
           scope.getStoreType = function () {
             var array = scope.metadata.storeTypes;
             for (var i = 0; i < array.length; i++) {
@@ -139,6 +220,36 @@
               }
             }
             return 'None';
+          };
+
+          scope.getStoreView = function (storeType) {
+            var viewDir = 'components/directives/cache/store/views/';
+            switch (storeType) {
+              case 'None':
+                return null;
+              case 'string-keyed-jdbc-store':
+              case 'binary-keyed-jdbc-store':
+              case 'mixed-keyed-jdbc-store':
+                return viewDir + 'jdbc-store.html';
+              default:
+                return viewDir + storeType + '.html';
+            }
+          };
+
+          scope.getCommonStoreCheckboxes = function () {
+            var boxes = [];
+            var genericStoreMeta = scope.resolveDescription('store');
+            angular.forEach(genericStoreMeta, function (value, key) {
+              var type = value['type'];
+              var deprecated = utils.isNotNullOrUndefined(value['deprecated']);
+              if (utils.isNotNullOrUndefined(type)) {
+                var modelType = type['TYPE_MODEL_VALUE'];
+                if (utils.isNotNullOrUndefined(modelType) && modelType === 'BOOLEAN' && !deprecated) {
+                  boxes.push(key);
+                }
+              }
+            });
+            return boxes;
           };
 
           scope.isNoStoreSelected = function () {
@@ -168,79 +279,6 @@
 
           scope.hasBinaryKeyedTable = function () {
             return utils.isNotNullOrUndefined(scope.data) && utils.isNotNullOrUndefined(scope.data['binary-keyed-table']);
-          };
-
-          scope.getCommonStoreCheckboxes = function () {
-            var boxes = [];
-            var genericStoreMeta = scope.resolveDescription('store');
-            angular.forEach(genericStoreMeta, function (value, key) {
-              var type = value['type'];
-              var deprecated = utils.isNotNullOrUndefined(value['deprecated']);
-              if (utils.isNotNullOrUndefined(type)) {
-                var modelType = type['TYPE_MODEL_VALUE'];
-                if (utils.isNotNullOrUndefined(modelType) && modelType === 'BOOLEAN' && !deprecated) {
-                  boxes.push(key);
-                }
-              }
-            });
-            return boxes;
-          };
-
-          scope.updateStoreType = function (previousType) {
-            var storeType = scope.data['store-type'];
-            var previousStore = scope.store;
-            var storeTypeChanged = scope.prevData['store-type'] !== storeType;
-
-            if (storeTypeChanged) {
-              scope.makeFieldDirty(scope.metadata['store-type'], 'store-type', true);
-            } else {
-              scope.makeFieldClean(scope.metadata['store-type'], 'store-type', true);
-            }
-
-            scope.storeView = scope.getStoreView(storeType);
-            if (scope.isNoStoreSelected()) {
-              scope.metadata.currentStore = {};
-              return;
-            }
-
-            var storeKey = scope.getStoreObjectKey(storeType);
-            scope.updateStoreAttributesAndMeta(storeType, previousType, storeTypeChanged);
-            scope.data[storeType] = {};
-            scope.data[storeType][storeKey] = utils.isNotNullOrUndefined(previousStore) ? previousStore : {};
-            scope.data['is-new-node'] = storeTypeChanged;
-            scope.store = scope.data[storeType][storeKey];
-            scope.store['is-new-node'] = storeTypeChanged;
-          };
-
-          scope.getStoreView = function (storeType) {
-          var viewDir = 'components/directives/cache/store/views/';
-            switch (storeType) {
-              case 'None':
-                return null;
-              case 'string-keyed-jdbc-store':
-              case 'binary-keyed-jdbc-store':
-              case 'mixed-keyed-jdbc-store':
-                return viewDir + 'jdbc-store.html';
-              default:
-                return viewDir + storeType + '.html';
-            }
-          };
-
-          scope.cleanMetadataAndPrevValues = function () {
-            angular.forEach(scope.metadata.currentStore, function (value, key) {
-              if (utils.isObject(value)) {
-                scope.makeFieldClean(value);
-                scope.prevData[key] = angular.copy(scope.store[key]);
-              }
-            });
-
-            scope.prevData['write-behind'] = angular.copy(scope.store['write-behind']);
-            scope.prevData['store-type'] = scope.data['store-type'];
-            scope.metadata['store-type'] = {
-              uiModified: false,
-              style: null
-            };
-            scope.data['store-original-type'] = scope.prevData['store-type'];
           };
 
           scope.fieldValueModified = function (field) {
@@ -314,44 +352,6 @@
             if (meta.type.TYPE_MODEL_VALUE === 'OBJECT') {
               scope.makeAllFieldsClean(meta);
             }
-          };
-
-          scope.undoTypeChange = function () {
-            var currentStoreType = scope.data['store-type'];
-            var originalStoreType = scope.prevData['store-type'];
-            var originalStoreKey = scope.getStoreObjectKey(originalStoreType);
-
-            scope.data[originalStoreType] = {};
-            scope.data[originalStoreType][originalStoreKey] = originalStoreType === 'None' ? {} : scope.store;
-            scope.data['store-type'] = originalStoreType;
-            scope.data['is-new-node'] = false;
-            scope.storeView = scope.getStoreView(originalStoreType);
-
-            scope.updateStoreAttributesAndMeta(originalStoreType, currentStoreType);
-            scope.makeFieldClean(scope.metadata['store-type'], 'store-type', true);
-          };
-
-          scope.updateStoreAttributesAndMeta = function (newStoreType, oldStoreType, storeTypeChanged) {
-            var noPrevStore = utils.isNotNullOrUndefined(oldStoreType) && oldStoreType === 'None';
-            var oldMeta = scope.metadata.currentStore;
-            var newMeta = scope.resolveDescription(newStoreType);
-
-            if (!noPrevStore) {
-              angular.forEach(scope.store, function (value, key) {
-                if (customStoreFields.indexOf(key) < 0) {
-                  if (key !== 'write-behind' && !newMeta.hasOwnProperty(key)) {
-                    delete scope.store[key];
-                  } else if (utils.isNotNullOrUndefined(oldMeta)) {
-                    newMeta[key] = oldMeta[key];
-                  }
-                }
-              });
-              scope.data[oldStoreType] = null;
-            }
-            scope.fields = storeFields[newStoreType];
-            scope.metadata.currentStore = newMeta;
-            scope.initWriteBehindData();
-            scope.initLevelDbChildrenAndMeta(newStoreType, storeTypeChanged);
           };
 
           scope.getStyle = function (field) {
