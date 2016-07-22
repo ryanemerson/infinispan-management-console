@@ -49,7 +49,8 @@
             scope.data['store-type'] = storeType;
             scope.data['is-new-node'] = scope.isNoStoreSelected();
             scope.fields = storeFields[storeType];
-            scope.metadata.currentStore = scope.isNoStoreSelected() ? {} : scope.resolveDescription(storeType);
+            // Copy so that scope.metadata.currentStore is just reloaded when this directive is initialised
+            scope.metadata.currentStore = scope.isNoStoreSelected() ? {} : angular.copy(scope.resolveDescription(storeType));
             scope.store = scope.getStoreObject();
             scope.store['is-new-node'] = scope.isNoStoreSelected();
             scope.storeView = scope.getStoreView(storeType);
@@ -79,7 +80,6 @@
               scope.internalController = {};
             }
             scope.internalController.requiresRestart = scope.requiresRestart;
-            scope.internalController.cleanMetadata = scope.cleanMetadataAndPrevValues;
           };
 
           scope.initWriteBehindData = function (typeHasChanged) {
@@ -89,7 +89,7 @@
 
             var storeMeta = scope.metadata.currentStore;
             if (utils.isNullOrUndefined(storeMeta['write-behind'])) {
-              var meta = utils.resolveDescription(scope.metadata, scope.resourceDescriptionMap, 'write-behind', scope.cacheType);
+              var meta = angular.copy(utils.resolveDescription(scope.metadata, scope.resourceDescriptionMap, 'write-behind', scope.cacheType));
               scope.addModelChildToMetaAndStore('write-behind', meta, scope.store, storeMeta, typeHasChanged);
             }
 
@@ -102,7 +102,7 @@
             if (scope.isNoStoreSelected() || storeType !== 'leveldb-store') {
               return;
             }
-            var meta = utils.resolveDescription(scope.metadata, scope.resourceDescriptionMap, 'leveldb-children', scope.cacheType);
+            var meta = angular.copy(utils.resolveDescription(scope.metadata, scope.resourceDescriptionMap, 'leveldb-children', scope.cacheType));
             delete meta['write-behind']; // Remove so we don't overwrite existing field on merge
             delete meta['property'];
 
@@ -143,7 +143,7 @@
           scope.updateStoreAttributesAndMeta = function (newStoreType, oldStoreType) {
             var noPrevStore = utils.isNotNullOrUndefined(oldStoreType) && oldStoreType === 'None';
             var oldMeta = scope.metadata.currentStore;
-            var newMeta = scope.resolveDescription(newStoreType);
+            var newMeta = angular.copy(scope.resolveDescription(newStoreType));
 
             if (!noPrevStore) {
               angular.forEach(scope.store, function (value, key) {
