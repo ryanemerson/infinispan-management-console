@@ -3,7 +3,6 @@
 
   var module = angular.module('ispn.directives.cache.cachestore', ['ispn.services.utils']);
 
-// TODO change cachestore to cacheStore so that the directive is called as cache-store
   module.directive('cachestore', ['utils', function (utils) {
     var customStoreFields = ['is-new-node', 'store-original-type'];
     // These are the default fields which are loaded for each store in the order of the array
