@@ -237,8 +237,6 @@
             for (var i = 0; i < array.length; i++) {
               var store = scope.data[array[i]];
               if (utils.isNotNullOrUndefined(store)) {
-              if (array[i] === undefined) {
-              }
                 var storeObject = store[scope.getStoreObjectKey(array[i])];
                 if (Object.keys(storeObject).length > 1) {
                   return array[i];
