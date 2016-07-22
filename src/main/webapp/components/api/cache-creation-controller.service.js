@@ -141,7 +141,7 @@ angular.module('managementConsole.api')
         if (utils.isNotNullOrUndefined(configurationElement)) {
           // ISPN-6587: Exclude type from the exclusion list for EVICTION objects, as EVICTION.type exists.
           var exclusionList = ['is-new-node', 'store-type', 'store-original-type'];
-          if (utils.isNullOrUndefined(configurationElement['EVICTION']) || utils.isNullOrUndefined(configurationElement['COMPRESSION'])) {
+          if (utils.isNullOrUndefined(configurationElement['EVICTION']) && utils.isNullOrUndefined(configurationElement['COMPRESSION'])) {
             exclusionList.push('type');
           }
           this.addNodeComposite(steps, address, configurationElement, exclusionList, true);
@@ -222,7 +222,7 @@ angular.module('managementConsole.api')
           // ISPN-6587: Exclude type from the exclusion list for EVICTION objects, as EVICTION.type exists.
           // Same for LevelDB->Compression. TODO need a better way to make exceptions
           var exclusionList = ['is-new-node', 'store-type', 'store-original-type'];
-          if (utils.isNullOrUndefined(configurationElement['EVICTION']) || utils.isNullOrUndefined(configurationElement['COMPRESSION'])) {
+          if (utils.isNullOrUndefined(configurationElement['EVICTION']) && utils.isNullOrUndefined(configurationElement['COMPRESSION'])) {
             exclusionList.push('type');
           }
           this.addNodeComposite(steps, address, configurationElement, exclusionList);

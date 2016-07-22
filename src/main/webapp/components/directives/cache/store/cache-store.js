@@ -109,6 +109,12 @@
             for (var key in meta) {
               scope.addModelChildToMetaAndStore(key, meta, scope.store, scope.metadata.currentStore);
             }
+
+            // Init levelDb select ng-models. Can't use store object directly as it does not allow existing values to
+            // be the initially selected option.
+            scope.levelDb = {};
+            scope.levelDb.impl = utils.deepGet(scope.store, 'implementation.IMPLEMENTATION');
+            scope.levelDb.comp = utils.deepGet(scope.store, 'compression.COMPRESSION');
           };
 
           scope.addModelChildToMetaAndStore = function (key, childMeta, store, storeMeta) {
@@ -348,7 +354,7 @@
           };
 
           scope.fieldChangeRequiresRestart = function (field, parent) {
-            var fieldMeta = scope.getFieldMetaObject(field, parent)
+            var fieldMeta = scope.getFieldMetaObject(field, parent);
             return utils.isNotNullOrUndefined(fieldMeta) && fieldMeta['restart-required'] !== 'no-services';
           };
 
@@ -377,12 +383,7 @@
           };
 
           scope.getStyle = function (field, parent) {
-            var fieldMeta;
-            if (utils.isNotNullOrUndefined(parent)) {
-              fieldMeta = scope.metadata.currentStore[parent, field];
-            } else {
-              fieldMeta = scope.metadata.hasOwnProperty(field) ? scope.metadata[field] : scope.metadata.currentStore[field];
-            }
+            var fieldMeta = scope.getFieldMetaObject(field, parent);
             return utils.isNotNullOrUndefined(fieldMeta) ? fieldMeta.style : '';
           };
 
@@ -425,18 +426,31 @@
             }
           };
 
-          // There must be a better way to achieve this!
-          // TODO this still does not work for already selected values!!!!!
-          scope.getOptions = function (field, parent) {
-            var options = [];
-            var allowed = scope.getFieldMetaObject(field, parent).allowed;
-            for (var i = 0; i < allowed.length; i++) {
-              options.push({
-                id: allowed[i],
-                label: allowed[i]
-              });
+          // Different to normal fields as we have to ensure that only the actual ng-model value is changed
+          scope.undoLevelDbSelectChange = function (field, parent) {
+            var path = utils.createPath('.', [parent, scope.getStoreObjectKey(parent)]);
+            var storeObject = utils.deepGet(scope.store, path);
+            var prevObject = utils.deepGet(scope.prevData, path);
+            storeObject[field] = angular.copy(prevObject[field]);
+            scope.store[field] = angular.copy(scope.prevData[field]);
+
+            var meta = scope.getFieldMetaObject(field, parent);
+            scope.makeFieldClean(meta, field, false);
+          };
+
+          scope.levelDbSelectModified = function (field, parent) {
+            var path = utils.createPath('.', [parent, scope.getStoreObjectKey(parent)]);
+            var storeObject = utils.deepGet(scope.store, path);
+            var prevObject = utils.deepGet(scope.prevData, path);
+            var original = utils.isNotNullOrUndefined(prevObject) ? prevObject[field] : undefined;
+            var latest = storeObject[field];
+
+            var meta = scope.getFieldMetaObject(field, parent);
+            if ((utils.isNullOrUndefined(original) && !latest) || original === latest) {
+              scope.makeFieldClean(meta, field, true);
+            } else {
+              scope.makeFieldDirty(meta, field, true);
             }
-            return options;
           };
 
           // Initialise scope variables

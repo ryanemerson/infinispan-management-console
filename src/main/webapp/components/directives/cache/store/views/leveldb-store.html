@@ -24,18 +24,17 @@
   <label class="col-md-4 control-label">Implementation</label>
 
   <div class="col-md-4">
-
     <select class="form-control" ng-style="getStyle('implementation', 'implementation')"
-            ng-model="store[implementation][IMPLEMENTATION][implementation]"
-            ng-options="item as item.label for item in getOptions('implementation', 'implementation') track by item.id"
-            ng-change="fieldValueModified('implementation', 'implementation')"/>
+            ng-model="levelDb.impl.implementation"
+            ng-options="o as o for o in getFieldMetaObject('implementation', 'implementation').allowed"
+            ng-change="levelDbSelectModified('implementation', 'implementation')"/>
   </div>
 
   <div class="col-md-4 pull-left">
     <i class="fa fa-info-circle" tooltip="{{getFieldMetaObject('implementation', 'implementation').description}}"
        tooltip-trigger tooltip-animation="true" tooltip-placement="top"></i>
     <span ng-if="isFieldValueModified('implementation', 'implementation')">
-      <a ng-click="undoFieldChange('implementation', 'implementation')">(Undo)</a>
+      <a ng-click="undoLevelDbSelectChange('implementation', 'implementation')">(Undo)</a>
       <span ng-if="fieldChangeRequiresRestart('implementation', 'implementation')">Restart needed</span>
     </span>
   </div>
@@ -47,16 +46,16 @@
 
   <div class="col-md-4">
     <select class="form-control" ng-style="getStyle('type', 'compression')"
-            ng-model="store[compression][COMPRESSION][type]"
-            ng-options="item as item.label for item in getOptions('type', 'compression') track by item.id"
-            ng-change="fieldValueModified('type', 'compression')"/>
+            ng-model="levelDb.comp.type"
+            ng-options="o as o for o in getFieldMetaObject('type', 'compression').allowed"
+            ng-change="levelDbSelectModified('type', 'compression')"/>
   </div>
 
   <div class="col-md-4 pull-left">
     <i class="fa fa-info-circle" tooltip="{{getFieldMetaObject('type', 'compression').description}}"
        tooltip-trigger tooltip-animation="true" tooltip-placement="top"></i>
     <span ng-if="isFieldValueModified('type', 'compression')">
-      <a ng-click="undoFieldChange('type', 'compression')">(Undo)</a>
+      <a ng-click="undoLevelDbSelectChange('type', 'compression')">(Undo)</a>
       <span ng-if="fieldChangeRequiresRestart('type', 'compression')">Restart needed</span>
     </span>
   </div>
