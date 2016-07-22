@@ -63,7 +63,6 @@
               scope.data['store-type'] = 'None';
             }
 
-            scope.prevData = {};
             scope.cleanMetadataAndPrevValues();
           };
 
@@ -173,6 +172,7 @@
           };
 
           scope.cleanMetadataAndPrevValues = function () {
+            scope.prevData = {};
             angular.forEach(scope.metadata.currentStore, function (value, key) {
               if (utils.isObject(value)) {
                 scope.makeFieldClean(value);
@@ -195,7 +195,7 @@
 
             if (storeTypeChanged) {
               scope.makeFieldDirty(scope.metadata['store-type'], 'store-type', true);
-              // scope.$emit('configurationFieldDirty', storeType);
+              scope.$emit('configurationFieldDirty', storeType);
             } else {
               scope.makeFieldClean(scope.metadata['store-type'], 'store-type', true);
             }
