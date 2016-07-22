@@ -146,15 +146,17 @@
             var newMeta = angular.copy(scope.resolveDescription(newStoreType));
 
             if (!noPrevStore) {
-              angular.forEach(scope.store, function (value, key) {
-                if (customStoreFields.indexOf(key) < 0) {
-                  if (key !== 'write-behind' && !newMeta.hasOwnProperty(key)) {
-                    delete scope.store[key];
-                  } else if (utils.isNotNullOrUndefined(oldMeta)) {
-                    newMeta[key] = oldMeta[key];
+              if (utils.isNotNullOrUndefined(newMeta)) {
+                angular.forEach(scope.store, function (value, key) {
+                  if (customStoreFields.indexOf(key) < 0) {
+                    if (key !== 'write-behind' && !newMeta.hasOwnProperty(key)) {
+                      delete scope.store[key];
+                    } else if (utils.isNotNullOrUndefined(oldMeta)) {
+                      newMeta[key] = oldMeta[key];
+                    }
                   }
-                }
-              });
+                });
+              }
               scope.data[oldStoreType] = null;
             }
             scope.fields = storeFields[newStoreType];
@@ -210,13 +212,16 @@
           scope.undoStoreTypeChange = function () {
             var currentStoreType = scope.data['store-type'];
             var originalStoreType = scope.prevData['store-type'];
-            var originalStoreKey = scope.getStoreObjectKey(originalStoreType);
+            var nonNullStore = originalStoreType !== 'None';
 
-            scope.data[originalStoreType] = {};
-            scope.data[originalStoreType][originalStoreKey] = originalStoreType === 'None' ? {} : scope.store;
+            if (nonNullStore) {
+              var originalStoreKey = scope.getStoreObjectKey(originalStoreType);
+              scope.data[originalStoreType] = {};
+              scope.data[originalStoreType][originalStoreKey] = scope.store;
+              scope.storeView = scope.getStoreView(originalStoreType);
+            }
             scope.data['store-type'] = originalStoreType;
-            scope.data['is-new-node'] = false;
-            scope.storeView = scope.getStoreView(originalStoreType);
+            scope.data['is-new-node'] = !nonNullStore;
 
             scope.updateStoreAttributesAndMeta(originalStoreType, currentStoreType);
             scope.makeFieldClean(scope.getFieldMetaObject('store-type'), 'store-type', true);
