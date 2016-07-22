@@ -159,6 +159,21 @@ angular.module('managementConsole.api')
         var objectKey = storeType.toUpperCase().replace(/-/g, '_');
         configuration[storeType][objectKey]['required-node'] = true;
         this.createHelper(steps, address.concat(storeType, objectKey), configuration[storeType]);
+
+        // Add all children objects
+        var store = configuration[storeType][objectKey];
+        if (utils.isNotNullOrUndefined(store)) {
+          for (var key in store) {
+            var nestedObject = store[key];
+            if (utils.isObject(nestedObject)) {
+              var nestedKey = key.toUpperCase().replace(/-/g, '_');
+              if (utils.isNotNullOrUndefined(nestedObject[nestedKey])) {
+                var nestedAddress = address.concat(storeType, objectKey, key, nestedKey);
+                this.updateHelper(steps, nestedAddress, nestedObject);
+              }
+            }
+          }
+        }
       };
 
       /**
