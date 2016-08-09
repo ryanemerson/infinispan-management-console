@@ -22,8 +22,8 @@ function browserSyncInit(baseDir, files, browser) {
 
 gulp.task('serve', ['build', 'watch'], function () {
   browserSyncInit('dist',
-    ['dist/**/*.html',
-      'dist/**/*.css',
-      'dist/**/*.js',
+    ['.tmp/**/*.html',
+     '.tmp/**/*.css',
+     '.tmp/**/*.js',
     ]);
 });
