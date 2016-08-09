@@ -39,8 +39,9 @@ gulp.task('styles', function() {
       ]
     }))
     .on('error', handleError)
-    .pipe(gulp.dest(paths.dist))
     .pipe(gulp.dest(paths.test))
+    .pipe(plugins.cleanCss())
+    .pipe(gulp.dest(paths.dist))
     .pipe(plugins.size());
 });
 
