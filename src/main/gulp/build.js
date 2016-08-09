@@ -13,14 +13,14 @@ var paths = {
   languages: 'src/main/assets/languages/*',
   index: 'src/main/webapp/index.html',
   partials: ['src/main/webapp/**/*.html', '!src/main/webapp/index.html'],
-  buildDir: '.tmp',
-  distDir: 'dist',
+  test: '.tmp',
+  dist: 'dist',
   components: '/built_components',
   componentsDeep: '/built_components/**'
 };
 
 var filters = {
-  build: plugins.filter(['**', '!*/*.{md,json,gzip,map}']),
+  test: plugins.filter(['**', '!*/*.{md,json,gzip,map}']),
   dist: plugins.filter(['**', '*/*.{min.js,css,map}', '*/{dist,css,less,min.js,fonts,release,components/font-awesome}/**']),
   fonts: plugins.filter(['**', '**/*.{eot,svg,ttf,woff}'])
 };
@@ -35,33 +35,32 @@ gulp.task('styles', function() {
   return gulp.src('src/main/webapp/management-console.less')
     .pipe(plugins.less({
       paths: [
-        paths.distDir + paths.components
+        paths.dist + paths.components
       ]
     }))
     .on('error', handleError)
-    .pipe(plugins.autoprefixer('last 1 version'))
-    .pipe(gulp.dest(paths.distDir))
-    .pipe(gulp.dest(paths.buildDir))
+    .pipe(gulp.dest(paths.dist))
+    .pipe(gulp.dest(paths.test))
     .pipe(plugins.size());
 });
 
 gulp.task('partials', function() {
   return gulp.src(paths.partials)
-    .pipe(gulp.dest(paths.distDir))
-    .pipe(gulp.dest(paths.buildDir))
+    .pipe(gulp.dest(paths.dist))
+    .pipe(gulp.dest(paths.test))
     .pipe(plugins.size());
 });
 
 gulp.task('index', function() {
   return gulp.src(paths.index)
-    .pipe(gulp.dest(paths.distDir))
-    .pipe(gulp.dest(paths.buildDir))
+    .pipe(gulp.dest(paths.dist))
+    .pipe(gulp.dest(paths.test))
     .pipe(plugins.size());
 });
 
 gulp.task('languages', function() {
-  var destPath = paths.distDir + '/assets/languages';
-  var buildPath = paths.buildDir + '/assets/languages';
+  var destPath = paths.dist + '/assets/languages';
+  var buildPath = paths.test + '/assets/languages';
 
   return gulp.src(paths.languages)
     .pipe(gulp.dest(destPath))
@@ -70,8 +69,8 @@ gulp.task('languages', function() {
 });
 
 gulp.task('images', function() {
-  var destPath = paths.distDir + '/assets/images';
-  var buildPath = paths.buildDir + '/assets/images';
+  var destPath = paths.dist + '/assets/images';
+  var buildPath = paths.test + '/assets/images';
 
   return gulp.src(paths.images)
     .pipe(plugins.cache(plugins.imagemin({
@@ -86,20 +85,20 @@ gulp.task('images', function() {
 
 gulp.task('fonts', function() {
   //grab everything in built_components dir, find all filtered files and copy them
-  return gulp.src(paths.distDir + paths.componentsDeep)
+  return gulp.src(paths.dist + paths.componentsDeep)
     .pipe(filters.fonts)
-    .pipe(gulp.dest(paths.distDir + paths.componentsDeep))
-    .pipe(gulp.dest(paths.buildDir + paths.componentsDeep))
+    .pipe(gulp.dest(paths.dist + paths.componentsDeep))
+    .pipe(gulp.dest(paths.test + paths.componentsDeep))
     .pipe(plugins.size());
 });
 
 // Filters not working
-gulp.task('copy-comps', function () {
+gulp.task('components', function () {
   return gulp.src(plugins.npmFiles(), { base: './node_modules' })
-    .pipe(filters.build)
-    .pipe(gulp.dest(paths.buildDir + paths.components))
-    .pipe(filters.dist)
-    .pipe(gulp.dest(paths.distDir + paths.components));
+    // .pipe(filters.test)
+    .pipe(gulp.dest(paths.test + paths.components))
+    // .pipe(filters.dist)
+    .pipe(gulp.dest(paths.dist + paths.components));
 });
 
 gulp.task('scripts', function() {
@@ -107,19 +106,19 @@ gulp.task('scripts', function() {
     .pipe(plugins.jshint())
     .pipe(plugins.jshint.reporter('jshint-stylish'))
     .pipe(plugins.concat('main.js'))
-    .pipe(gulp.dest(paths.buildDir))
+    .pipe(gulp.dest(paths.test))
     .pipe(plugins.rename({suffix: '.min'}))
     .pipe(plugins.ngAnnotate())
     .pipe(plugins.uglify())
-    .pipe(gulp.dest(paths.distDir));
+    .pipe(gulp.dest(paths.dist));
 });
 
 gulp.task('clean', function () {
-  return plugins.del([paths.buildDir, paths.distDir]);
+  return plugins.del([paths.test, paths.dist]);
 });
 
 gulp.task('build', ['clean'], function (cb) {
-  plugins.runSequence('copy-comps', [
+  plugins.runSequence('components', [
   'scripts',
   'fonts',
   'images',
