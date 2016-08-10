@@ -12,10 +12,10 @@ angular.module('managementConsole')
     'nodeCreateController',
     'view',
     'utils',
-    '$modal',
-    function ($scope, $stateParams, $state, $timeout, $interval, $q, modelController, nodeCreateController, view, utils, $modal) {
+    '$uibModal',
+    function ($scope, $stateParams, $state, $timeout, $interval, $q, modelController, nodeCreateController, view, utils, $uibModal) {
 
-      var AddNodeModalInstanceCtrl = function ($scope, utils, $modalInstance, $state, modelController, nodeCreateController) {
+      var AddNodeModalInstanceCtrl = function ($scope, utils, $uibModalInstance, $state, modelController, nodeCreateController) {
 
         $scope.host = $scope.hosts[0];
         $scope.serverName = '';
@@ -24,7 +24,7 @@ angular.module('managementConsole')
 
         $scope.createServerNode = function () {
           var modalBoot;
-          $modalInstance.close();
+          $uibModalInstance.close();
           var address = ['host', $scope.host, 'server-config'];
           address.push($scope.serverName);
           nodeCreateController.createServerNode(address, true, $scope.cluster.name, 'clustered-sockets', $scope.portOffset).then(function () {
@@ -45,17 +45,17 @@ angular.module('managementConsole')
         };
 
         $scope.cancel = function () {
-          $modalInstance.dismiss('cancel');
+          $uibModalInstance.dismiss('cancel');
         };
 
       };
 
 
-      var ClusterModalInstanceCtrl = function ($scope, $modalInstance, $stateParams) {
+      var ClusterModalInstanceCtrl = function ($scope, $uibModalInstance, $stateParams) {
         $scope.clusterName = $stateParams.clusterName;
 
         $scope.cancelModal = function () {
-          $modalInstance.dismiss('cancel');
+          $uibModalInstance.dismiss('cancel');
         };
 
       };
@@ -108,7 +108,7 @@ angular.module('managementConsole')
       };
 
       $scope.openModal = function () {
-        $modal.open({
+        $uibModal.open({
           templateUrl: 'cluster-nodes/add-node-modal.html',
           controller: AddNodeModalInstanceCtrl,
           scope: $scope
@@ -117,7 +117,7 @@ angular.module('managementConsole')
 
       $scope.openClusterModal = function (mode) {
         $scope.clusterStartStopMode = mode;
-        $modal.open({
+        $uibModal.open({
           templateUrl: 'cluster-nodes/confirmation-node-modal.html',
           controller: ClusterModalInstanceCtrl,
           scope: $scope
@@ -129,7 +129,7 @@ angular.module('managementConsole')
       };
 
       $scope.openBootingModal = function () {
-        return $modal.open({
+        return $uibModal.open({
           templateUrl: 'components/dialogs/booting.html',
           scope: $scope
         });

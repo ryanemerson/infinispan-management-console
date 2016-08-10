@@ -6,10 +6,10 @@ angular.module('managementConsole')
     '$state',
     '$stateParams',
     'utils',
-    '$modal',
+    '$uibModal',
     'modelController',
     'cacheContainerConfigurationService',
-    function ($scope, $state, $stateParams, utils, $modal, modelController, cacheContainerConfigurationService) {
+    function ($scope, $state, $stateParams, utils, $uibModal, modelController, cacheContainerConfigurationService) {
       if (!$stateParams.clusterName && !$stateParams.cacheName) {
         $state.go('error404');
       }
@@ -34,17 +34,17 @@ angular.module('managementConsole')
       $scope.openConfirmationModal = function (schemaName) {
         $scope.schemaName = schemaName;
 
-        var confirmRemoveController= function ($scope, $state, $modalInstance) {
+        var confirmRemoveController= function ($scope, $state, $uibModalInstance) {
             $scope.confirmRemoveSchema = function () {
               $scope.removeSchema(schemaName);
             };
 
             $scope.cancelModal = function () {
-              $modalInstance.close();
+              $uibModalInstance.close();
             };
         };
 
-        $modal.open({
+        $uibModal.open({
           templateUrl: 'cache-container/configuration-schemas/confirmation-delete-schema-modal.html',
           controller:   confirmRemoveController,
           scope: $scope
@@ -52,7 +52,7 @@ angular.module('managementConsole')
 
       };
 
-      var editSchemaModalInstanceCtrl = function ($scope, $state, $modalInstance, currentCluster, modelController, schema) {
+      var editSchemaModalInstanceCtrl = function ($scope, $state, $uibModalInstance, currentCluster, modelController, schema) {
 
           $scope.schema = schema ;
           $scope.successSchemaDeploy = false;
@@ -60,7 +60,7 @@ angular.module('managementConsole')
           $scope.errorDescription  = null;
 
           $scope.cancel = function () {
-            $modalInstance.close();
+            $uibModalInstance.close();
           };
 
           // Schema creation
@@ -79,7 +79,7 @@ angular.module('managementConsole')
                 function() {
                   $scope.errorExecuting = false;
                   $scope.successExecuteOperation = true;
-                  $modalInstance.close();
+                  $uibModalInstance.close();
                 },
                 function(reason) {
                   $scope.errorExecuting = true;
@@ -94,7 +94,7 @@ angular.module('managementConsole')
         schema = {editing:false};
       }
 
-      var d = $modal.open({
+      var d = $uibModal.open({
         templateUrl: 'cache-container/configuration-schemas/edit-schema-modal.html',
         controller: editSchemaModalInstanceCtrl,
         scope: $scope,

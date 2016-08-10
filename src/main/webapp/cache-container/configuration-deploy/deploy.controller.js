@@ -6,15 +6,15 @@ angular.module('managementConsole')
     '$q',
     '$state',
     '$stateParams',
-    '$modal',
+    '$uibModal',
     'utils',
     'modelController',
     'cacheContainerConfigurationService',
     'deployments',
     'deployed',
-    function ($scope, $q, $state, $stateParams, $modal, utils, modelController, cacheContainerConfigurationService, deployments, deployed) {
+    function ($scope, $q, $state, $stateParams, $uibModal, utils, modelController, cacheContainerConfigurationService, deployments, deployed) {
 
-      var UploadArtifactModalInstanceCtrl = function ($scope, $state, $modalInstance) {
+      var UploadArtifactModalInstanceCtrl = function ($scope, $state, $uibModalInstance) {
 
         $scope.fileToUpload = null;
         $scope.uploadAndDeployArtifact = function (){
@@ -44,11 +44,11 @@ angular.module('managementConsole')
         };
 
         $scope.cancelModal = function () {
-          $modalInstance.close();
+          $uibModalInstance.close();
         };
       };
 
-      var DeployArtifactModalInstanceCtrl = function ($scope, $state, $modalInstance) {
+      var DeployArtifactModalInstanceCtrl = function ($scope, $state, $uibModalInstance) {
 
         $scope.confirmDeployArtifact = function (){
           $scope.deployArtifact($scope.artifact);
@@ -63,7 +63,7 @@ angular.module('managementConsole')
         };
 
         $scope.cancelModal = function () {
-          $modalInstance.close();
+          $uibModalInstance.close();
         };
       };
 
@@ -133,7 +133,7 @@ angular.module('managementConsole')
 
       $scope.openUploadModal = function () {
 
-        $modal.open({
+        $uibModal.open({
           templateUrl: 'cache-container/configuration-deploy/upload-artifact-modal.html',
           controller: UploadArtifactModalInstanceCtrl,
           scope: $scope
@@ -144,7 +144,7 @@ angular.module('managementConsole')
         $scope.artifact = artifact;
         $scope.mode = mode;
 
-        $modal.open({
+        $uibModal.open({
           templateUrl: 'cache-container/configuration-deploy/confirmation-modal.html',
           controller: DeployArtifactModalInstanceCtrl,
           scope: $scope

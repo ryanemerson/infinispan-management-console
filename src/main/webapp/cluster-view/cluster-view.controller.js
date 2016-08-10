@@ -11,9 +11,9 @@ var app = angular.module('managementConsole')
     'cacheCreateController',
     'clusterNodesService',
     'utils',
-    '$modal',
-    function ($scope, $stateParams, $state, CONSTANTS, $q, modelController, cacheCreateController, clusterNodesService, utils, $modal) {
-      var AddCacheModalInstanceCtrl = function ($scope, $state, $modalInstance, cacheCreateController) {
+    '$uibModal',
+    function ($scope, $stateParams, $state, CONSTANTS, $q, modelController, cacheCreateController, clusterNodesService, utils, $uibModal) {
+      var AddCacheModalInstanceCtrl = function ($scope, $state, $uibModalInstance, cacheCreateController) {
 
         $scope.cacheName = null;
         $scope.selectedTemplate = null;
@@ -31,7 +31,7 @@ var app = angular.module('managementConsole')
           address.push(cacheType);
           address.push($scope.cacheName);
           cacheCreateController.createCacheFromTemplate(address, $scope.selectedTemplate, function () {
-            $modalInstance.close();
+            $uibModalInstance.close();
             $scope.currentCluster.refresh().then(function(){
               $state.go('clusterView', {
                 groupName: $scope.currentCluster.getServerGroupName(),
@@ -46,7 +46,7 @@ var app = angular.module('managementConsole')
           var cacheType = $scope.configurationTemplatesMap[$scope.selectedTemplate];
           address.push(cacheType);
           address.push($scope.cacheName);
-          $modalInstance.close();
+          $uibModalInstance.close();
           $state.go('editCache', {
             groupName: $scope.currentCluster.getServerGroupName(),
             clusterName: $scope.currentCluster.getName(),
@@ -62,7 +62,7 @@ var app = angular.module('managementConsole')
         };
 
         $scope.cancel = function () {
-          $modalInstance.close();
+          $uibModalInstance.close();
         };
 
         //Find all configuration templates across all clusters (cache containers)
@@ -87,14 +87,14 @@ var app = angular.module('managementConsole')
         $scope.selectedTemplate = $scope.configurationTemplates[0];
 
         $scope.cancel = function () {
-          $modalInstance.close();
+          $uibModalInstance.close();
         };
       };
 
-      var WIPModalInstanceCtrl = function ($scope, $modalInstance) {
+      var WIPModalInstanceCtrl = function ($scope, $uibModalInstance) {
 
         $scope.cancel = function () {
-          $modalInstance.close();
+          $uibModalInstance.close();
         };
       };
 
@@ -216,17 +216,17 @@ var app = angular.module('managementConsole')
       $scope.confirmAndSetCacheContainerRebalance = function (rebalanceValue, confirmationMessage) {
 
         // Get confirmation dialog
-        var confirmDialog = $modal.open({
+        var confirmDialog = $uibModal.open({
           templateUrl: 'cluster-view/confirmation-message-modal.html',
-          controller: function ($scope, $modalInstance) {
+          controller: function ($scope, $uibModalInstance) {
             $scope.confirmationMessage = confirmationMessage;
 
             $scope.ok = function () {
-              $modalInstance.close(true);
+              $uibModalInstance.close(true);
             };
 
             $scope.cancel = function () {
-              $modalInstance.dismiss();
+              $uibModalInstance.dismiss();
             };
           },
           scope: $scope
@@ -275,7 +275,7 @@ var app = angular.module('managementConsole')
       };
 
       $scope.openWIPModal = function () {
-        var modalInstance = $modal.open({
+        var modalInstance = $uibModal.open({
           templateUrl: 'workinprogress.html',
           controller: WIPModalInstanceCtrl,
           resolve: {
@@ -296,7 +296,7 @@ var app = angular.module('managementConsole')
       // Site management modal
       //
       //
-      var SiteManagementModalController = function ($scope, $modalInstance, modelController, currentCluster) {
+      var SiteManagementModalController = function ($scope, $uibModalInstance, modelController, currentCluster) {
 
         $scope.currentCluster = currentCluster;
         $scope.offlineSites = [];
@@ -310,18 +310,18 @@ var app = angular.module('managementConsole')
         $scope.executeSiteOperation = function (siteName, operationId, confirmationMessage) {
 
           // Get confirmation dialog
-          var confirmDialog = $modal.open({
+          var confirmDialog = $uibModal.open({
             templateUrl: 'cluster-view/confirmation-message-modal.html',
-            controller: function ($scope, $modalInstance) {
+            controller: function ($scope, $uibModalInstance) {
 
               $scope.confirmationMessage = confirmationMessage;
 
               $scope.ok = function () {
-                $modalInstance.close(true);
+                $uibModalInstance.close(true);
               };
 
               $scope.cancel = function () {
-                $modalInstance.dismiss();
+                $uibModalInstance.dismiss();
               };
             },
             scope: $scope
@@ -404,7 +404,7 @@ var app = angular.module('managementConsole')
         };
 
         $scope.cancel = function () {
-          $modalInstance.dismiss();
+          $uibModalInstance.dismiss();
         };
 
         $scope.refresh();
@@ -414,7 +414,7 @@ var app = angular.module('managementConsole')
 
       // Opens the site management dialog
       $scope.openSiteDialog = function () {
-        return $modal.open({
+        return $uibModal.open({
           templateUrl: 'cluster-view/manage-sites-modal.html',
           size: 'lg',
           controller: SiteManagementModalController,
@@ -433,7 +433,7 @@ var app = angular.module('managementConsole')
 
       $scope.openModal = function () {
 
-        var modalInstance = $modal.open({
+        var modalInstance = $uibModal.open({
           templateUrl: 'cluster-view/add-cache-modal.html',
           controller: AddCacheModalInstanceCtrl,
           scope: $scope

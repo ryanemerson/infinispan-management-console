@@ -8,24 +8,24 @@ angular.module('managementConsole')
     '$state',
     '$stateParams',
     'utils',
-    '$modal',
+    '$uibModal',
     'modelController',
     'cacheContainerConfigurationService',
     'clusterNodesService',
-    function ($scope, $rootScope, $q, $state, $stateParams, utils, $modal, modelController,
+    function ($scope, $rootScope, $q, $state, $stateParams, utils, $uibModal, modelController,
               cacheContainerConfigurationService, clusterNodesService) {
       if (!$stateParams.clusterName) {
         $state.go('error404');
       }
 
-      var RequiresRestartModalInstanceCtrl = function ($scope, $modalInstance) {
+      var RequiresRestartModalInstanceCtrl = function ($scope, $uibModalInstance) {
 
         $scope.ok = function () {
-          $modalInstance.close(true);
+          $uibModalInstance.close(true);
         };
 
         $scope.cancel = function () {
-          $modalInstance.dismiss();
+          $uibModalInstance.dismiss();
         };
       };
 
@@ -95,7 +95,7 @@ angular.module('managementConsole')
         if ($scope.hasDirtyFields()) {
           var rr = $scope.requiresRestart();
           if (rr) {
-            var dialog = $modal.open({
+            var dialog = $uibModal.open({
               templateUrl: 'components/dialogs/requires-restart.html',
               controller: RequiresRestartModalInstanceCtrl,
               scope: $scope

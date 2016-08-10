@@ -7,10 +7,10 @@ angular.module('managementConsole')
   'modelController',
   'clusterNodesService',
   'utils',
-  '$modal',
+  '$uibModal',
   '$controller',
     'taskService',
-  function ($scope, $stateParams, modelController, clusterNodesService, utils, $modal, $controller, taskService) {
+  function ($scope, $stateParams, modelController, clusterNodesService, utils, $uibModal, $controller, taskService) {
 
       // Extend from cluster view controller, given we need some functions for the menus and we don't want to replicate them here
       angular.extend(this, $controller('ClusterViewCtrl',{$scope: $scope}));
@@ -72,15 +72,15 @@ angular.module('managementConsole')
       // Modal dialog to display task output
       //
 
-      var ViewEventDetailsModalController = function ($scope, $modalInstance, event) {
+      var ViewEventDetailsModalController = function ($scope, $uibModalInstance, event) {
         $scope.event = event;
         $scope.cancel = function () {
-          $modalInstance.dismiss();
+          $uibModalInstance.dismiss();
         };
       };
 
       $scope.displayEventDetails = function (event) {
-        return $modal.open({
+        return $uibModal.open({
             templateUrl: 'cluster-view/display-event-modal.html',
             size: 'lg',
             controller: ViewEventDetailsModalController,
@@ -99,7 +99,7 @@ angular.module('managementConsole')
       // Task creation controller
       //
       //
-      var CreateTaskModalController = function($scope, $modalInstance, modelController, currentCluster) {
+      var CreateTaskModalController = function($scope, $uibModalInstance, modelController, currentCluster) {
 
         //Parameters
         var numberOfParams = 5;
@@ -145,7 +145,7 @@ angular.module('managementConsole')
               $scope.errorDescription = e;
             }).finally(function () {
               if ($scope.asyncTask) {
-                $modalInstance.dismiss();
+                $uibModalInstance.dismiss();
               }
             });
         };
@@ -171,12 +171,12 @@ angular.module('managementConsole')
         $scope.loadTasks();
 
         $scope.cancel = function() {
-          $modalInstance.dismiss();
+          $uibModalInstance.dismiss();
         };
       };
 
       $scope.openTaskDialog = function () {
-        return $modal.open({
+        return $uibModal.open({
             templateUrl: 'cluster-view/create-task-modal.html',
             size: 'lg',
             controller: CreateTaskModalController,

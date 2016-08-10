@@ -7,11 +7,11 @@ angular.module('managementConsole')
     '$state',
     '$stateParams',
     'utils',
-    '$modal',
+    '$uibModal',
     'modelController',
     'cacheCreateController',
     'configurationModel',
-    function ($scope, $rootScope, $state, $stateParams, utils, $modal,
+    function ($scope, $rootScope, $state, $stateParams, utils, $uibModal,
               modelController, cacheCreateController, configurationModel) {
       if (!$stateParams.clusterName) {
         $state.go('error404');

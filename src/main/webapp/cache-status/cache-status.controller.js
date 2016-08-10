@@ -5,12 +5,12 @@ angular.module('managementConsole')
     '$scope',
     '$stateParams',
     '$state',
-    '$modal',
+    '$uibModal',
     'modelController',
     'clusterNodesService',
     'cacheService',
     'utils',
-    function ($scope, $stateParams, $state, $modal, modelController, clusterNodesService, cacheService, utils) {
+    function ($scope, $stateParams, $state, $uibModal, modelController, clusterNodesService, cacheService, utils) {
             if (!$stateParams.clusterName && !$stateParams.cacheName) {
                 $state.go('error404');
             }
@@ -154,14 +154,14 @@ angular.module('managementConsole')
 
             $scope.openModal = function (mode) {
               $scope.mode = mode;
-              $modal.open({
+              $uibModal.open({
                 templateUrl: 'cache-status/confirmation-cache-modal.html',
-                controller: function ($scope, $modalInstance) {
+                controller: function ($scope, $uibModalInstance) {
 
                   $scope.cacheName = $scope.currentCache.name;
 
                   $scope.cancelModal = function () {
-                    $modalInstance.dismiss('cancel');
+                    $uibModalInstance.dismiss('cancel');
                   };
                 },
                 scope: $scope

@@ -6,13 +6,13 @@ angular.module('managementConsole')
     '$state',
     '$stateParams',
     'utils',
-    '$modal',
+    '$uibModal',
     'modelController',
     'cacheContainerConfigurationService',
     'securityConfig',
-    function ($scope, $state, $stateParams, utils, $modal, modelController, cacheContainerConfigurationService, securityConfig) {
+    function ($scope, $state, $stateParams, utils, $uibModal, modelController, cacheContainerConfigurationService, securityConfig) {
 
-      var AddRoleModalInstanceCtrl = function ($scope, $state, $modalInstance, role) {
+      var AddRoleModalInstanceCtrl = function ($scope, $state, $uibModalInstance, role) {
         $scope.roleName = '';
         $scope.permissions = {};
         if (utils.isNotNullOrUndefined(role)) {
@@ -25,7 +25,7 @@ angular.module('managementConsole')
         $scope.createNewRole = function () {
           var address = $scope.getRoleDMRAddress($scope.roleName);
           cacheContainerConfigurationService.addRole($scope.roleName, address, $scope.permissions).then(function () {
-            $modalInstance.close();
+            $uibModalInstance.close();
             $state.go('editCacheContainerSecurity', {
               groupName: $scope.currentCluster.getServerGroupName(),
               clusterName: $scope.currentCluster.name
@@ -40,11 +40,11 @@ angular.module('managementConsole')
         $scope.editExistingRole = function () {
           var address = $scope.getRoleDMRAddress($scope.roleName);
           cacheContainerConfigurationService.editRole(address, $scope.permissions);
-          $modalInstance.close();
+          $uibModalInstance.close();
         };
 
         $scope.cancel = function () {
-          $modalInstance.close();
+          $uibModalInstance.close();
         };
       };
 
@@ -69,7 +69,7 @@ angular.module('managementConsole')
 
       $scope.openAddRoleModal = function () {
         $scope.isNewRole = true;
-        $modal.open({
+        $uibModal.open({
           templateUrl: 'cache-container/configuration-security/add-role-modal.html',
           controller: AddRoleModalInstanceCtrl,
           scope: $scope,
@@ -81,7 +81,7 @@ angular.module('managementConsole')
 
       $scope.openEditRoleModal = function (role) {
         $scope.isNewRole = false;
-        $modal.open({
+        $uibModal.open({
           templateUrl: 'cache-container/configuration-security/add-role-modal.html',
           controller: AddRoleModalInstanceCtrl,
           scope: $scope,
@@ -92,9 +92,9 @@ angular.module('managementConsole')
       };
 
       $scope.openRemoveRoleModal = function (role) {
-        $modal.open({
+        $uibModal.open({
           templateUrl: 'components/dialogs/generic-ok-cancel.html',
-          controller: function ($scope, $state, $modalInstance) {
+          controller: function ($scope, $state, $uibModalInstance) {
             $scope.confirmButton = 'Remove';
             $scope.modalText = 'Do you want to remove ' + role.name + ' role?';
 
@@ -103,7 +103,7 @@ angular.module('managementConsole')
             };
 
             $scope.cancel = function () {
-              $modalInstance.close();
+              $uibModalInstance.close();
             };
           },
           scope: $scope

@@ -8,11 +8,11 @@ angular.module('managementConsole')
     'CONSTANTS',
     '$stateParams',
     'utils',
-    '$modal',
+    '$uibModal',
     'modelController',
     'cacheCreateController',
     'configurationModel',
-    function ($scope, $rootScope, $state, CONSTANTS, $stateParams, utils, $modal, modelController, cacheCreateController, configurationModel) {
+    function ($scope, $rootScope, $state, CONSTANTS, $stateParams, utils, $uibModal, modelController, cacheCreateController, configurationModel) {
       if (!$stateParams.clusterName && !$stateParams.cacheName) {
         $state.go('error404');
       }
@@ -216,18 +216,18 @@ angular.module('managementConsole')
         }
       };
 
-      var CacheTemplateModalInstanceCtrl = function ($scope, utils, $modalInstance) {
+      var CacheTemplateModalInstanceCtrl = function ($scope, utils, $uibModalInstance) {
 
 
         $scope.cancelModal = function () {
-          $modalInstance.dismiss('cancel');
+          $uibModalInstance.dismiss('cancel');
         };
 
       };
 
       $scope.openModal = function (mode) {
         $scope.mode = mode;
-        $modal.open({
+        $uibModal.open({
           templateUrl: 'edit-cache/confirmation-cache-modal.html',
           controller: CacheTemplateModalInstanceCtrl,
           scope: $scope

@@ -6,17 +6,17 @@ angular.module('managementConsole')
     '$state',
     '$stateParams',
     'utils',
-    '$modal',
+    '$uibModal',
     'modelController',
     'cacheCreateController',
     'configurationTemplates',
     'CONSTANTS',
-    function ($scope, $state, $stateParams, utils, $modal, modelController, cacheCreateController, configurationTemplates, CONSTANTS) {
+    function ($scope, $state, $stateParams, utils, $uibModal, modelController, cacheCreateController, configurationTemplates, CONSTANTS) {
 
       $scope.currentCluster = modelController.getServer().getClusterByNameAndGroup($stateParams.clusterName, $stateParams.groupName);
       $scope.confs = $scope.currentCluster.getConfigurationTemplatesFromModel(configurationTemplates);
 
-      var AddCacheTemplateModalInstanceCtrl = function ($scope, $state, $modalInstance) {
+      var AddCacheTemplateModalInstanceCtrl = function ($scope, $state, $uibModalInstance) {
 
         $scope.newTemplateName = '';
         $scope.availableTemplates = [];
@@ -36,7 +36,7 @@ angular.module('managementConsole')
         $scope.selectedTemplate = $scope.availableTemplates[0];
 
         $scope.createNewTemplate = function () {
-          $modalInstance.close();
+          $uibModalInstance.close();
           $state.go('editCacheTemplate', {
             groupName: $scope.currentCluster.getServerGroupName(),
             clusterName: $scope.currentCluster.name,
@@ -48,7 +48,7 @@ angular.module('managementConsole')
         };
 
         $scope.cancel = function () {
-          $modalInstance.close();
+          $uibModalInstance.close();
         };
       };
 
@@ -106,7 +106,7 @@ angular.module('managementConsole')
 
       $scope.openModal = function () {
 
-        $modal.open({
+        $uibModal.open({
           templateUrl: 'cache-container/configuration-templates/add-cache-template-modal.html',
           controller: AddCacheTemplateModalInstanceCtrl,
           scope: $scope

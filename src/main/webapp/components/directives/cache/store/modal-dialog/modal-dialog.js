@@ -3,7 +3,7 @@
 
   var module = angular.module('ispn.directives.cache.modaldialog', ['ispn.services.utils']);
 
-  module.directive('modalDialog', ['utils', '$modal', function (utils, modal) {
+  module.directive('modalDialog', ['utils', '$uibModal', function (utils, modal) {
     return {
       restrict: 'E',
       scope: {
@@ -51,7 +51,7 @@
                 };
               }
             },
-            controller: ['$scope', 'utils', '$modalInstance', 'store', function ($scope, utils, $modalInstance, store) {
+            controller: ['$scope', 'utils', '$uibModalInstance', 'store', function ($scope, utils, $uibModalInstance, store) {
               $scope.title = store.title;
               $scope.metadata = store.metadata;
               $scope.data = store.data;
@@ -60,12 +60,12 @@
 
               $scope.cancelModal = function () {
                 $scope.undoAllFieldChanges($scope.data);
-                $modalInstance.dismiss('cancel');
+                $uibModalInstance.dismiss('cancel');
               };
 
               $scope.submitModal = function () {
                 $scope.data.modified = $scope.isObjectModified($scope.data, $scope.metadata);
-                $modalInstance.close($scope.data);
+                $uibModalInstance.close($scope.data);
               };
 
               $scope.isObjectModified = function (data, metadata) {

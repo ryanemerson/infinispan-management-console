@@ -405,7 +405,7 @@ angular.module('managementConsole', [
  * during digest cycle which causes an error.
  * Use it just like normal apply: $scope.safeApply(myFunc).
  */
-  .run(['$rootScope', '$timeout', '$modal', 'utils', function ($rootScope, $timeout, $modal, utils) {
+  .run(['$rootScope', '$timeout', '$uibModal', 'utils', function ($rootScope, $timeout, $uibModal, utils) {
       //isDomainControllerAlive is used for web app to server connectivity checking
       $rootScope.isDomainControllerAlive = true;
       $rootScope.safeApply = function (f) {
@@ -418,9 +418,9 @@ angular.module('managementConsole', [
 
       //generic error modal
       $rootScope.openErrorModal = function (error) {
-        $modal.open({
+        $uibModal.open({
           templateUrl: 'components/dialogs/generic-error.html',
-          controller: function($scope, $modalInstance) {
+          controller: function($scope, $uibModalInstance) {
             if( typeof error === 'string') {
               $scope.errorText = 'An error has occurred:';
               $scope.errorTextDetail = error;
@@ -432,7 +432,7 @@ angular.module('managementConsole', [
               });
             }
             $scope.ok = function () {
-              $modalInstance.close();
+              $uibModalInstance.close();
             };
           },
           scope: $rootScope
@@ -442,9 +442,9 @@ angular.module('managementConsole', [
       //generic info modal
       $rootScope.openRestartModal = function () {
         if ($rootScope.requiresRestartFlag) {
-          $modal.open({
+          $uibModal.open({
             templateUrl: 'components/dialogs/requires-restart.html',
-            controller: function ($scope, $modalInstance, clusterNodesService) {
+            controller: function ($scope, $uibModalInstance, clusterNodesService) {
 
               $scope.ok = function () {
                 clusterNodesService.restartCluster();
@@ -452,7 +452,7 @@ angular.module('managementConsole', [
               };
 
               $scope.cancel = function () {
-                $modalInstance.close();
+                $uibModalInstance.close();
               }
             },
             scope: $rootScope
@@ -462,16 +462,16 @@ angular.module('managementConsole', [
 
       //generic info modal
       $rootScope.openInfoModal = function (infoText, infoTextDetail) {
-        $modal.open({
+        $uibModal.open({
           templateUrl: 'components/dialogs/generic-info.html',
-          controller: function ($scope, $modalInstance) {
+          controller: ['$scope', '$uibModalInstance', function ($scope, $uibModalInstance) {
             $scope.infoText = infoText;
             $scope.infoTextDetail = infoTextDetail;
 
             $scope.ok = function () {
-              $modalInstance.close();
+              $uibModalInstance.close();
             };
-          },
+          }],
           scope: $rootScope
         });
       };

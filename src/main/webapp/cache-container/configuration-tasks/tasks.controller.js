@@ -6,17 +6,17 @@ angular.module('managementConsole')
     '$q',
     '$state',
     '$stateParams',
-    '$modal',
+    '$uibModal',
     'utils',
     'modelController',
     'cacheContainerConfigurationService',
-    function ($scope, $q, $state, $stateParams, $modal, utils, modelController, cacheContainerConfigurationService) {
-      
+    function ($scope, $q, $state, $stateParams, $uibModal, utils, modelController, cacheContainerConfigurationService) {
+
       $scope.clusters = modelController.getServer().getClusters();
       $scope.currentCluster = modelController.getServer().getClusterByNameAndGroup($stateParams.clusterName, $stateParams.groupName);
       $scope.serverGroup = $scope.currentCluster.getServerGroupName();
       $scope.availableTasks = [];
-      
+
       $scope.loadScriptTasks = function () {
         cacheContainerConfigurationService.loadScriptTasks($scope.currentCluster).then(
           function (response) {
@@ -27,9 +27,9 @@ angular.module('managementConsole')
 
       $scope.loadScriptTasks();
 
-      var TasksModalInstanceCtrl = function ($scope, $state, $modalInstance) {
+      var TasksModalInstanceCtrl = function ($scope, $state, $uibModalInstance) {
         $scope.cancelModal = function () {
-          $modalInstance.close();
+          $uibModalInstance.close();
         };
         $scope.confirmRemoveScript = function () {
           $scope.removeScript($scope.artifact);
@@ -40,14 +40,14 @@ angular.module('managementConsole')
         $scope.artifact = artifact;
         $scope.mode = mode;
 
-        $modal.open({
+        $uibModal.open({
           templateUrl: 'cache-container/configuration-tasks/confirmation-modal.html',
           controller: TasksModalInstanceCtrl,
           scope: $scope
         });
       };
-  
-      var EditScriptModalInstanceCtrl = function ($scope, $state, $modalInstance, currentCluster, modelController, script) {
+
+      var EditScriptModalInstanceCtrl = function ($scope, $state, $uibModalInstance, currentCluster, modelController, script) {
 
         $scope.task = script;
         $scope.successTaskDeploy = false;
@@ -74,7 +74,7 @@ angular.module('managementConsole')
         };
 
         $scope.cancel = function () {
-          $modalInstance.close();
+          $uibModalInstance.close();
         };
 
         // Task creation
@@ -90,7 +90,7 @@ angular.module('managementConsole')
             function () {
               $scope.errorExecuting = false;
               $scope.successExecuteOperation = true;
-              $modalInstance.close();
+              $uibModalInstance.close();
             },
             function (reason) {
               $scope.errorExecuting = true;
@@ -107,7 +107,7 @@ angular.module('managementConsole')
           };
         }
 
-        var d = $modal.open({
+        var d = $uibModal.open({
           templateUrl: 'cache-container/configuration-tasks/edit-script-modal.html',
           controller: EditScriptModalInstanceCtrl,
           scope: $scope,

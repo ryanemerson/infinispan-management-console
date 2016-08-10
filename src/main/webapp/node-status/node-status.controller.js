@@ -5,12 +5,12 @@ angular.module('managementConsole')
     '$scope',
     '$stateParams',
     '$state',
-    '$modal',
+    '$uibModal',
     'modelController',
     '$interval',
     'view',
     'utils',
-    function ($scope, $stateParams, $state, $modal, modelController, $interval, view, utils) {
+    function ($scope, $stateParams, $state, $uibModal, modelController, $interval, view, utils) {
 
 
       $scope.clusterName = $stateParams.clusterName;
@@ -96,7 +96,7 @@ angular.module('managementConsole')
       };
 
       $scope.startNode = function () {
-        var bootModal = $modal.open({
+        var bootModal = $uibModal.open({
           templateUrl: 'components/dialogs/booting.html',
           scope: $scope
         });
@@ -124,20 +124,20 @@ angular.module('managementConsole')
         }, {reload: true});
       };
 
-      var NodeModalInstanceCtrl = function ($scope, utils, $modalInstance, $stateParams) {
+      var NodeModalInstanceCtrl = function ($scope, utils, $uibModalInstance, $stateParams) {
 
         $scope.serverNode = $stateParams.nodeName;
         $scope.clusterName = $stateParams.clusterName;
 
         $scope.cancelModal = function () {
-          $modalInstance.dismiss('cancel');
+          $uibModalInstance.dismiss('cancel');
         };
 
       };
 
       $scope.openModal = function (mode) {
         $scope.mode = mode;
-        $modal.open({
+        $uibModal.open({
           templateUrl: 'node-status/confirmation-node-modal.html',
           controller: NodeModalInstanceCtrl,
           scope: $scope
