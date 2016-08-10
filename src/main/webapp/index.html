@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <!-- build:css({src/main}) styles/vendor.css -->
+    <!-- build:css(dist) styles/vendor.css -->
     <!-- components:css -->
     <link rel="stylesheet" href="built_components/patternfly/dist/css/patternfly.css" media="screen, print"/>
     <link rel="stylesheet" href="built_components/patternfly/dist/css/patternfly-additions.css" media="screen, print"/>
@@ -31,13 +31,13 @@
         <div ui-view></div>
     </div>
 
-    <!-- build:js(src/main) scripts/vendor.js -->
+    <!-- build:js(dist) scripts/vendor.js -->
     <!-- components:js -->
     <script src="built_components/jquery/dist/jquery.js"></script>
     <script src="built_components/angular/angular.js"></script>
     <script src="built_components/bootstrap/js/alert.js"></script>
     <script src="built_components/angular-local-storage/dist/angular-local-storage.js"></script>
-    <script src="built_components/angular-ui-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="built_components/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
     <script src="built_components/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="built_components/patternfly/dist/js/patternfly.js"></script>
     <script src="built_components/jquery-match-height/jquery.matchHeight-min.js"></script>
@@ -50,7 +50,7 @@
     <!-- endcomponents -->
     <!-- endbuild -->
 
-    <!-- build:js({src/main/webapp}) scripts/main.js -->
+    <!-- build:js(src/main/webapp) scripts/main.js -->
     <script src="management-console.js"></script>
     <script src="login/login.controller.js"></script>
     <script src="clusters-view/clusters-view.controller.js"></script>

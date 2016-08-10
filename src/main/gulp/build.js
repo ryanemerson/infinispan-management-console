@@ -8,7 +8,7 @@ var plugins = require('gulp-load-plugins')({
 
 var paths = {
   scripts: 'src/main/webapp/**/*.js',
-  styles: ['src/main/webapp/**/*.less','src/main/webapp/**/*.css'],
+  styles: 'src/main/webapp/management-console.less',
   images: 'src/main/assets/images/**/*',
   languages: 'src/main/assets/languages/*',
   index: 'src/main/webapp/index.html',
@@ -31,8 +31,8 @@ function handleError(err) {
 }
 
 
-gulp.task('styles', function() {
-  return gulp.src('src/main/webapp/management-console.less')
+gulp.task('styles', function () {
+  return gulp.src(paths.styles)
     .pipe(plugins.less({
       paths: [
         paths.dist + paths.components
@@ -45,21 +45,21 @@ gulp.task('styles', function() {
     .pipe(plugins.size());
 });
 
-gulp.task('partials', function() {
+gulp.task('partials', function () {
   return gulp.src(paths.partials)
     .pipe(gulp.dest(paths.dist))
     .pipe(gulp.dest(paths.test))
     .pipe(plugins.size());
 });
 
-gulp.task('index', function() {
+gulp.task('index', function () {
   return gulp.src(paths.index)
     .pipe(gulp.dest(paths.dist))
     .pipe(gulp.dest(paths.test))
     .pipe(plugins.size());
 });
 
-gulp.task('languages', function() {
+gulp.task('languages', function () {
   var destPath = paths.dist + '/assets/languages';
   var buildPath = paths.test + '/assets/languages';
 
@@ -69,7 +69,7 @@ gulp.task('languages', function() {
     .pipe(plugins.size());
 });
 
-gulp.task('images', function() {
+gulp.task('images', function () {
   var destPath = paths.dist + '/assets/images';
   var buildPath = paths.test + '/assets/images';
 
@@ -84,7 +84,7 @@ gulp.task('images', function() {
     .pipe(plugins.size());
 });
 
-gulp.task('fonts', function() {
+gulp.task('fonts', function () {
   //grab everything in built_components dir, find all filtered files and copy them
   return gulp.src(paths.dist + paths.componentsDeep)
     .pipe(filters.fonts)
@@ -95,22 +95,28 @@ gulp.task('fonts', function() {
 
 // Filters not working
 gulp.task('components', function () {
-  return gulp.src(plugins.npmFiles(), { base: './node_modules' })
-    // .pipe(filters.test)
+  return gulp.src(plugins.npmFiles(), {base: './node_modules'})
+  // .pipe(filters.test)
     .pipe(gulp.dest(paths.test + paths.components))
     // .pipe(filters.dist)
     .pipe(gulp.dest(paths.dist + paths.components));
 });
 
-gulp.task('scripts', function() {
+gulp.task('scripts', function () {
   return gulp.src(paths.scripts)
     .pipe(plugins.jshint())
     .pipe(plugins.jshint.reporter('jshint-stylish'))
-    .pipe(plugins.concat('main.js'))
+    // .pipe(plugins.concat('main.js'))
     .pipe(gulp.dest(paths.test))
-    .pipe(plugins.rename({suffix: '.min'}))
-    .pipe(plugins.ngAnnotate())
-    .pipe(plugins.uglify())
+    // .pipe(plugins.rename({suffix: '.min'}))
+    // .pipe(plugins.ngAnnotate())
+    // .pipe(plugins.uglify())
+    .pipe(gulp.dest(paths.dist));
+});
+
+gulp.task('html', function () {
+  return gulp.src('src/main/webapp/*.html')
+    .pipe(plugins.useref())
     .pipe(gulp.dest(paths.dist));
 });
 
@@ -120,11 +126,13 @@ gulp.task('clean', function () {
 
 gulp.task('build', ['clean'], function (cb) {
   plugins.runSequence('components', [
-  'scripts',
-  'fonts',
-  'images',
-  'languages',
-  'partials'
-  ], 'styles', cb);
+    'fonts',
+    'images',
+    'index',
+    'languages',
+    'partials',
+    'scripts',
+    'styles'
+  ], 'html', cb);
 });
 
