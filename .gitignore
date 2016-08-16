@@ -1,6 +1,7 @@
 node
 node_modules
 dist
+!dist/index.html
 .idea
 .tmp
 .sass-cache
@@ -11,3 +12,12 @@ src/main/bower_components
 target
 *.iml
 *.pyc
+vendor/
+typings/
+report/
+docs/
+src/**/*.js
+src/**/*.js.map
+src/**/*.css
+!src/jspm.conf.js
+old-source/

@@ -1,0 +1,62 @@
+<div class="container-fluid">
+  <div class="row header-row">
+    <div class="col-sm-8 col-md-9">
+      <ol class="breadcrumb">
+        <li translate>CACHE_CONTAINERS</li>
+      </ol>
+      <h1 translate>CACHE_CONTAINERS</h1>
+      <br>
+      <table class="table ispn-aligned">
+        <tr>
+          <th translate>NAME</th>
+          <th translate>STATUS</th>
+          <th translate>NUMBER_OF_CACHES</th>
+          <th translate>CLUSTERING_INFO</th>
+          <th translate>ENDPOINTS</th>
+          <th translate>SITES</th>
+        </tr>
+
+        <tr ng-repeat="container in ctrl.containers track by $index">
+          <td><strong><a href="#/containers/{{container.profile}}/{{container.name}}/caches">{{container.name}}</a></strong></td>
+          <td><span class="label isCacheAvailable" ng-class="ctrl.getAvailabilityClass(container)">{{ctrl.getAvailability(container)}}</span></td>
+          <td><span class="numberOfCaches label label-default">{{container.numberOfCaches}}</span></td>
+          <td><a class="clusterName" ui-sref="server-group({serverGroup: container.serverGroup.name})">{{container.serverGroup.name}}</a><br>
+            <small class="stack">{{ctrl.getDefaultStack(container)}}</small>
+          </td>
+          <td>
+            <span class="endpoint" ng-repeat="endpoint in container.endpoints" ng-init="socketBinding = endpoint['socket-binding']">
+                 {{socketBinding.name}} : {{socketBinding.port}} {{endpoint.encryption}}</br>
+            </span>
+          </td>
+          <td>
+            <div ng-repeat="site in container['online-sites']"><span class="pficon pficon-ok"></span>{{site}}</div>
+            <div ng-repeat="site in container['mixed-sites']"><span class="pficon pficon-warning-triangle-o"></span> <span class="label label-warning">{{site}}</span></div>
+            <div ng-repeat="site in container['offline-sites']"><span class="pficon pficon-error-circle-o"></span> <span class="label label-danger">{{site}}</span></div>
+            <div ng-if="ctrl.isSitesEmpty(container)">N/A</div>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="pre-scrollable col-sm-4 col-md-3 sidebar-pf sidebar-pf-right" style="min-height: 923px;">
+      <div class="sidebar-header sidebar-header-bleed-left sidebar-header-bleed-right">
+        <h2 class="h5" translate>LATEST_GRID_EVENTS</h2>
+      </div>
+      <ul class="list-group"  ng-if="ctrl.gridEvents.length > 0">
+        <li class="list-group-item" ng-repeat="event in ctrl.gridEvents">
+          <h3 class="list-group-item-heading">
+            <span ng-if="event.level=='WARN'"  class="icon-class pficon-warning-triangle-o"></span>
+            <span ng-if="event.level=='INFO'"  class="icon-class pficon-info"></span>
+            <span ng-if="event.level=='ERROR'" class="pficon-error-circle-o"></span>
+            {{event.message}}.</h3>
+          <small>{{event.when | date:'yyyy-MM-dd HH:mm:ss Z'}}<br></small>
+          <small ng-if="event.server">{{event.server.host}}:{{event.server.name}}<br></small>
+          <small ng-if="event.context">{{event.context}}</small>
+        </li>
+      </ul>
+
+    </div>
+    <!-- /col -->
+  </div>
+  <!-- /row -->
+</div>
+<!-- /container -->
