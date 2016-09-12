@@ -1,6 +1,7 @@
 import {App} from "./ManagementConsole";
 import "./services/authentication/AuthenticationService";
 import "./services/cache/CacheService";
+import "./services/cache-config/CacheConfigService";
 import "./services/cluster-events/ClusterEventsService";
 import "./services/container/ContainerService";
 import "./services/container-config/ContainerConfigService";
@@ -15,6 +16,7 @@ import "./services/schemas/SchemasService";
 import "./services/server/ServerService";
 import "./services/server-group/ServerGroupService";
 import "./services/socket-binding/SocketBindingService";
+import "./components/cache-configuration/CacheConfiguration";
 import "./components/configuration-section/ConfigurationSection";
 import "./components/forms/field-info/FieldInfo";
 import "./components/forms/form-group/FormGroup";
@@ -23,6 +25,7 @@ import "./module/auth/Auth";
 import "./module/cache-container/CacheContainer";
 import "./module/cache-container/config/ContainerConfig";
 import "./module/cache-containers/CacheContainers";
+import "./module/cache-templates/CacheTemplates";
 import "./module/events/Events";
 import "./module/navbar/Navbar";
 import "./module/server-group/ServerGroup";
@@ -36,17 +39,20 @@ App.element(document).ready(() => {
     "managementConsole.cache-container",
     "managementConsole.cache-container.config",
     "managementConsole.cache-containers",
+    "managementConsole.cache-templates",
     "managementConsole.events",
     "managementConsole.navbar",
     "managementConsole.server-instance",
     "managementConsole.server-group",
     "managementConsole.server-groups",
     "managementConsole.components.configuration",
+    "managementConsole.components.configuration.cache",
     "managementConsole.components.forms.field-info",
     "managementConsole.components.forms.form-group",
     "managementConsole.components.modals.information",
     "managementConsole.services.authentication",
     "managementConsole.services.cache",
+    "managementConsole.services.cache-config",
     "managementConsole.services.cluster-events",
     "managementConsole.services.container",
     "managementConsole.services.container-config",

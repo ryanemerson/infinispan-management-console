@@ -24,7 +24,12 @@ export function isNumber(object: any): boolean {
 }
 
 export function isObject(object: any): boolean {
-  return isNotNullOrUndefined(object) && !isBoolean(object) && !isString(object) && !isNumber(object);
+  return object === Object(object);
+}
+
+export function isJsonString(object: any): boolean {
+  return isString(object) && ((object.indexOf("{") > -1 && object.indexOf("}") > -1) ||
+    (object.indexOf("[") > -1 && object.indexOf("]") > -1));
 }
 
 export function isNotNullOrUndefined(value: any): boolean {

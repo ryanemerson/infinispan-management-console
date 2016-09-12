@@ -24,7 +24,10 @@ export class LoginCtrl {
     var onSuccess: () => void = () => {
       this.showLoginSpinner = false;
       this.$scope.page.htmlClass = "";
-      this.$state.go("containers");
+      // this.$state.go("containers");
+      // this.$state.go("cache-templates.new", {profileName: "profile-name", containerName: "cache-container"});
+      this.$state.go("new-cache-template", {profileName: "profile-name", containerName: "cache-container", baseType: "distributed-cache"});
+      // this.$state.go("edit-cache-template", {profileName: "profile-name", containerName: "cache-container", templateType: "distributed-cache", templateName: "default"});
     };
 
     var onFailure: (errorMsg: string) => void = (errorMsg) => {
