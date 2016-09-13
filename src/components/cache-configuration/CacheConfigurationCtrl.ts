@@ -1,6 +1,5 @@
 import {IConfigurationCallback} from "../../common/configuration/IConfigurationCallback";
-import {RESOURCE_DESCRIPTION_MAP} from "../../common/configuration/ConfigUtil";
-import {deepGet, isNotNullOrUndefined} from "../../common/utils/Utils";
+import {getMetaForResource} from "../../common/configuration/ConfigUtil";
 
 export class CacheConfigurationCtrl {
 
@@ -25,7 +24,6 @@ export class CacheConfigurationCtrl {
   }
 
   getMetaForResource(resource: string): any {
-    let resourcePath: string = RESOURCE_DESCRIPTION_MAP[resource];
-    return deepGet(this.meta, resourcePath);
+    return getMetaForResource(this.meta, resource);
   }
 }

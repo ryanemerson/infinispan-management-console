@@ -26,8 +26,8 @@ export class LoginCtrl {
       this.$scope.page.htmlClass = "";
       // this.$state.go("containers");
       // this.$state.go("cache-templates.new", {profileName: "profile-name", containerName: "cache-container"});
-      this.$state.go("new-cache-template", {profileName: "profile-name", containerName: "cache-container", baseType: "distributed-cache"});
-      // this.$state.go("edit-cache-template", {profileName: "profile-name", containerName: "cache-container", templateType: "distributed-cache", templateName: "default"});
+      // this.$state.go("new-cache-template", {profileName: "profile-name", containerName: "cache-container", templateName: "default", baseType: "distributed-cache"});
+      this.$state.go("edit-cache-template", {profileName: "clustered", containerName: "clustered", templateType: "distributed-cache", templateName: "default"});
     };
 
     var onFailure: (errorMsg: string) => void = (errorMsg) => {

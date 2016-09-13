@@ -3,7 +3,6 @@ import "../../services/dmr/DmrService";
 import {CacheTemplatesCtrl} from "./CacheTemplatesCtrl";
 import {IRedirectState} from "../../common/IRedirectState";
 import {isNotNullOrUndefined} from "../../common/utils/Utils";
-import {ITemplate} from "../../services/container-config/ITemplate";
 
 const module: ng.IModule = App.module("managementConsole.cache-templates", []);
 

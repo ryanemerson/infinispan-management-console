@@ -103,3 +103,8 @@ export function getTypeModelType(field: any): string {
     throw new ISPNException("Unresolved field for" + field);
   }
 }
+
+export function getMetaForResource(meta: any, resource: string): any {
+  let resourcePath: string = RESOURCE_DESCRIPTION_MAP[resource];
+  return deepGet(meta, resourcePath);
+}

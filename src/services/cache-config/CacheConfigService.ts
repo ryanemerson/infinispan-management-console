@@ -262,7 +262,7 @@ export class CacheConfigService {
           let nestedKey: string = key.toUpperCase().replace(/-/g, "_");
           if (isNotNullOrUndefined(nestedObject[nestedKey])) {
             let nestedAddress: string[] = address.concat(storeType, objectKey, key, nestedKey);
-            this.updateHelper(builder, nestedAddress, nestedKey);
+            this.updateHelper(builder, nestedAddress, nestedObject);
           }
         }
       }
@@ -295,7 +295,7 @@ export class CacheConfigService {
       this.updateHelper(builder, address.concat("security", "SECURITY", "authorization", "AUTHORIZATION"), config.security.SECURITY.authorization);
     }
 
-    // this.updateCacheLoader(builder, address, config);
+    this.updateCacheLoader(builder, address, config);
     this.updateCacheStore(builder, address, config);
     return this.dmrService.executePost(builder.build());
   }

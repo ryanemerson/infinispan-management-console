@@ -1,8 +1,10 @@
-import {isNotNullOrUndefined, isNullOrUndefined, isEmptyObject} from "../../common/utils/Utils";
+import {isNotNullOrUndefined, isNullOrUndefined} from "../../common/utils/Utils";
 import {IConfigurationCallback} from "../../common/configuration/IConfigurationCallback";
 import {
-  isFieldValueModified, fieldChangeRequiresRestart,
-  convertListToJson, makeFieldClean
+  isFieldValueModified,
+  fieldChangeRequiresRestart,
+  convertListToJson,
+  makeFieldClean
 } from "../../common/configuration/ConfigUtil";
 
 export class ConfigurationSectionCtrl implements IConfigurationCallback {
@@ -25,7 +27,7 @@ export class ConfigurationSectionCtrl implements IConfigurationCallback {
       this.configCallbacks.push(this);
     }
     this.prevData = {};
-    this.data["is-new-node"] = isEmptyObject(this.data);
+    this.data["is-new-node"] = !this.hasAnyFieldPreviousData();
     this.cleanMetadata();
     this.createPlaceholders();
   }

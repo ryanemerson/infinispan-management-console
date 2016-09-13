@@ -16,6 +16,9 @@ import "./services/schemas/SchemasService";
 import "./services/server/ServerService";
 import "./services/server-group/ServerGroupService";
 import "./services/socket-binding/SocketBindingService";
+import "./components/cache-loaders/CacheLoaders";
+import "./components/cache-stores/CacheStores";
+import "./components/cache-stores/CacheStoreModal";
 import "./components/cache-configuration/CacheConfiguration";
 import "./components/configuration-section/ConfigurationSection";
 import "./components/forms/field-info/FieldInfo";
@@ -45,6 +48,9 @@ App.element(document).ready(() => {
     "managementConsole.server-instance",
     "managementConsole.server-group",
     "managementConsole.server-groups",
+    "managementConsole.components.cache-loaders",
+    "managementConsole.components.cache-stores",
+    "managementConsole.components.cache-stores.modal",
     "managementConsole.components.configuration",
     "managementConsole.components.configuration.cache",
     "managementConsole.components.forms.field-info",

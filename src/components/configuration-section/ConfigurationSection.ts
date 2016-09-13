@@ -5,7 +5,7 @@ export class ConfigurationSection {
 
   bindings: any;
   controller: any;
-  templateUrl: any;
+  templateUrl: string;
 
   constructor() {
     this.bindings = {

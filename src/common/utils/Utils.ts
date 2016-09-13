@@ -79,6 +79,10 @@ export function deepSet(object: Object, path: String, value: any): void {
 }
 
 export function deepGet(object: Object, path: string): any {
+  if (isNullOrUndefined(object) || isNullOrUndefined(path)) {
+    return null;
+  }
+
   var o: Object = object;
   path = path.replace(/\[(\w+)\]/g, ".$1");
   path = path.replace(/^\./, "");
@@ -139,4 +143,30 @@ export function getInstanceFromDmr<T>(dmr: any): T {
     retObject[key] = dmr[key];
   }
   return retObject;
+}
+
+export function createPath(separator: string, args: string[]): string {
+    if (isArray(args)) {
+      let path: string = "";
+      for (let i: number = 0; i < args.length; i++) {
+        /* tslint:disable:triple-equals */
+        path += i == 0 ? args[i] : separator + args[i];
+      }
+      return path;
+    }
+    return null;
+}
+
+export function removeEmptyFieldsFromObject(object: any, recursive: boolean = false): void {
+  angular.forEach(object, (value, key) => {
+    if (recursive && isObject(value)) {
+      var nestedObject: any = removeEmptyFieldsFromObject(value, true);
+      if (isEmptyObject(nestedObject)) {
+        delete object[key];
+      }
+    } else if (value === "" || isNullOrUndefined(value)) {
+      delete object[key];
+    }
+  });
+  return object;
 }
