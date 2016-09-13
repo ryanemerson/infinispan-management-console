@@ -44,11 +44,11 @@
                                    config-callbacks="$ctrl.configCallbacks"/>
         </uib-tab>
 
-        <uib-tab heading="Security">
-            <security  data="$ctrl.data.security.SECURITY.authorization.AUTHORIZATION" cluster="cluster" meta="$ctrl.getMetaForResource('authorization')"
-                       init-defaults="$ctrl.initDefaults" read-only="$ctrl.readOnly"
-                       config-callbacks="$ctrl.configCallbacks"/>
-        </uib-tab>
+        <!--<uib-tab heading="Security">-->
+            <!--<security  data="$ctrl.data.security.SECURITY.authorization.AUTHORIZATION" cluster="cluster" meta="$ctrl.getMetaForResource('authorization')"-->
+                       <!--init-defaults="$ctrl.initDefaults" read-only="$ctrl.readOnly"-->
+                       <!--config-callbacks="$ctrl.configCallbacks"/>-->
+        <!--</uib-tab>-->
 
         <uib-tab heading="Partition handling">
             <configuration-section fields="[{name: 'Partition handling', fields: ['enabled']}]" data="$ctrl.data['partition-handling'].PARTITION_HANDLING"
@@ -67,11 +67,10 @@
         read-only="$ctrl.readOnly" config-callbacks="$ctrl.configCallbacks"/>
         </uib-tab>
 
-        <!--<uib-tab heading="Store">-->
-        <!--<cachestore data="$ctrl.data" meta="$ctrl.meta" cache-type="cacheType"-->
-        <!--init-defaults="$ctrl.initDefaults" read-only="$ctrl.readOnly"-->
-        <!--config-callbacks="$ctrl.configCallbacks"/>-->
-        <!--</uib-tab>-->
+        <uib-tab heading="Store">
+            <cache-stores data="$ctrl.data" meta="$ctrl.meta" cache-type="cacheType" read-only="$ctrl.readOnly"
+                          config-callbacks="$ctrl.configCallbacks"/>
+        </uib-tab>
 
     </uib-tabset>
 </div>
