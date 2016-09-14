@@ -24,7 +24,11 @@ export class LoginCtrl {
     var onSuccess: () => void = () => {
       this.showLoginSpinner = false;
       this.$scope.page.htmlClass = "";
-      this.$state.go("containers");
+      // this.$state.go("containers");
+      this.$state.go("container-config.templates", {
+        profileName: "clustered",
+        containerName: "clustered"
+      });
     };
 
     var onFailure: (errorMsg: string) => void = (errorMsg) => {

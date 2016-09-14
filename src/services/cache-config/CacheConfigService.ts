@@ -7,7 +7,7 @@ import {ITemplate} from "../container-config/ITemplate";
 import {ICacheContainer} from "../container/ICacheContainer";
 import {
   isNotNullOrUndefined, deepGet, isNullOrUndefined, isObject, isString,
-  isJsonString, deepValue
+  isJsonString, deepValue, deepMerge
 } from "../../common/utils/Utils";
 import {CompositeOpBuilder, createWriteAttrReq, createRemoveReq} from "../dmr/CompositeOpBuilder";
 
@@ -38,14 +38,13 @@ export class CacheConfigService {
 
   getTemplate(container: ICacheContainer, templateType: string, templateName: string): ng.IPromise<any> {
     let deferred: ng.IDeferred<any> = this.$q.defer();
-    this.dmrService.readResource({
-      address: this.getConfigAddress(container.name, container.profile).concat(templateType + "-configuration", templateName),
-      recursive: true
-    }).then(response => {
-      response.type = templateType;
-      response["template-name"] = templateName;
-      deferred.resolve(response);
-    }, error => deferred.reject(error));
+    this.getAllTemplatesInHierarchy(container, templateType, templateName)
+      .then((templates: any[]) => {
+        let template: any = templates.reduce((prevTemp, currentTemp) => deepMerge(prevTemp, currentTemp));
+        template.type = templateType;
+        template["template-name"] = templateName;
+        deferred.resolve(template);
+      });
 
     return deferred.promise;
   }
@@ -76,9 +75,26 @@ export class CacheConfigService {
       "recursive-depth": 1
     };
 
-    this.dmrService.readResource(request).then(
-      response => deferred.resolve(this.extractTemplatesFromConfigurations(response)),
-      error => deferred.reject(error));
+    this.dmrService.readResource(request).then(response => {
+      let templatePromises: ng.IPromise<ITemplate>[] = [];
+      angular.forEach(response, (templates, templateType) => {
+        angular.forEach(templates, (template, templateName) => {
+          // Ignore none template configurations
+          if (isNotNullOrUndefined(template.template) && !template.template) {
+            return;
+          }
+          // If this is a parent template, then just return the basic information
+          if (isNullOrUndefined(template.configuration)) {
+            templatePromises.push(this.$q.when(this.createITemplate(templateName, templateType, template)));
+          } else {
+            // Otherwise we need to follow the template hierarchy to retrieve parent templates
+            templatePromises.push(this.getITemplate(container, templateType.replace("-configuration", ""), templateName));
+          }
+        });
+      });
+      this.$q.all(templatePromises).then((allTemplates: ITemplate[]) => deferred.resolve(allTemplates));
+
+    }, error => deferred.reject(error));
     return deferred.promise;
   }
 
@@ -96,6 +112,23 @@ export class CacheConfigService {
       recursive: true
     };
     return this.dmrService.readResource(request);
+  }
+
+  private createITemplate(name: string, type: string, template: any): ITemplate {
+    return <ITemplate>{
+      name: name,
+      mode: template.mode,
+      type: type.replace("-configuration", ""),
+      traits: this.extractTraitsFromTemplate(template)
+    };
+  }
+
+  private getITemplate(container: ICacheContainer, templateType: string, templateName: string): ng.IPromise<ITemplate> {
+    let deferred: ng.IDeferred<ITemplate> = this.$q.defer<ITemplate>();
+    this.getTemplate(container, templateType, templateName)
+      .then(template => deferred.resolve(this.createITemplate(templateName, templateType, template)),
+        error => deferred.reject(error));
+    return deferred.promise;
   }
 
   private getContainerAddress(container: string, profile?: string): string[] {
@@ -135,6 +168,34 @@ export class CacheConfigService {
     };
   }
 
+  private getAllTemplatesInHierarchy(container: ICacheContainer, templateType: string, templateName: string,
+                                     allTemplates: any[] = [], deferred: ng.IDeferred<any[]> = this.$q.defer()): ng.IPromise<any[]> {
+    this.getTemplateWithoutParent(container, templateType, templateName)
+      .then(response => {
+        allTemplates.unshift(response);
+        if (isNullOrUndefined(response.configuration)) {
+          deferred.resolve(allTemplates);
+        } else {
+          return this.getAllTemplatesInHierarchy(container, templateType, response.configuration, allTemplates, deferred);
+        }
+      }, error => deferred.reject(error));
+    return deferred.promise;
+  }
+
+  private getTemplateWithoutParent(container: ICacheContainer, templateType: string, templateName: string): ng.IPromise<any> {
+    let deferred: ng.IDeferred<any> = this.$q.defer();
+    this.dmrService.readResource({
+      address: this.getConfigAddress(container.name, container.profile).concat(templateType + "-configuration", templateName),
+      recursive: true
+    }).then(response => {
+      response.type = templateType;
+      response["template-name"] = templateName;
+      deferred.resolve(response);
+    }, error => deferred.reject(error));
+
+    return deferred.promise;
+  }
+
   private modifyAuthorizationDmr(meta: any): void {
     let authorization: any = deepGet(meta, "children.security.model-description.*.children.authorization.model-description.*.attributes");
     authorization.enabled = {
@@ -152,21 +213,6 @@ export class CacheConfigService {
         TYPE_MODEL_VALUE: "LIST"
       }
     };
-  }
-
-  private extractTemplatesFromConfigurations(config: any): ITemplate[] {
-    let templateArray: ITemplate[] = [];
-    angular.forEach(config, (templates, templateType) => {
-      angular.forEach(templates, (template, templateName) => {
-        templateArray.push({
-          name: templateName,
-          mode: template.mode,
-          type: templateType.replace("-configuration", ""),
-          traits: this.extractTraitsFromTemplate(template)
-        });
-      });
-    });
-    return templateArray;
   }
 
   private extractTraitsFromTemplate(template: any): string[] {
