@@ -39,7 +39,7 @@ export class FormGroupCtrl {
   }
 
   getId(): string {
-    let id: string = isNotNullOrUndefined(this.parent) && isNonEmptyString(this.parent) ? this.parent + "." : "";
+    let id: string = isNonEmptyString(this.parent) ? this.parent + "." : "";
     return id + this.field;
   }
 

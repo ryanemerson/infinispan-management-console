@@ -16,7 +16,7 @@
     </div>
 
     <select class="form-control" ng-style="$ctrl.getStyle()" ng-model="$ctrl.data[$ctrl.field]"
-            ng-options="{{$ctrl.option}}" id-generator id-tag="{{$ctrl.getId()}}"
+            ng-options="{{$ctrl.option}}" id-generator id-tag="{{$ctrl.getId()}}" type="select"
             ng-if="$ctrl.multiValue" ng-change="$ctrl.fieldValueModified()"/>
 
     <!-- TODO Make a property table directive-->

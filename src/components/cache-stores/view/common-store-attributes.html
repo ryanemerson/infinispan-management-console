@@ -16,6 +16,6 @@
         </div>
 
         <field-info data="$ctrl.store" meta="$ctrl.getFieldMetaObject('write-behind')" field="write-behind"
-                    parent="stores" previous-value="$ctrl.prevData['write-behind']"/>
+                    parent="{{$ctrl.data['store-type']}}" previous-value="$ctrl.prevData['write-behind']"/>
     </div>
 </div>
