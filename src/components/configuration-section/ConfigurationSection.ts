@@ -9,6 +9,7 @@ export class ConfigurationSection {
 
   constructor() {
     this.bindings = {
+      section: "@",
       data: "=",
       meta: "=",
       fields: "=",

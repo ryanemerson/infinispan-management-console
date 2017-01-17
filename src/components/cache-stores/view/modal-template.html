@@ -16,13 +16,13 @@
                             meta="ctrl.getMetadataObject(field.name, field.parent)"
                             previous-value="ctrl.prevData[field.parent][field.name]" read-only="ctrl.readOnly"
                             label="{{ctrl.resolveFieldName(field.name, field.parent)}}"
-                            ng-if="ctrl.isParentDefined(field)"/>
+                            ng-if="ctrl.isParentDefined(field)" parent="{{ctrl.getId(field.name)}}"/>
             </div>
 
             <div>
                 <form-group data="ctrl.data" field="{{field.name}}" meta="ctrl.getMetadataObject(field.name)"
                             previous-value="ctrl.prevData[field.name]" read-only="ctrl.readOnly"
-                            ng-if="!ctrl.isParentDefined(field)"/>
+                            ng-if="!ctrl.isParentDefined(field)" parent="{{ctrl.getId(field.name)}}"/>
             </div>
         </div>
     </div>

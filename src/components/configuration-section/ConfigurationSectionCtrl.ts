@@ -9,6 +9,7 @@ import {
 
 export class ConfigurationSectionCtrl implements IConfigurationCallback {
 
+  section: string;
   data: any;
   meta: any;
   prevData: any;

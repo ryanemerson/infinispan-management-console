@@ -1,5 +1,8 @@
 import IModalServiceInstance = angular.ui.bootstrap.IModalServiceInstance;
-import {isNotNullOrUndefined, isObject, convertCacheAttributeIntoFieldName} from "../../common/utils/Utils";
+import {
+  isNotNullOrUndefined, isObject, convertCacheAttributeIntoFieldName,
+  isNonEmptyString
+} from "../../common/utils/Utils";
 import {makeFieldClean} from "../../common/configuration/ConfigUtil";
 
 export class CacheStoreModalCtrl {
@@ -9,9 +12,15 @@ export class CacheStoreModalCtrl {
   constructor(private $uibModalInstance: IModalServiceInstance,
               public data: any,
               public meta: any,
+              public parent: string,
               public fields: {name: string}[],
               public prevData: any,
               public title: string) {
+  }
+
+  getId(field: string): string {
+    let id: string = isNonEmptyString((this.parent)) ? this.parent : "";
+    return id + "." + this.title + "." + field;
   }
 
   cancelModal(): void {

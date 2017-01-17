@@ -1,5 +1,5 @@
 <div class="row" vertilize-container>
-  <div class="col-sm-9 col-md-10 col-sm-push-3 col-md-push-2" id="cache-cards">
+  <div class="col-sm-9 col-md-10 col-sm-push-3 col-md-push-2" id-generator id-tag=cache-cards">
     <br/>
 
     <div class="alert alert-info" ng-show="filtered.length < cachesCtrl.caches.length">
@@ -72,7 +72,7 @@
       <div class="form-group has-clear">
         <div class="search-pf-input-group">
           <label for="searchTextField" class="sr-only">Name</label>
-          <input class="form-control" id="searchTextField" ng-model="searchNameQuery"
+          <input class="form-control" id-generator id-tag="cache"  ng-model="searchNameQuery"
                  placeholder="Type name, data center, ..."
                  type="search">
           <button style="display: none;" type="button" class="clear" aria-hidden="true"><span
@@ -80,7 +80,7 @@
         </div>
       </div>
       <div class="form-group">
-        <button class="btn btn-default" id="searchCacheButton" type="submit"><span class="fa fa-search"></span>
+        <button class="btn btn-default" id-generator id-tag="search-cache-button"  type="submit"><span class="fa fa-search"></span>
         </button>
       </div>
     </form>
@@ -95,16 +95,16 @@
             </a>
           </h4>
         </div>
-        <div id="filter-type-accordion" class="panel-collapse" ng-class="cachesCtrl.isCollapsedType? 'collapse' : ''">
+        <div id-generator id-tag="filter-type-accordian" class="panel-collapse" ng-class="cachesCtrl.isCollapsedType? 'collapse' : ''">
           <div class="panel-body">
             <fieldset>
-              <label><input type="checkbox" id="typeCheckboxLocal" value="local"
+              <label><input type="checkbox" id-generator id-tag="type" value="local"
                             ng-model="cachesCtrl.typeCheckboxes.local"/> <span translate> LOCAL</span></label>
-              <label><input type="checkbox" id="typeCheckboxReplicated" value="replicated"
+              <label><input type="checkbox" id-generator id-tag="type" value="replicated"
                             ng-model="cachesCtrl.typeCheckboxes.replicated"/> <span translate> REPLICATED</span></label>
-              <label><input type="checkbox" id="typeCheckboxDistributed" value="distributed"
+              <label><input type="checkbox" id-generator id-tag="type" value="distributed"
                             ng-model="cachesCtrl.typeCheckboxes.distributed"/> <span translate> DISTRIBUTED</span></label>
-              <label><input type="checkbox" id="typeCheckboxInvalidation" value="invalidation"
+              <label><input type="checkbox" id-generator id-tag="type" value="invalidation"
                             ng-model="cachesCtrl.typeCheckboxes.invalidation"/> <span translate> INVALIDATION</span></label>
             </fieldset>
           </div>
@@ -120,31 +120,31 @@
             </a>
           </h4>
         </div>
-        <div id="filter-trait-accordion" class="panel-collapse" ng-class="cachesCtrl.isCollapsedTrait?'collapse':''">
+        <div id-generator id-tag="filter-trait-accordion" class="panel-collapse" ng-class="cachesCtrl.isCollapsedTrait?'collapse':''">
           <div class="panel-body">
             <fieldset>
-              <label><input type="checkbox" id="traitCheckboxBounded" value="bounded"
+              <label><input type="checkbox" id-generator id-tag="trait" value="bounded"
                             ng-model="cachesCtrl.traitCheckboxes.bounded"/> <span class="fa fa-stack-overflow"
                                                                             title="Bounded"></span> <span translate>BOUNDED</span></label>
-              <label><input type="checkbox" id="traitCheckboxCompatible" value="compatible"
+              <label><input type="checkbox" id-generator id-tag="trait" value="compatible"
                             ng-model="cachesCtrl.traitCheckboxes.compatible"/> <span class="fa fa-puzzle-piece"
                                                                                title="Compatible"></span> <span
                 translate>COMPATIBLE</span></label>
-              <label><input type="checkbox" id="traitCheckboxIndexed" value="indexed"
+              <label><input type="checkbox" id-generator id-tag="trait" value="indexed"
                             ng-model="cachesCtrl.traitCheckboxes.indexed"/> <span class="fa fa-list-ol"
                                                                             title="Indexed"></span> <span translate>INDEXED</span></label>
-              <label><input type="checkbox" id="traitCheckboxPersistent" value="persistent"
+              <label><input type="checkbox" id-generator id-tag="trait" value="persistent"
                             ng-model="cachesCtrl.traitCheckboxes.persistent"/> <span class="fa fa-database"
                                                                                title="Persistent"></span> <span
                 translate>PERSISTENT</span></label>
-              <label><input type="checkbox" id="traitCheckboxRemotebackup" value="remotebackup"
+              <label><input type="checkbox" id-generator id-tag="trait" value="remotebackup"
                             ng-model="cachesCtrl.traitCheckboxes.remotebackup"/> <span class="pficon pficon-history"
                                                                                  title="Remote backup"></span> <span
                 translate>REMOTE_BACKUP</span></label>
-              <label><input type="checkbox" id="traitCheckboxSecure" value="secure"
+              <label><input type="checkbox" id-generator id-tag="trait" value="secure"
                             ng-model="cachesCtrl.traitCheckboxes.secure"/> <span class="fa fa-lock" title="Indexed"></span>
                 <span translate>SECURE</span></label>
-              <label><input type="checkbox" id="traitCheckboxTransactional" value="transactional"
+              <label><input type="checkbox" id-generator id-tag="trait" value="transactional"
                             ng-model="cachesCtrl.traitCheckboxes.transactional"/> <span class="fa fa-arrow-circle-o-down"
                                                                                   title="Transactional"></span> <span
                 translate>TRANSACTIONAL</span></label>
@@ -162,16 +162,16 @@
             </a>
           </h4>
         </div>
-        <div id="filter-status-accordion" class="panel-collapse" ng-class="cachesCtrl.isCollapsedStatus?'collapse':''">
+        <div id-generator id-tag="filter-status-accordion" class="panel-collapse" ng-class="cachesCtrl.isCollapsedStatus?'collapse':''">
           <div class="panel-body">
             <fieldset>
-              <label><input type="checkbox" id="statusCheckboxIndexing" value="indexing"
+              <label><input type="checkbox" id-generator id-tag="status" value="indexing"
                             ng-model="cachesCtrl.statusCheckboxes.indexing"/> Indexing</label>
-              <label><input type="checkbox" id="statusCheckboxMaintenance" value="maintenance"
+              <label><input type="checkbox" id-generator id-tag="status" value="maintenance"
                             ng-model="cachesCtrl.statusCheckboxes.offline"/> Offline</label>
-              <label><input type="checkbox" id="statusCheckboxRebalancing" value="rebalancing"
+              <label><input type="checkbox" id-generator id-tag="status" value="rebalancing"
                             ng-model="cachesCtrl.statusCheckboxes.rebalancing"/> Rebalancing</label>
-              <label><input type="checkbox" id="statusCheckboxSplitbrain" value="splitbrain"
+              <label><input type="checkbox" id-generator id-tag="status" value="splitbrain"
                             ng-model="cachesCtrl.statusCheckboxes.splitbrain"/> Split</label>
             </fieldset>
           </div>

@@ -1,6 +1,6 @@
 import {
   isNullOrUndefined, isBoolean, isNotNullOrUndefined,
-  convertCacheAttributeIntoFieldName
+  convertCacheAttributeIntoFieldName, isNonEmptyString
 } from "../../../common/utils/Utils";
 import {
   makeFieldClean,
@@ -13,6 +13,7 @@ export class FormGroupCtrl {
   data: any;
   field: string;
   label: string;
+  parent: string;
   meta: any;
   previousValue: any;
   placeholder: string;
@@ -35,6 +36,11 @@ export class FormGroupCtrl {
       this.multiValue = true;
       this.option = this.optionString.concat(" in $ctrl.optionValues");
     }
+  }
+
+  getId(): string {
+    let id: string = isNotNullOrUndefined(this.parent) && isNonEmptyString(this.parent) ? this.parent + "." : "";
+    return id + this.field;
   }
 
   fieldValueModified(): void {

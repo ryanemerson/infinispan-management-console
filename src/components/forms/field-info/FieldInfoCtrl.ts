@@ -4,15 +4,22 @@ import {
   makeFieldClean,
   makeAllFieldsClean
 } from "../../../common/configuration/ConfigUtil";
-import {deepGet, isNotNullOrUndefined} from "../../../common/utils/Utils";
+import {deepGet, isNotNullOrUndefined, isNonEmptyString} from "../../../common/utils/Utils";
 
 export class FieldInfoCtrl {
   data: any;
   meta: any;
+  parent: string;
   field: string;
   previousValue: any;
   readOnly: boolean;
   undoCallback: Function;
+
+
+  getId(): string {
+    let id: string = isNotNullOrUndefined(this.parent) && isNonEmptyString(this.parent) ? this.parent + "." : "";
+    return id + "info";
+  }
 
   isFieldValueModified(): boolean {
     return isFieldValueModified(this.meta);

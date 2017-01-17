@@ -16,6 +16,7 @@ export class CacheStoreModalButtonCtrl {
 
   data: any;
   field: string;
+  parent: string;
   fieldMeta: any;
   modalFields: string[];
   previousValues: any;
@@ -37,6 +38,7 @@ export class CacheStoreModalButtonCtrl {
       resolve: {
         data: (): any => this.resolveDataField(this.data, this.field),
         meta: (): any => this.fieldMeta,
+        parent: (): string => this.parent,
         prevData: (): any => isNullOrUndefined(this.previousValues) ? {} : this.previousValues,
         title: (): string => this.title,
         fields: (): any => this.modalFields
