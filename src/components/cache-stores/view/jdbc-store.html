@@ -5,7 +5,7 @@
     <label class="col-md-4 control-label">String keyed table</label>
 
     <div class="col-md-4">
-        <cache-store-modal data="$ctrl.store" field="string-keyed-table" parent="{{$ctrl.data['store-type']}}"
+        <cache-store-modal data="$ctrl.store" field="string-keyed-table" parent="$ctrl.data['store-type']"
                            field-meta="$ctrl.getFieldMetaValues('string-keyed-table')"
                            parent-meta="$ctrl.getFieldMetaObject('string-keyed-table')"
                            previous-values="$ctrl.prevData['string-keyed-table']" title="String Keyed Table"
@@ -25,7 +25,7 @@
     <label class="col-md-4 control-label">Binary keyed table</label>
 
     <div class="col-md-4">
-        <cache-store-modal data="$ctrl.store" field="binary-keyed-table" parent="{{$ctrl.data['store-type']}}"
+        <cache-store-modal data="$ctrl.store" field="binary-keyed-table" parent="$ctrl.data['store-type']"
                            field-meta="$ctrl.getFieldMetaValues('binary-keyed-table')"
                            parent-meta="$ctrl.getFieldMetaObject('binary-keyed-table')"
                            previous-values="$ctrl.prevData['binary-keyed-table']" title="Binary Keyed Table"

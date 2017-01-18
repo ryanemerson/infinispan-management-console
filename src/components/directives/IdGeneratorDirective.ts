@@ -9,6 +9,9 @@ import {IScope} from "../../common/IScopeService";
 export class IdGeneratorDirective implements IDirective {
 
   restrict: string = "A";
+  scope: any = {
+    idTag: "="
+  };
 
   public static factory(): IDirectiveFactory {
     let directive: IDirectiveFactory = ($state: IStateService) => {
@@ -23,7 +26,29 @@ export class IdGeneratorDirective implements IDirective {
 
   public link: Function = ($scope: IScope, element: IAugmentedJQuery, attributes: IAttributes) => {
     element.attr("id", this.generateId(attributes));
-    element.removeAttr("id-generator").removeAttr("id-tag");
+    // TRY USING $OBSERVE INSTEAD OF WATCH!
+
+    $scope.$observe("id-tag", (newVal) => {
+      alert(newVal);
+    });
+
+    // debugger;
+    // let x: any = this.scope.idTag;
+    // this.count += 1;
+    // if (this.count > 1) {
+    //   debugger;
+    //   let x: number = this.count;
+    // }
+    // element.removeAttr("id-generator");
+
+    // $scope.$watch(attributes["id-tag"], (newValue, oldValue, scope) => {
+    //   if (isNotNullOrUndefined(newValue)) {
+    //     debugger;
+    //     let x: Function = this.generateId;
+    //     attributes["id-tag"]
+    //     element.attr("id", this.generateId(attributes));
+    //   }
+    // });
   };
 
   private generateId(attributes: IAttributes): string {

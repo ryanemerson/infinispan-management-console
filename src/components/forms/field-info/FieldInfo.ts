@@ -11,7 +11,7 @@ export class FieldInfo {
     this.bindings = {
       data: "=",
       meta: "=",
-      parent: "@",
+      parent: "=",
       field: "@",
       previousValue: "=",
       readOnly: "=",

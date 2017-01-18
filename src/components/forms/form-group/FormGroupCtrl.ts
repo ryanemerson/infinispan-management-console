@@ -13,7 +13,7 @@ export class FormGroupCtrl {
   data: any;
   field: string;
   label: string;
-  parent: string;
+  parent: any;
   meta: any;
   previousValue: any;
   placeholder: string;

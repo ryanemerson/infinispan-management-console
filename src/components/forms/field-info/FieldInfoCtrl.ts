@@ -9,12 +9,11 @@ import {deepGet, isNotNullOrUndefined, isNonEmptyString} from "../../../common/u
 export class FieldInfoCtrl {
   data: any;
   meta: any;
-  parent: string;
+  parent: any;
   field: string;
   previousValue: any;
   readOnly: boolean;
   undoCallback: Function;
-
 
   getId(): string {
     let id: string = isNotNullOrUndefined(this.parent) && isNonEmptyString(this.parent) ? this.parent + "." : "";

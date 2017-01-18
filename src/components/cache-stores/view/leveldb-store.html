@@ -4,7 +4,7 @@
         <label class="col-md-4 control-label">Expiration</label>
 
         <div class="col-md-4">
-            <cache-store-modal data="$ctrl.store" field="expiration.EXPIRATION" parent="{{$ctrl.data['store-type']}}"
+            <cache-store-modal data="$ctrl.store" field="expiration.EXPIRATION" parent="$ctrl.data['store-type']"
                                field-meta="$ctrl.getFieldMetaObject('expiration')"
                                parent-meta="$ctrl.getFieldMetaObject('expiration')"
                                previous-values="$ctrl.prevData['expiration']['EXPIRATION']" title="{{$ctrl.data['store-type']}} Expiration"
@@ -12,7 +12,7 @@
         </div>
 
         <field-info data="$ctrl.store" meta="$ctrl.getFieldMetaObject('expiration')" field="expiration"
-                    previous-value="$ctrl.prevData['expiration']" parent="{{$ctrl.data['store-type']}}"/>
+                    previous-value="$ctrl.prevData['expiration']" parent="$ctrl.data['store-type']"/>
     </div>
 </div>
 
@@ -21,7 +21,7 @@
     <form-group data="$ctrl.levelDb.impl" field="implementation"
                 meta="$ctrl.getFieldMetaObject('implementation', 'implementation')"
                 read-only="$ctrl.readOnly" previous-value="$ctrl.getLevelDbPrevVal('implementation', 'implementation')"
-                undo-callback="$ctrl.undoLdbImplementationChange" parent="{{$ctrl.data['store-type']}}">
+                undo-callback="$ctrl.undoLdbImplementationChange" parent="$ctrl.data['store-type']">
 </div>
 
 <!--Compression-->
@@ -29,7 +29,7 @@
     <form-group data="$ctrl.levelDb.comp" field="type" label="Compression"
                 meta="$ctrl.getFieldMetaObject('type', 'compression')"
                 read-only="$ctrl.readOnly" previous-value="$ctrl.getLevelDbPrevVal('type', 'compression')"
-                undo-callback="$ctrl.undoLdbCompressionChange" parent="{{$ctrl.data['store-type']}}"/>
+                undo-callback="$ctrl.undoLdbCompressionChange" parent="$ctrl.data['store-type']"/>
 </div>
 
 <!--Normal Input-->
