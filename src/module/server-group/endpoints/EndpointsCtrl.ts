@@ -1,5 +1,4 @@
 import IModalService = angular.ui.bootstrap.IModalService;
-import {IMap} from "../../../common/utils/IMap";
 import {IServerGroup} from "../../../services/server-group/IServerGroup";
 import {IEndpoint} from "../../../services/endpoint/IEndpoint";
 import {AddEndpointModalCtrl} from "./AddEndpointModalCtrl";
@@ -11,7 +10,6 @@ export class EndpointsCtrl {
   constructor(private $uibModal: IModalService,
               private serverGroup: IServerGroup,
               private endpoints: IEndpoint[]){
-    console.log(endpoints)
   }
 
   execute(): void{
