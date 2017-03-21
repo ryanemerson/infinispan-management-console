@@ -8,6 +8,7 @@ import {IServerGroup} from "../../services/server-group/IServerGroup";
 import {IRedirectState} from "../../common/IRedirectState";
 import {EndpointService} from "../../services/endpoint/EndpointService";
 import {endpointFilter} from "./endpoints/filters/EndpointFilter";
+import {EndpointConfigCtrl} from "./endpoints/config/EndpointConfigCtrl";
 
 const module: ng.IModule = App.module("managementConsole.server-group", []);
 
@@ -55,6 +56,17 @@ module.config(($stateProvider: ng.ui.IStateProvider) => {
         (endpointService: EndpointService, serverGroup: IServerGroup) => {
           return endpointService.getAllClusterEndpoints(serverGroup);
         }],
+    }
+  });
+
+  $stateProvider.state("server-group.edit-endpoint-config", {
+    url: "/endpoints/:endpointType/:endpointName/config",
+    controller: EndpointConfigCtrl,
+    controllerAs: "ctrl",
+    templateUrl: "module/server-group/endpoints/config/view/endpoint-config.html",
+    resolve: {
+      endpointName: ["$stateParams", ($stateParams) => $stateParams.endpointName],
+      endpointType: ["$stateParams", ($stateParams) => $stateParams.endpointType]
     }
   });
 });

@@ -173,5 +173,7 @@
   "CREATE_ENDPOINT":"Add endpoint",
   "PLEASE_ADD_REQUIRED_ENDPOINT_PROPS":"Please add required endpoint properties",
   "ENDPOINT_NAME":"Name",
-  "ENDPOINT_TYPE":"Type"
+  "ENDPOINT_TYPE":"Type",
+  "VIEW_EDIT_ENDPOINT_CONFIGURATION":"View / Edit endpoint configuration:",
+  "CREATE_ENDPOINT": "Create Endpoint"
 }
