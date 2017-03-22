@@ -59,12 +59,21 @@ module.config(($stateProvider: ng.ui.IStateProvider) => {
     }
   });
 
-  $stateProvider.state("server-group.edit-endpoint-config", {
-    url: "/endpoints/:endpointType/:endpointName/config",
+  $stateProvider.state("edit-endpoint-config", {
+    parent: "root",
+    url: "/server-groups/:serverGroup/endpoints/:endpointType/:endpointName/config",
     controller: EndpointConfigCtrl,
     controllerAs: "ctrl",
     templateUrl: "module/server-group/endpoints/config/view/endpoint-config.html",
     resolve: {
+      serverGroup: ["$stateParams", "serverGroupService", ($stateParams, serverGroupService, endpointService) => {
+        // TODO add serverGroup object as optional parameter and if exists don't call service again unless refresh is true
+        let serverGroup: string = $stateParams.serverGroup;
+        return serverGroupService.getServerGroupMapWithMembers(serverGroup);
+      }],
+      endpoint: ["$stateParams", "endpointService", "serverGroup", ($stateParams, endpointService, serverGroup) => {
+        return endpointService.getEndpoint(serverGroup, /*$stateParams.endpointType*/ "hotrod-connector", null);
+      }],
       endpointName: ["$stateParams", ($stateParams) => $stateParams.endpointName],
       endpointType: ["$stateParams", ($stateParams) => $stateParams.endpointType]
     }

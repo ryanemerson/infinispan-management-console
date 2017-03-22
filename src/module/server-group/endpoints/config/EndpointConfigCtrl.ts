@@ -3,9 +3,11 @@ import {AbstractConfigurationCtrl} from "../../../../common/configuration/Abstra
 import IModalService = angular.ui.bootstrap.IModalService;
 import {LaunchTypeService} from "../../../../services/launchtype/LaunchTypeService";
 import {ServerGroupService} from "../../../../services/server-group/ServerGroupService";
+import {IServerGroup} from "../../../../services/server-group/IServerGroup";
+import {IEndpoint} from "../../../../services/endpoint/IEndpoint";
 
 export class EndpointConfigCtrl extends AbstractConfigurationCtrl {
-  static $inject: string[] = ["$state", "$scope", "$uibModal", "serverGroupService", "launchType", "endpointType", "endpointName"];
+  static $inject: string[] = ["$state", "$scope", "$uibModal", "serverGroupService", "launchType", "serverGroup", "endpoint", "endpointType", "endpointName"];
 
   readOnlyFields: string[];
 
@@ -16,6 +18,8 @@ export class EndpointConfigCtrl extends AbstractConfigurationCtrl {
               private $uibModal: IModalService,
               private serverGroupService: ServerGroupService,
               private launchType: LaunchTypeService,
+              private serverGroup: IServerGroup,
+              private endpoint: IEndpoint,
               private endpointType: string,
               public endpointName: string) {
     super();

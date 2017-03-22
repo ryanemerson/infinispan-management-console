@@ -9,6 +9,7 @@ import {LaunchTypeService} from "../launchtype/LaunchTypeService";
 import {isNotNullOrUndefined, traverse, deepValue} from "../../common/utils/Utils";
 import {ICacheContainer} from "../container/ICacheContainer";
 import {IServerGroup} from "../server-group/IServerGroup";
+import {IServerAddress} from "../server/IServerAddress";
 
 const module: ng.IModule = App.module("managementConsole.services.endpoint", []);
 
@@ -19,7 +20,7 @@ export class EndpointService {
     return <IEndpoint> {
       name: isNotNullOrUndefined(object.name) ? object.name : isNotNullOrUndefined(namePath) && namePath.length > 0 ? namePath[0] : "",
       "cache-container": object["cache-container"],
-      encryption: (object.encryption != null && object.encryption !== undefined) ? object.encryption : "",
+      "encryption": (object.encryption != null && object.encryption !== undefined) ? object.encryption : "",
       "socket-binding-name": object["socket-binding"],
       "socket-binding": socketBinding,
       "hotrod-socket-binding": object["hotrod-socket-binding"],
@@ -65,6 +66,15 @@ export class EndpointService {
         });
       });
     return deferred.promise;
+  }
+
+  getEndpoint(serverGroup: IServerGroup, endpointType: string, name: string): ng.IPromise<IEndpoint> {
+    let resolvedName: string = isNotNullOrUndefined(name) ? name : endpointType;
+    let request: IDmrRequest = <IDmrRequest>{
+      address: this.getEndpointAddress(serverGroup.profile).concat(endpointType).concat(resolvedName),
+      recursive: true,
+    };
+    return this.dmrService.readResource(request);
   }
 
   getAllClusterEndpoints(serverGroup: IServerGroup): ng.IPromise<IEndpoint[]> {

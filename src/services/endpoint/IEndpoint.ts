@@ -1,9 +1,17 @@
 import {ISocketBinding} from "../socket-binding/ISocketBinding";
 
 export interface IEndpoint {
+  name: string;
   "cache-container": string;
-  encryption: any; // Todo model this?
+  "worker-threads": number;
+  "idle-timeout": number;
+  "tcp-nodelay": boolean;
+  "send-buffer-size": number;
+  "receive-buffer-size": number;
   "socket-binding-name": string;
   "socket-binding"?: ISocketBinding;
-  name: string;
+  encryption?: any;
+
+  "hotrod-socket-binding"?:any;
+  "rest-socket-binding"?:any;
 }
