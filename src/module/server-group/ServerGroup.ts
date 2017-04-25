@@ -74,6 +74,9 @@ module.config(($stateProvider: ng.ui.IStateProvider) => {
       endpoint: ["$stateParams", "endpointService", "serverGroup", ($stateParams, endpointService, serverGroup) => {
         return endpointService.getEndpoint(serverGroup, /*$stateParams.endpointType*/ "hotrod-connector", null);
       }],
+      endpointMeta: ["$stateParams", "endpointService", "serverGroup", ($stateParams, endpointService, serverGroup) => {
+        return endpointService.getConfigurationMeta(serverGroup.profile, "hotrod-connector", "hotrod-connector");
+      }],
       endpointName: ["$stateParams", ($stateParams) => $stateParams.endpointName],
       endpointType: ["$stateParams", ($stateParams) => $stateParams.endpointType]
     }

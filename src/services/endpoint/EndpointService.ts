@@ -24,7 +24,12 @@ export class EndpointService {
       "socket-binding-name": object["socket-binding"],
       "socket-binding": socketBinding,
       "hotrod-socket-binding": object["hotrod-socket-binding"],
-      "rest-socket-binding": object["rest-socket-binding"]
+      "rest-socket-binding": object["rest-socket-binding"],
+      "worker-threads": object["worker-threads"],
+      "idle-timeout": object["idle-timeout"],
+      "tcp-nodelay": object["tcp-nodelay"],
+      "send-buffer-size": object["end-buffer-size"],
+      "receive-buffer-size": object["receive-buffer-size"]
     };
   }
 
@@ -108,6 +113,21 @@ export class EndpointService {
           deferred.resolve(endpoints);
         });
       });
+    return deferred.promise;
+  }
+
+  getConfigurationMeta(profile: string, endpointType: string, endpointName: string): ng.IPromise<any> {
+    let deferred: ng.IDeferred<any> = this.$q.defer();
+    let address: string[] = this.getEndpointAddress(profile).concat(endpointType).concat(endpointType);
+    this.dmrService.readResourceDescription({
+      address: address,
+      recursive: true
+    }).then(
+      response => {
+        //TODO perhaps inspect and adjust the response
+        deferred.resolve(response);
+      },
+      error => deferred.reject(error));
     return deferred.promise;
   }
 

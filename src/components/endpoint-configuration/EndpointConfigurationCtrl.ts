@@ -5,7 +5,7 @@ import {ICacheContainer} from "../../services/container/ICacheContainer";
 export class EndpointConfigurationCtrl {
 
   endpointType: string;
-  container: ICacheContainer;
+  //container: ICacheContainer;
   data: any;
   meta: any;
   initDefaults: boolean;

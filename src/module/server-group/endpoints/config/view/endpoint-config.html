@@ -45,8 +45,8 @@
     <div class="row">
         <div class="col-sm-12 col-md-12">
             <div id-generator="content">
-                <endpoint-configuration endpoint-type="{{ctrl.endpointType}}" data=""
-                                     meta="" init-defaults="!ctrl.isEditMode()" read-only="false"
+                <endpoint-configuration endpoint-type="{{ctrl.endpointType}}" data="ctrl.endpoint"
+                                     meta="ctrl.endpointMeta" init-defaults="!ctrl.isEditMode()" read-only="false"
                                      read-only-fields="" config-callbacks="ctrl.callbackArray"
                                      edit-mode="ctrl.isEditMode()"/>
             </div>

@@ -7,7 +7,7 @@ import {IServerGroup} from "../../../../services/server-group/IServerGroup";
 import {IEndpoint} from "../../../../services/endpoint/IEndpoint";
 
 export class EndpointConfigCtrl extends AbstractConfigurationCtrl {
-  static $inject: string[] = ["$state", "$scope", "$uibModal", "serverGroupService", "launchType", "serverGroup", "endpoint", "endpointType", "endpointName"];
+  static $inject: string[] = ["$state", "$scope", "$uibModal", "serverGroupService", "launchType", "serverGroup", "endpoint", "endpointMeta", "endpointType", "endpointName"];
 
   readOnlyFields: string[];
 
@@ -20,20 +20,10 @@ export class EndpointConfigCtrl extends AbstractConfigurationCtrl {
               private launchType: LaunchTypeService,
               private serverGroup: IServerGroup,
               private endpoint: IEndpoint,
+              private endpointMeta: any,
               private endpointType: string,
-              public endpointName: string) {
+              private endpointName: string) {
     super();
-    this.readOnlyFields = this.isEditMode() ? ["type", "template-name"] : ["template-name"];
-    this.$scope.$watch("ctrl.template.type", (newType: string, oldType: string) => {
-      if (newType !== oldType) {
-        if (this.typeChangeCancelled) {
-          this.typeChangeCancelled = false;
-        } else {
-          this.reloadMetaAndDataOnTypeChange(newType, oldType);
-        }
-      }
-    });
-
     /*if (!this.isEditMode()) {
       setIsNewNodeRecursively(this.template);
     }*/
