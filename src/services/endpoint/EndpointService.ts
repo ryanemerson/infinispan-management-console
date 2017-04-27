@@ -19,6 +19,7 @@ export class EndpointService {
   static parseEndpoint(namePath: string [], object: any, socketBinding?: ISocketBinding): IEndpoint {
     return <IEndpoint> {
       name: isNotNullOrUndefined(object.name) ? object.name : isNotNullOrUndefined(namePath) && namePath.length > 0 ? namePath[0] : "",
+      "type": isNotNullOrUndefined(namePath) && namePath.length > 0 ? namePath[0]: undefined,
       "cache-container": object["cache-container"],
       "encryption": (object.encryption != null && object.encryption !== undefined) ? object.encryption : "",
       "socket-binding-name": object["socket-binding"],

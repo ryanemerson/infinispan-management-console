@@ -1,6 +1,7 @@
 import {IConfigurationCallback} from "../../common/configuration/IConfigurationCallback";
 import {getMetaForResource} from "../../common/configuration/ConfigUtil";
 import {ICacheContainer} from "../../services/container/ICacheContainer";
+import {deepGet} from "../../common/utils/Utils";
 
 export class EndpointConfigurationCtrl {
 
@@ -18,6 +19,7 @@ export class EndpointConfigurationCtrl {
   }
 
   getMetaForResource(resource: string): any {
-    return getMetaForResource(this.meta, resource);
+    //return getMetaForResource(this.meta, resource);
+    return deepGet(this.meta, resource);
   }
 }

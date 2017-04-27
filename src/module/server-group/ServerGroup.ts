@@ -72,10 +72,10 @@ module.config(($stateProvider: ng.ui.IStateProvider) => {
         return serverGroupService.getServerGroupMapWithMembers(serverGroup);
       }],
       endpoint: ["$stateParams", "endpointService", "serverGroup", ($stateParams, endpointService, serverGroup) => {
-        return endpointService.getEndpoint(serverGroup, /*$stateParams.endpointType*/ "hotrod-connector", null);
+        return endpointService.getEndpoint(serverGroup, $stateParams.endpointType, $stateParams.endpointName);
       }],
       endpointMeta: ["$stateParams", "endpointService", "serverGroup", ($stateParams, endpointService, serverGroup) => {
-        return endpointService.getConfigurationMeta(serverGroup.profile, "hotrod-connector", "hotrod-connector");
+        return endpointService.getConfigurationMeta(serverGroup.profile,  $stateParams.endpointType,  $stateParams.endpointType);
       }],
       endpointName: ["$stateParams", ($stateParams) => $stateParams.endpointName],
       endpointType: ["$stateParams", ($stateParams) => $stateParams.endpointType]

@@ -6,7 +6,9 @@
         <li>
           <a ui-sref="server-groups" translate>CLUSTERS</a>
         </li>
-        <li class="active"><strong>{{ctrl.serverGroup.name}}</strong></li>
+        <li><a ui-sref="server-group({serverGroup: ctrl.serverGroup.name})" ui-sref-opts="{reload:true}">{{ctrl.serverGroup.name}}</a></li>
+        <li><a ui-sref="server-group.endpoints({serverGroup: ctrl.serverGroup.name})" ui-sref-opts="{reload:true}">endpoints</a></li>
+        <li>{{ctrl.endpointType}}</li>
       </ol>
       <h1><span class="label"
                 ng-class="{'label-success':ctrl.isAtLeastOneServerInRunningState(),
