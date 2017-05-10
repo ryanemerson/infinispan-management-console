@@ -19,7 +19,10 @@ export class EndpointConfigurationCtrl {
   }
 
   getMetaForResource(resource: string): any {
-    //return getMetaForResource(this.meta, resource);
+    return deepGet(this.meta, resource.concat(".attributes"));
+  }
+
+  getMetaRootForResource(resource: string): any {
     return deepGet(this.meta, resource);
   }
 }

@@ -14,7 +14,7 @@
       <div class="panel-body">
         <div class="form-horizontal" ng-repeat="field in group.fields">
 
-          <form-group parent="{{group.name}}" data="$ctrl.data" field="{{field}}" meta="$ctrl.meta[field]"
+          <form-group parent="{{group.name}}" data="$ctrl.resolveData(group)" field="{{field}}" meta="$ctrl.resolveMeta(field)"
                       placeholder="{{$ctrl.placeholders[field]}}" previous-value="$ctrl.prevData[field]"
                       read-only="$ctrl.isReadOnly(field)"/>
 

@@ -1,4 +1,4 @@
-import {isNotNullOrUndefined, isNullOrUndefined} from "../../common/utils/Utils";
+import {isNotNullOrUndefined, isNullOrUndefined, deepGet} from "../../common/utils/Utils";
 import {IConfigurationCallback} from "../../common/configuration/IConfigurationCallback";
 import {
   isFieldValueModified,
@@ -12,7 +12,7 @@ export class ConfigurationSectionCtrl implements IConfigurationCallback {
   data: any;
   meta: any;
   prevData: any;
-  fields: {name: string, fields: string[]}[];
+  fields: {name: string, fields: string[], dataPath: string, metaPath: string}[];
   initDefaults: boolean;
   readOnly: boolean;
   readOnlyFields: string[];
@@ -38,15 +38,22 @@ export class ConfigurationSectionCtrl implements IConfigurationCallback {
   }
 
   hasAnyFieldPreviousData(): boolean {
-    return this.fields.some(group => {
-      return group.fields.some(attr => isNotNullOrUndefined(this.data[attr]), this);
+    let result:boolean = this.fields.some(group => {
+      let dataObject: any = this.resolveObject(this.data, group.dataPath);
+      if (isNotNullOrUndefined(dataObject)) {
+        return group.fields.some(attr => isNotNullOrUndefined([attr]), this);
+      } else {
+        return false;
+      }
     });
+    return result;
   }
 
   isAnyFieldModified(): boolean {
     return this.createdOrDestroyedFromUI || this.fields.some(group => {
       return group.fields.some(attrName => {
-        return isNotNullOrUndefined(this.meta) && isFieldValueModified(this.meta[attrName]);
+        let meta: any = this.resolveObject(this.meta, group.metaPath);
+        return isNotNullOrUndefined(meta) && isFieldValueModified(meta[attrName]);
       }, this);
     });
   }
@@ -54,7 +61,8 @@ export class ConfigurationSectionCtrl implements IConfigurationCallback {
   isRestartRequired(): boolean {
     return this.fields.some(group => {
       return group.fields.some(attrName => {
-        return isFieldValueModified(this.meta[attrName]) && fieldChangeRequiresRestart(this.meta[attrName]);
+        let meta: any = this.resolveObject(this.meta, group.metaPath);
+        return isFieldValueModified(meta[attrName]) && fieldChangeRequiresRestart(meta[attrName]);
       }, this);
     });
   }
@@ -62,9 +70,17 @@ export class ConfigurationSectionCtrl implements IConfigurationCallback {
   cleanMetadata(): void {
     this.fields.forEach(group => {
       group.fields.forEach(attrName => {
-        convertListToJson(this.data, this.meta, attrName);
-        this.cleanFieldMeta(attrName);
-        this.prevData[attrName] = isNotNullOrUndefined(this.data[attrName]) ? angular.copy(this.data[attrName]) : "";
+        let data: any = this.resolveObject(this.data, group.dataPath);
+        let meta: any = this.resolveObject(this.meta, group.metaPath);
+        convertListToJson(data, meta, attrName);
+        this.cleanFieldMeta(meta, attrName);
+        if (isNotNullOrUndefined(data)) {
+          this.prevData[attrName] = isNotNullOrUndefined(data[attrName]) ? angular.copy(data[attrName]) : "";
+        } else {
+          console.log("Could not resolve data object for attribute " +
+            attrName + " check the data path specified in HTML which is " +
+            group.dataPath + " while the root data object is ", this.data);
+        }
       }, this);
     });
   }
@@ -78,13 +94,19 @@ export class ConfigurationSectionCtrl implements IConfigurationCallback {
 
   createNewDefault(): void {
     // initialize all fields with default values, make fields dirty
-    this.iterateFields((att: string) => {
-      this.data[att] = this.meta[att].default;
-      this.prevData[att] = this.meta[att].default;
+    this.iterateFields((group: any, att: string) => {
+      let data: any = this.resolveObject(this.data, group.dataPath);
+      let meta: any = this.resolveObject(this.meta, group.metaPath);
+      data[att] = meta[att].default;
+      this.prevData[att] = meta[att].default;
     });
     this.data["is-new-node"] = !this.loadedWithData;
     this.data["is-removed"] = false;
     this.createdOrDestroyedFromUI = true;
+  }
+
+  isNewNode(): boolean {
+    return this.data["is-new-node"];
   }
 
   destroy(): void {
@@ -96,17 +118,71 @@ export class ConfigurationSectionCtrl implements IConfigurationCallback {
     this.createdOrDestroyedFromUI = true;
   }
 
-  iterateFields(callback: (attribute: string) => void): void {
+  iterateFields(callback: (group: any, attribute: string) => void): void {
     this.fields.forEach((group) => {
       group.fields.forEach((attrName) => {
         if (this.meta[attrName].hasOwnProperty("default")) {
-          callback(attrName);
+          callback(group, attrName);
         }
       });
     });
   }
 
   isRemovable: Function = () => isNotNullOrUndefined(this.removable) ? this.removable : false;
+
+  findGroupForAttribute(name: string): any {
+    let result: any = null;
+    this.fields.forEach(group => {
+      group.fields.forEach(attributeName => {
+        if (attributeName === name) {
+          result = group;
+        }
+      });
+    });
+    return result;
+  }
+
+  resolveMeta(attributeName: string): any {
+    let meta: any;
+    let group: any = this.findGroupForAttribute(attributeName);
+    if(isNotNullOrUndefined(group)) {
+      meta = this.resolveObject(this.meta, group.metaPath);
+    }
+    if (isNotNullOrUndefined(meta) && isNotNullOrUndefined(attributeName)) {
+      if (isNotNullOrUndefined(meta[attributeName])) {
+        return meta[attributeName];
+      } else if (isNotNullOrUndefined(group.metaPath)) {
+        let metaRoot: any = deepGet(meta, group.metaPath);
+        if (isNotNullOrUndefined(metaRoot)){
+          return metaRoot[attributeName];
+        } else {
+          console.log("Could not resolve meta for attribute " + attributeName + " in group " + group);
+        }
+      }
+    } else {
+      console.log("Could not resolve meta for attribute " + attributeName + " in group " + group);
+    }
+  }
+
+  resolveData(group: any): any {
+    let data: any;
+    if(isNotNullOrUndefined(group)) {
+      data = this.resolveObject(this.data, group.dataPath);
+    }
+    return data;
+  }
+
+  resolveObject(root: any, path: string): any {
+    let result: any;
+    if (isNotNullOrUndefined(root)) {
+      if (isNotNullOrUndefined(path)) {
+        result = deepGet(root, path)
+      } else {
+        result = root;
+      }
+    }
+    return result;
+  }
 
   private createPlaceholders(): void {
     if (!this.initDefaults) {
@@ -115,16 +191,17 @@ export class ConfigurationSectionCtrl implements IConfigurationCallback {
     this.placeholders = {};
     this.fields.forEach((group) => {
       group.fields.forEach((attrName) => {
-        if (this.meta[attrName].hasOwnProperty("default")) {
-          this.placeholders[attrName] = this.meta[attrName].default;
+        let meta: any = this.resolveObject(this.meta, group.metaPath);
+        if (meta[attrName].hasOwnProperty("default")) {
+          this.placeholders[attrName] = meta[attrName].default;
         }
       });
     });
   }
 
-  private cleanFieldMeta(field: string): void {
-    if (isNotNullOrUndefined(this.meta[field])) {
-      makeFieldClean(this.meta[field]);
+  private cleanFieldMeta(meta: any, field: string): void {
+    if (isNotNullOrUndefined(meta[field])) {
+      makeFieldClean(meta[field]);
     }
   }
 }

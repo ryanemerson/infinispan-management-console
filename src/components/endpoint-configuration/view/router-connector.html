@@ -1,28 +1,24 @@
 <div>
   <uib-tabset vertical="true" type="pills">
     <uib-tab heading="General" active="true">
-      <configuration-section fields="[{name: 'Main', fields: ['name', 'cache-container']},
-                                      {name: 'TCP', fields: ['idle-timeout', 'receive-buffer-size', 'send-buffer-size', 'tcp-nodelay']},
-                                      {name: 'Sockets', fields: ['socket-binding']}]" data="$ctrl.data"
-                             meta="$ctrl.getMetaForResource('.attributes')" init-defaults="$ctrl.initDefaults" read-only="$ctrl.readOnly"
+      <configuration-section fields="[{name: 'Main', fields: ['hotrod-socket-binding', 'rest-socket-binding']},
+                                      {name: 'TCP', fields: ['receive-buffer-size', 'send-buffer-size', 'tcp-nodelay', 'keep-alive']}]"
+                             data="$ctrl.data" meta="$ctrl.getMetaForResource('')" init-defaults="$ctrl.initDefaults" read-only="$ctrl.readOnly"
                              read-only-fields="$ctrl.readOnlyFields" config-callbacks="$ctrl.configCallbacks"/>
     </uib-tab>
 
-    <uib-tab heading="Authentication">
-      <configuration-section fields="[{name: 'Authentication', fields: ['acquire-timeout', 'concurrency-level', 'isolation', 'striping']}]"
-                             data="ctrl.data" meta="$ctrl.getMetaForResource('.children.authentication.model-description.AUTHENTICATION.attributes')"
+    <uib-tab heading="Hotrod">
+      <configuration-section fields="[{name: 'Hotrod', fields: ['name'], dataPath: 'hotrod.HOTROD', metaPath:'hotrod.model-description.*.attributes'},
+                             {name: 'SNI configuration', fields: ['host-name', 'security-realm'], dataPath: 'hotrod.HOTROD.sni.SNI', metaPath:'hotrod.model-description.*.children.sni.model-description.*.attributes'}]"
+                             data="$ctrl.data['multi-tenancy'].MULTI_TENANCY" meta="$ctrl.getMetaRootForResource('.children.multi-tenancy.model-description.*.children')"
                              init-defaults="initDefaults" read-only="$ctrl.readOnly"
                              config-callbacks="$ctrl.configCallbacks" removable="true"/>
     </uib-tab>
-    <uib-tab heading="Topology State Transfer">
-      <configuration-section fields="[{name: 'Topology State Transfer', fields: ['acquire-timeout', 'concurrency-level', 'isolation', 'striping']}]"
-                             data="ctrl.data" meta="$ctrl.getMetaForResource('.children.authentication.model-description.AUTHENTICATION.attributes')"
-                             init-defaults="initDefaults" read-only="$ctrl.readOnly"
-                             config-callbacks="$ctrl.configCallbacks" removable="true"/>
-    </uib-tab>
-    <uib-tab heading="Encryption">
-      <configuration-section fields="[{name: 'Encryption', fields: ['lifespan', 'interval', 'max-idle']}]"
-                             data="ctrl.data" meta="$ctrl.getMetaForResource('.children.authentication.model-description.AUTHENTICATION.attributes')"
+
+    <uib-tab heading="REST">
+      <configuration-section fields="[{name: 'REST connector', fields: ['name'], dataPath: 'rest.REST', metaPath:'rest.model-description.*.attributes'},
+                             {name: 'Path prefix', fields: ['path'], dataPath: 'rest.REST.prefix.PREFIX', metaPath:'rest.model-description.*.children.prefix.model-description.*.attributes'}]"
+                             data="$ctrl.data['multi-tenancy'].MULTI_TENANCY" meta="$ctrl.getMetaRootForResource('.children.multi-tenancy.model-description.*.children')"
                              init-defaults="initDefaults" read-only="$ctrl.readOnly"
                              config-callbacks="$ctrl.configCallbacks" removable="true"/>
     </uib-tab>

@@ -58,14 +58,14 @@
                 <div class="col-md-6 col-md-offset-6">
                     <button id="create.button" type="button" class="btn btn-primary"
                             ng-if="!ctrl.isEditMode()"
-                            ng-disabled="ctrl.isTemplateNameEmpty()" ng-click="ctrl.createCache()" translate>CREATE
+                            ng-disabled="ctrl.isTemplateNameEmpty()" ng-click="ctrl.createEndpoint()" translate>CREATE
                     </button>
                     <button id="apply_changes.button" type="button" class="btn btn-primary" ng-if="ctrl.isEditMode()"
-                            ng-disabled="!ctrl.isAnyFieldModified()" ng-click="ctrl.updateTemplate()" translate>
+                            ng-disabled="!ctrl.isAnyFieldModified()" ng-click="ctrl.updateEndpoint()" translate>
                         APPLY_CHANGES
                     </button>
                     <button id="cancel.button" type="button" class="btn btn-default"
-                            ng-click="ctrl.goToContainerCachesView()"
+                            ng-click="ctrl.goToEndpointsView()"
                             translate>CANCEL
                     </button>
                 </div>

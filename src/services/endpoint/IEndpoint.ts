@@ -1,17 +1,14 @@
+import {IProtocolConnector} from "./IProtocolConnector";
 import {ISocketBinding} from "../socket-binding/ISocketBinding";
 
 export interface IEndpoint {
-  name: string;
-  "cache-container": string;
-  "worker-threads": number;
-  "idle-timeout": number;
-  "tcp-nodelay": boolean;
-  "send-buffer-size": number;
-  "receive-buffer-size": number;
-  "socket-binding-name": string;
-  "socket-binding"?: ISocketBinding;
-  encryption?: any;
-
-  "hotrod-socket-binding"?:any;
-  "rest-socket-binding"?:any;
+  getName(): string;
+  getType(): string;
+  getCacheContainer(): string;
+  getSocketBindingName(): string;
+  setSocketBinding(binding: ISocketBinding): void;
+  getEncryption(): any;
+  getSocketBinding(): ISocketBinding;
+  isMultiTenant(): boolean;
+  getObject(path: string): any;
 }

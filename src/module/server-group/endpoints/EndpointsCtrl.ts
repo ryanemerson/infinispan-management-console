@@ -26,7 +26,7 @@ export class EndpointsCtrl {
 
   isMultiTenantRouter(endpoint: IEndpoint): boolean {
     return isNotNullOrUndefined(endpoint) &&
-      (isNotNullOrUndefined(endpoint["hotrod-socket-binding"]) || isNotNullOrUndefined(endpoint["rest-socket-binding"]));
+      endpoint.isMultiTenant();
   }
 
   createEndpointModal(): void {

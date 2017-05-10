@@ -5,9 +5,11 @@ import {LaunchTypeService} from "../../../../services/launchtype/LaunchTypeServi
 import {ServerGroupService} from "../../../../services/server-group/ServerGroupService";
 import {IServerGroup} from "../../../../services/server-group/IServerGroup";
 import {IEndpoint} from "../../../../services/endpoint/IEndpoint";
+import {openConfirmationModal, openErrorModal} from "../../../../common/dialogs/Modals";
 
 export class EndpointConfigCtrl extends AbstractConfigurationCtrl {
-  static $inject: string[] = ["$state", "$scope", "$uibModal", "serverGroupService", "launchType", "serverGroup", "endpoint", "endpointMeta", "endpointType", "endpointName"];
+  static $inject: string[] = ["$state", "$scope", "$uibModal", "serverGroupService", "launchType",
+    "serverGroup", "endpoint", "endpointMeta", "endpointType", "endpointName"];
 
   readOnlyFields: string[];
 
@@ -36,6 +38,10 @@ export class EndpointConfigCtrl extends AbstractConfigurationCtrl {
     });
   }
 
+  goToEndpointsView(): void {
+    this.$state.go("server-group.endpoints", {});
+  }
+
   isEditMode(): boolean {
     //return this.$state.current.name === "edit-cache-config";
     return true;
@@ -47,16 +53,20 @@ export class EndpointConfigCtrl extends AbstractConfigurationCtrl {
     return true;
   }
 
-  createCache(): void {
-    /*openConfirmationModal(this.$uibModal, "Create " + this.cacheName + " cache using " + this.template.baseTemplate + " configuration template?")
-      .result.then(() => {
-      this.cacheService.createCacheAndConfiguration(this.container, this.template.type, this.template["template-name"], this.template)
-        .then(() => this.goToContainerCachesView(), error => openErrorModal(this.$uibModal, error));
-    });*/
+  createEndpoint(): void {
+    /*openConfirmationModal(this.$uibModal, "Create " + this.endpoint.name + " endpoint?")
+     .result.then(() => {
+     this.endpointService.createEndpoint(this.container, this.template.type, this.template["template-name"], this.template)
+     .then(() => this.goToEndpointsView(), error => openErrorModal(this.$uibModal, error));
+     });*/
   }
 
-  updateTemplate(): void {
-
+  updateEndpoint(): void {
+    /*openConfirmationModal(this.$uibModal, "Update " + this.endpoint.name + " endpoint?")
+      .result.then(() => {
+      this.endpointService.updateEndpoint(this.container, this.template.type, this.template["template-name"], this.template)
+        .then(() => this.goToEndpointsView(), error => openErrorModal(this.$uibModal, error));
+    });*/
   }
 
   private reloadMetaAndDataOnTypeChange(newType: string, oldType: string): void {

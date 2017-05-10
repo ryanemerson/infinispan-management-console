@@ -4,25 +4,29 @@
       <configuration-section fields="[{name: 'Main', fields: ['name', 'cache-container']},
                                       {name: 'TCP', fields: ['socket-binding','idle-timeout', 'receive-buffer-size', 'send-buffer-size', 'tcp-nodelay']},
                                       {name: 'Other', fields: ['worker-threads']}]" data="$ctrl.data"
-                             meta="$ctrl.getMetaForResource('.attributes')" init-defaults="$ctrl.initDefaults" read-only="$ctrl.readOnly"
+                             meta="$ctrl.getMetaForResource('')" init-defaults="$ctrl.initDefaults" read-only="$ctrl.readOnly"
                              read-only-fields="$ctrl.readOnlyFields" config-callbacks="$ctrl.configCallbacks"/>
     </uib-tab>
 
     <uib-tab heading="Authentication">
-      <configuration-section fields="[{name: 'Authentication', fields: ['security-realm']}]"
-                             data="$ctrl.data.authentication.AUTHENTICATION" meta="$ctrl.getMetaForResource('.children.authentication.model-description.AUTHENTICATION.attributes')"
+      <configuration-section fields="[{name: 'Authentication', fields: ['security-realm'], metaPath:'attributes'},
+                             {name: 'SASL configuration', fields: ['mechanisms', 'qop', 'server-context-name', 'server-name', 'strength'], dataPath:'sasl.SASL', metaPath:'children.sasl.model-description.SASL.attributes'},
+                             {name: 'SASL policy', fields: ['forward-secrecy', 'no-active', 'no-anonymous', 'no-dictionary', 'no-plain-text', 'pass-credentials'], dataPath:'sasl.SASL.sasl-policy.SASL_POLICY', metaPath:'children.sasl.model-description.SASL.children.sasl-policy.model-description.SASL_POLICY.attributes'}]"
+                             data="$ctrl.data.authentication.AUTHENTICATION" meta="$ctrl.getMetaRootForResource('.children.authentication.model-description.AUTHENTICATION')"
                              init-defaults="initDefaults" read-only="$ctrl.readOnly"
                              config-callbacks="$ctrl.configCallbacks" removable="true"/>
     </uib-tab>
+
     <uib-tab heading="Topology State Transfer">
       <configuration-section fields="[{name: 'Topology State Transfer', fields: ['await-initial-retrieval', 'external-host', 'external-port', 'lazy-retrieval', 'lock-timeout', 'replication-timeout']}]"
-                             data="$ctrl.data['topology-state-transfer'].TOPOLOGY_STATE_TRANSFER" meta="$ctrl.getMetaForResource('.children.topology-state-transfer.model-description.TOPOLOGY_STATE_TRANSFER.attributes')"
+                             data="$ctrl.data['topology-state-transfer'].TOPOLOGY_STATE_TRANSFER" meta="$ctrl.getMetaForResource('.children.topology-state-transfer.model-description.TOPOLOGY_STATE_TRANSFER')"
                              init-defaults="initDefaults" read-only="$ctrl.readOnly"
                              config-callbacks="$ctrl.configCallbacks" removable="true"/>
     </uib-tab>
     <uib-tab heading="Encryption">
-      <configuration-section fields="[{name: 'Encryption', fields: ['require-ssl-client-auth', 'security-realm']}]"
-                             data="$ctrl.data.encryption.ENCRYPTION" meta="$ctrl.getMetaForResource('.children.encryption.model-description.ENCRYPTION.attributes')"
+      <configuration-section fields="[{name: 'Encryption', fields: ['require-ssl-client-auth', 'security-realm'], metaPath:'attributes'},
+                             {name: 'TLS SNI configuration', fields: ['host-name'], dataPath: 'sni.vlado', metaPath:'children.sni.model-description.*.attributes'}]"
+                             data="$ctrl.data.encryption.ENCRYPTION" meta="$ctrl.getMetaRootForResource('.children.encryption.model-description.ENCRYPTION')"
                              init-defaults="initDefaults" read-only="$ctrl.readOnly"
                              config-callbacks="$ctrl.configCallbacks" removable="true"/>
     </uib-tab>
