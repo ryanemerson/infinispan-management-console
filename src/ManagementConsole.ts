@@ -14,7 +14,7 @@ import "angular-local-storage";
 import "angular-ui-bootstrap";
 import "angular-ui-bootstrap/dist/ui-bootstrap-tpls.js";
 import "angular-ui-router";
-import "patternfly";
+import "patternfly/dist/js/patternfly.js";
 import "angular-translate";
 import "angular-translate-loader-static-files";
 import "bootstrap";
