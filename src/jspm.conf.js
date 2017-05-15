@@ -32,8 +32,9 @@ System.config({
   },
 
   map: {
-    "angular": "github:angular/bower-angular@1.5.8",
+    "angular": "npm:angular@1.5.11",
     "angular-local-storage": "npm:angular-local-storage@0.5.0",
+    "angular-patternfly": "npm:angular-patternfly@3.24.0",
     "angular-translate": "github:angular-translate/bower-angular-translate@2.11.1",
     "angular-translate-loader-static-files": "github:angular-translate/bower-angular-translate-loader-static-files@2.11.1",
     "angular-ui-bootstrap": "npm:angular-ui-bootstrap@2.2.0",
@@ -49,7 +50,7 @@ System.config({
     "d3": "npm:d3@3.5.0",
     "http-proxy": "npm:http-proxy@1.14.0",
     "jquery": "npm:jquery@3.1.1",
-    "patternfly": "npm:patternfly@4.0.0-rc.1",
+    "patternfly": "npm:patternfly@3.24.0",
     "ts": "github:frankwallis/plugin-typescript@4.0.5",
     "typescript": "npm:typescript@1.8.9",
     "github:angular-translate/bower-angular-translate-loader-static-files@2.11.1": {
@@ -147,8 +148,22 @@ System.config({
       "mime-types": "npm:mime-types@2.1.11",
       "negotiator": "npm:negotiator@0.6.1"
     },
+    "npm:angular-patternfly@3.24.0": {
+      "angular": "npm:angular@1.5.11",
+      "angular-animate": "npm:angular-animate@1.5.11",
+      "angular-drag-and-drop-lists": "npm:angular-drag-and-drop-lists@2.0.0",
+      "angular-sanitize": "npm:angular-sanitize@1.5.11",
+      "angular-ui-bootstrap": "npm:angular-ui-bootstrap@0.14.3",
+      "http": "github:jspm/nodelibs-http@1.7.1",
+      "lodash": "npm:lodash@3.10.1",
+      "patternfly": "npm:patternfly@3.24.0",
+      "process": "github:jspm/nodelibs-process@0.1.2"
+    },
+    "npm:angular-ui-bootstrap@0.14.3": {
+      "angular": "npm:angular@1.5.11"
+    },
     "npm:angular-ui-router@0.3.1": {
-      "angular": "npm:angular@1.5.8",
+      "angular": "npm:angular@1.5.11",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:anymatch@1.3.0": {
@@ -763,7 +778,7 @@ System.config({
       "path-exists": "npm:path-exists@2.1.0",
       "pinkie-promise": "npm:pinkie-promise@2.0.1"
     },
-    "npm:font-awesome@4.6.3": {
+    "npm:font-awesome@4.7.0": {
       "css": "github:systemjs/plugin-css@0.1.33"
     },
     "npm:for-own@0.1.4": {
@@ -1327,7 +1342,7 @@ System.config({
       "path": "github:jspm/nodelibs-path@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
-    "npm:patternfly@4.0.0-rc.1": {
+    "npm:patternfly@3.24.0": {
       "bootstrap": "npm:bootstrap@3.3.7",
       "bootstrap-datepicker": "npm:bootstrap-datepicker@1.6.4",
       "bootstrap-select": "npm:bootstrap-select@1.10.0",
@@ -1341,7 +1356,7 @@ System.config({
       "datatables.net-select": "npm:datatables.net-select@1.2.2",
       "drmonty-datatables-colvis": "npm:drmonty-datatables-colvis@1.1.2",
       "eonasdan-bootstrap-datetimepicker": "npm:eonasdan-bootstrap-datetimepicker@4.15.35",
-      "font-awesome": "npm:font-awesome@4.6.3",
+      "font-awesome": "npm:font-awesome@4.7.0",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "google-code-prettify": "npm:google-code-prettify@1.0.5",
       "jquery": "npm:jquery@2.1.4",

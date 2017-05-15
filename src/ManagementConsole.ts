@@ -18,6 +18,8 @@ import "patternfly/dist/js/patternfly.js";
 import "angular-translate";
 import "angular-translate-loader-static-files";
 import "bootstrap";
+import "angular-patternfly";
+import "angular-patternfly/dist/styles/angular-patternfly.css!";
 import "patternfly/dist/css/patternfly.css!";
 import "patternfly/dist/css/patternfly-additions.css!";
 import "./ManagementConsole.css!";
