@@ -65,10 +65,10 @@ export class CounterService {
               let type: string = trail[0];
               if (isNotNullOrUndefined(counter) && type === "strong-counter") {
                 counters.push(new StrongCounter(counter.name, counter.storage, counter["initial-value"],
-                  counter.value, counter["lower-bound"], counter["upper-bound"], counter));
+                  counter.value, counter["lower-bound"], counter["upper-bound"]));
               } else if (isNotNullOrUndefined(counter) && type === "weak-counter") {
                 counters.push(new WeakCounter(counter.name, counter.storage, counter["initial-value"],
-                  counter.value, counter.concurrency, counter));
+                  counter.value, counter.concurrency));
               }
             }
           }, trail);
@@ -109,7 +109,7 @@ export class CounterService {
 
   private createHelper(counter: ICounter, profile: string, container: string): ng.IPromise<any> {
     let request: IDmrRequest;
-    if (counter.isStrong()) {
+    if (counter instanceof StrongCounter) {
       let strongCounter: StrongCounter = <StrongCounter> counter;
       request = <IDmrRequest> {
         address: this.getCounterAddress(counter, container, profile),
@@ -133,7 +133,9 @@ export class CounterService {
   }
 
   private getCounterAddress(c: ICounter, container: string, profile?: string): string[] {
-    return this.getCountersConfigurationAddress(container, profile).concat(c.isStrong() ? "strong-counter" : "weak-counter").concat(c.getName());
+    return this.getCountersConfigurationAddress(container, profile)
+      .concat(c instanceof StrongCounter ? "strong-counter" : "weak-counter")
+      .concat(c.getName());
   }
 
   private getContainerAddress(container: string, preappendPath: string []): string[] {

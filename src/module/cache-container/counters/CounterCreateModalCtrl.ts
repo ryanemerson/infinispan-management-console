@@ -27,9 +27,9 @@ export class CounterCreateModalCtrl {
   createCounter(): void {
     let counter: ICounter;
     if (this.isNewCounterStrong()) {
-      counter = new StrongCounter(this.name, this.storage, this.initialValue, 0, this.lowerBound, this.upperBound, null);
+      counter = new StrongCounter(this.name, this.storage, this.initialValue, 0, this.lowerBound, this.upperBound);
     } else {
-      counter = new WeakCounter(this.name, this.storage, this.initialValue, 0, 32, null);
+      counter = new WeakCounter(this.name, this.storage, this.initialValue, 0, 32);
     }
     this.counterService.create(counter, this.container.profile, this.container.name).then(
       () => this.$state.reload(), error => openErrorModal(this.$uibModal, error));

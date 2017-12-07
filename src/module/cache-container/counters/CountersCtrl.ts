@@ -5,6 +5,7 @@ import {CounterCreateModalCtrl} from "./CounterCreateModalCtrl";
 import {CounterService} from "../../../services/counters/CounterService";
 import {openConfirmationModal} from "../../../common/dialogs/Modals";
 import {IStateService} from "angular-ui-router";
+import {StrongCounter} from "../../../services/counters/StrongCounter";
 
 export class CountersCtrl {
   static $inject: string[] = ["$state", "$uibModal", "container", "counterService", "counters"];
@@ -43,5 +44,13 @@ export class CountersCtrl {
       .result
       .then(() => this.counterService.remove(this.container, counter))
       .then(() => this.$state.reload());
+  }
+
+  getBounds(counter: ICounter): string {
+    if (counter instanceof StrongCounter) {
+      let strongCounter: StrongCounter = <StrongCounter> counter;
+      return "[" + strongCounter.getLowerBound() + "," + strongCounter.getUpperBound() + "]";
+    }
+    return "N/A";
   }
 }

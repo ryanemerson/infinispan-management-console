@@ -1,19 +1,11 @@
-import {isNotNullOrUndefined} from "../../common/utils/Utils";
 import {AbstractCounter} from "./AbstractCounter";
+import {CounterService} from "./CounterService";
+
 export class StrongCounter extends AbstractCounter {
 
-  constructor(name: string, storage: string,
-              initialValue: number, currentValue: number,
-              protected lowerBound: number, protected upperBound: number, dmr: any) {
-    super(name, storage, initialValue, currentValue, dmr);
-  }
-
-  isStrong(): boolean {
-    return true;
-  }
-
-  hasBounds(): boolean {
-    return isNotNullOrUndefined(this.getLowerBound()) || isNotNullOrUndefined(this.getUpperBound());
+  constructor(name: string, storage: string, initialValue: number, currentValue: number,
+              protected lowerBound: number, protected upperBound: number) {
+    super(name, storage, initialValue, currentValue);
   }
 
   getLowerBound(): number {
@@ -22,5 +14,9 @@ export class StrongCounter extends AbstractCounter {
 
   getUpperBound(): number {
     return this.upperBound;
+  }
+
+  toString(): string {
+    return CounterService.STRONG_COUNTER;
   }
 }
