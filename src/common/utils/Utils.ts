@@ -108,10 +108,6 @@ export function deepGet(object: Object, path: string): any {
   return o;
 }
 
-export function convertCamelCase(name: string): string {
-  return name.split(/(?=[A-Z])/).join("-").toLowerCase();
-}
-
 export function deepValue(object: Object, path: any): any {
   let pathArray: string [] = [];
   if (isArray(path)) {

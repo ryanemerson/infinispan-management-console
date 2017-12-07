@@ -107,21 +107,29 @@ export class CounterService {
     });
   }
 
-  save(counter: ICounter, profile: string, container: string, excludedAttributes: string []): ng.IPromise<any> {
-    let builder: CompositeOpBuilder = new CompositeOpBuilder();
-    let dmrAddress: string [] = this.getCounterAddress(counter, container, profile);
-    this.dmrService.traverseDMRTree(builder, counter, dmrAddress, excludedAttributes);
-    let req: IDmrCompositeReq  = builder.build();
-    req.steps = req.steps.reverse();
-    return this.dmrService.executePost(req);
-  }
-
   private createHelper(counter: ICounter, profile: string, container: string): ng.IPromise<any> {
+    let request: IDmrRequest;
     if (counter.isStrong()) {
-      return this.save(counter, profile, container, ["is-new-node", "type", "concurrency"]);
+      let strongCounter: StrongCounter = <StrongCounter> counter;
+      request = <IDmrRequest> {
+        address: this.getCounterAddress(counter, container, profile),
+        name: strongCounter.getName(),
+        storage: strongCounter.getStorage(),
+        "initial-value": strongCounter.getInitialValue(),
+        "lower-bound": strongCounter.getLowerBound(),
+        "upper-bound": strongCounter.getUpperBound()
+      }
     } else {
-      return this.save(counter, profile, container, ["is-new-node", "type", "lower-bound", "upper-bound"]);
+      let weakCounter: WeakCounter = <WeakCounter> counter;
+      request = <IDmrRequest> {
+        address: this.getCounterAddress(counter, container, profile),
+        name: weakCounter.getName(),
+        storage: weakCounter.getStorage(),
+        "initial-value": weakCounter.getInitialValue(),
+        "concurrency": weakCounter.getConcurrency()
+      }
     }
+    return this.dmrService.add(request);
   }
 
   private getCounterAddress(c: ICounter, container: string, profile?: string): string[] {

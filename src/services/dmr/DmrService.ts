@@ -3,7 +3,7 @@ import {IDmrRequest} from "./IDmrRequest";
 import {IDmrCompositeReq} from "./IDmrCompositeReq";
 import {
   isNotNullOrUndefined, isNullOrUndefined, traverseObject, isObject,
-  isJsonString, isArray, convertCamelCase
+  isJsonString, isArray
 } from "../../common/utils/Utils";
 import {CompositeOpBuilder, createWriteAttrReq} from "./CompositeOpBuilder";
 
@@ -242,7 +242,7 @@ export class DmrService {
         if (isJsonString(value)) { // handle JSON described objects
           value = this.parseJson(value, key);
         }
-        op[convertCamelCase(key)] = value;
+        op[key] = value;
       });
     }
     // Remove excluded attributes
