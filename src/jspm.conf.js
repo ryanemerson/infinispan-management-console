@@ -59,9 +59,6 @@ System.config({
     "patternfly": "npm:patternfly@4.0.0-rc.1",
     "ts": "npm:plugin-typescript@7.1.0",
     "typescript": "npm:typescript@2.7.2",
-    "github:jspm/nodelibs-constants@0.1.0": {
-      "constants-browserify": "npm:constants-browserify@0.0.1"
-    },
     "github:jspm/nodelibs-crypto@0.1.0": {
       "crypto-browserify": "npm:crypto-browserify@3.12.0"
     },
@@ -417,7 +414,7 @@ System.config({
     "npm:browserify-rsa@4.0.1": {
       "bn.js": "npm:bn.js@4.11.8",
       "buffer": "npm:buffer@5.1.0",
-      "constants": "github:jspm/nodelibs-constants@0.1.0",
+      "constants": "npm:constants-browserify@0.0.1",
       "crypto": "github:jspm/nodelibs-crypto@0.1.0",
       "randombytes": "npm:randombytes@2.0.6"
     },
@@ -1021,13 +1018,13 @@ System.config({
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:graceful-fs@1.2.3": {
-      "constants": "github:jspm/nodelibs-constants@0.1.0",
+      "constants": "npm:constants-browserify@0.0.1",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:graceful-fs@4.1.11": {
       "assert": "npm:assert@1.4.1",
-      "constants": "github:jspm/nodelibs-constants@0.1.0",
+      "constants": "npm:constants-browserify@0.0.1",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "process": "github:jspm/nodelibs-process@0.1.2",
       "stream": "github:jspm/nodelibs-stream@0.1.0",
