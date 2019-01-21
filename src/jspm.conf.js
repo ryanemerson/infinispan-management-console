@@ -45,7 +45,7 @@ System.config({
     "angularjs-dropdown-multiselect": "npm:angularjs-dropdown-multiselect@2.0.0-beta.10",
     "babel": "npm:babel-core@5.8.38",
     "babel-runtime": "npm:babel-runtime@5.8.38",
-    "bootstrap": "github:twbs/bootstrap@3.3.7",
+    "bootstrap": "npm:bootstrap@3.3.7",
     "bootstrap-css": "npm:bootstrap-css@3.0.0",
     "browser-sync": "npm:browser-sync@2.18.3",
     "c3": "npm:c3@0.4.11",
@@ -130,9 +130,6 @@ System.config({
     },
     "github:jspm/nodelibs-zlib@0.1.0": {
       "browserify-zlib": "npm:browserify-zlib@0.1.4"
-    },
-    "github:twbs/bootstrap@3.3.7": {
-      "jquery": "npm:jquery@3.3.1"
     },
     "npm:accepts@1.3.1": {
       "mime-types": "npm:mime-types@2.1.18",
