@@ -38,8 +38,8 @@ System.config({
     "angular-local-storage": "npm:angular-local-storage@0.5.0",
     "angular-patternfly": "npm:angular-patternfly@4.0.0-rc.1",
     "angular-sanitize": "npm:angular-sanitize@1.5.11",
-    "angular-translate": "github:angular-translate/bower-angular-translate@2.11.1",
-    "angular-translate-loader-static-files": "github:angular-translate/bower-angular-translate-loader-static-files@2.11.1",
+    "angular-translate": "npm:angular-translate@2.11.1",
+    "angular-translate-loader-static-files": "npm:angular-translate-loader-static-files@2.11.1",
     "angular-ui-bootstrap": "npm:angular-ui-bootstrap@2.2.0",
     "angular-ui-router": "npm:angular-ui-router@0.3.1",
     "angularjs-dropdown-multiselect": "npm:angularjs-dropdown-multiselect@2.0.0-beta.10",
@@ -59,12 +59,6 @@ System.config({
     "patternfly": "npm:patternfly@4.0.0-rc.1",
     "ts": "github:frankwallis/plugin-typescript@7.1.0",
     "typescript": "npm:typescript@2.7.2",
-    "github:angular-translate/bower-angular-translate-loader-static-files@2.11.1": {
-      "angular-translate": "github:angular-translate/bower-angular-translate@2.11.1"
-    },
-    "github:angular-translate/bower-angular-translate@2.11.1": {
-      "angular": "npm:angular@1.5.11"
-    },
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.4.1"
     },
@@ -179,6 +173,13 @@ System.config({
     },
     "npm:angular-svg-base-fix@2.0.0": {
       "angular": "npm:angular@1.5.11"
+    },
+    "npm:angular-translate-loader-static-files@2.11.1": {
+      "angular-translate": "npm:angular-translate@2.11.1"
+    },
+    "npm:angular-translate@2.11.1": {
+      "angular": "npm:angular@1.5.11",
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:angular-ui-router@0.3.1": {
       "angular": "npm:angular@1.5.11",
