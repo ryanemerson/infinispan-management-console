@@ -51,7 +51,7 @@ System.config({
     "c3": "npm:c3@0.4.11",
     "codemirror": "npm:codemirror@5.35.0",
     "core-js": "npm:core-js@1.2.7",
-    "css": "github:systemjs/plugin-css@0.1.37",
+    "css": "npm:systemjs-plugin-css@0.1.37",
     "d3": "npm:d3@3.5.17",
     "deepmerge": "npm:deepmerge@1.3.2",
     "http-proxy": "npm:http-proxy@1.17.0",
@@ -476,7 +476,7 @@ System.config({
       "systemjs-json": "github:systemjs/plugin-json@0.1.2"
     },
     "npm:c3@0.4.11": {
-      "css": "github:systemjs/plugin-css@0.1.37",
+      "css": "npm:systemjs-plugin-css@0.1.37",
       "d3": "npm:d3@3.5.17"
     },
     "npm:caseless@0.11.0": {
@@ -674,7 +674,7 @@ System.config({
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:datatables@1.10.13": {
-      "css": "github:systemjs/plugin-css@0.1.37",
+      "css": "npm:systemjs-plugin-css@0.1.37",
       "jquery": "npm:jquery@3.3.1"
     },
     "npm:debug@2.2.0": {
@@ -887,7 +887,7 @@ System.config({
       "url": "github:jspm/nodelibs-url@0.1.0"
     },
     "npm:font-awesome@4.6.3": {
-      "css": "github:systemjs/plugin-css@0.1.37"
+      "css": "npm:systemjs-plugin-css@0.1.37"
     },
     "npm:for-own@0.1.5": {
       "for-in": "npm:for-in@1.0.2"
