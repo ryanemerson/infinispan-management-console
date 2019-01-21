@@ -57,7 +57,7 @@ System.config({
     "http-proxy": "npm:http-proxy@1.17.0",
     "jquery": "npm:jquery@3.3.1",
     "patternfly": "npm:patternfly@4.0.0-rc.1",
-    "ts": "github:frankwallis/plugin-typescript@7.1.0",
+    "ts": "npm:plugin-typescript@7.1.0",
     "typescript": "npm:typescript@2.7.2",
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.4.1"

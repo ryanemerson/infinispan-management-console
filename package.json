@@ -90,7 +90,7 @@
       "babel": "npm:babel-core@5.8.24",
       "babel-runtime": "npm:babel-runtime@5.8.24",
       "core-js": "npm:core-js@1.1.4",
-      "ts": "github:frankwallis/plugin-typescript@7.1.0",
+      "ts": "npm:plugin-typescript@7.1.0",
       "typescript": "npm:typescript@2.7.2"
     },
     "overrides": {
