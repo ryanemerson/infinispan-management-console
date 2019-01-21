@@ -59,9 +59,6 @@ System.config({
     "patternfly": "npm:patternfly@4.0.0-rc.1",
     "ts": "npm:plugin-typescript@7.1.0",
     "typescript": "npm:typescript@2.7.2",
-    "github:jspm/nodelibs-assert@0.1.0": {
-      "assert": "npm:assert@1.4.1"
-    },
     "github:jspm/nodelibs-buffer@0.1.1": {
       "buffer": "npm:buffer@5.1.0"
     },
@@ -202,7 +199,7 @@ System.config({
       "util": "github:jspm/nodelibs-util@0.1.0"
     },
     "npm:argparse@0.1.16": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "path": "github:jspm/nodelibs-path@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2",
@@ -221,27 +218,27 @@ System.config({
       "vm": "github:jspm/nodelibs-vm@0.1.0"
     },
     "npm:asn1@0.2.3": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "buffer": "github:jspm/nodelibs-buffer@0.1.1",
       "sys": "github:jspm/nodelibs-util@0.1.0",
       "util": "github:jspm/nodelibs-util@0.1.0"
     },
     "npm:assert-plus@0.2.0": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "buffer": "github:jspm/nodelibs-buffer@0.1.1",
       "process": "github:jspm/nodelibs-process@0.1.2",
       "stream": "github:jspm/nodelibs-stream@0.1.0",
       "util": "github:jspm/nodelibs-util@0.1.0"
     },
     "npm:assert-plus@1.0.0": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "buffer": "github:jspm/nodelibs-buffer@0.1.1",
       "process": "github:jspm/nodelibs-process@0.1.2",
       "stream": "github:jspm/nodelibs-stream@0.1.0",
       "util": "github:jspm/nodelibs-util@0.1.0"
     },
     "npm:assert@1.4.1": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "buffer": "github:jspm/nodelibs-buffer@0.1.1",
       "process": "github:jspm/nodelibs-process@0.1.2",
       "util": "npm:util@0.10.3"
@@ -253,7 +250,7 @@ System.config({
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:asynckit@0.4.0": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "process": "github:jspm/nodelibs-process@0.1.2",
       "stream": "github:jspm/nodelibs-stream@0.1.0",
       "util": "github:jspm/nodelibs-util@0.1.0"
@@ -284,7 +281,7 @@ System.config({
       "tweetnacl": "npm:tweetnacl@0.14.5"
     },
     "npm:better-assert@1.0.2": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "callsite": "npm:callsite@1.0.0",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "process": "github:jspm/nodelibs-process@0.1.2"
@@ -441,7 +438,7 @@ System.config({
       "systemjs-json": "npm:systemjs-plugin-json@0.1.0"
     },
     "npm:browserify-zlib@0.1.4": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "buffer": "github:jspm/nodelibs-buffer@0.1.1",
       "pako": "npm:pako@0.2.9",
       "process": "github:jspm/nodelibs-process@0.1.2",
@@ -534,7 +531,7 @@ System.config({
       "vm": "github:jspm/nodelibs-vm@0.1.0"
     },
     "npm:colors@0.6.2": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0"
+      "assert": "npm:assert@1.4.1"
     },
     "npm:combined-stream@1.0.6": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.1",
@@ -555,7 +552,7 @@ System.config({
       "url": "github:jspm/nodelibs-url@0.1.0"
     },
     "npm:connect@1.9.2": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "buffer": "github:jspm/nodelibs-buffer@0.1.1",
       "crypto": "github:jspm/nodelibs-crypto@0.1.0",
       "events": "github:jspm/nodelibs-events@0.1.1",
@@ -844,7 +841,7 @@ System.config({
       "is-extglob": "npm:is-extglob@1.0.0"
     },
     "npm:extsprintf@1.3.0": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "process": "github:jspm/nodelibs-process@0.1.2",
       "util": "github:jspm/nodelibs-util@0.1.0"
     },
@@ -875,7 +872,7 @@ System.config({
       "path": "github:jspm/nodelibs-path@0.1.0"
     },
     "npm:follow-redirects@1.5.0": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "buffer": "github:jspm/nodelibs-buffer@0.1.1",
       "debug": "npm:debug@3.1.0",
       "http": "github:jspm/nodelibs-http@1.7.1",
@@ -922,7 +919,7 @@ System.config({
       "util": "github:jspm/nodelibs-util@0.1.0"
     },
     "npm:fs-extra@1.0.0": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "buffer": "github:jspm/nodelibs-buffer@0.1.1",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "graceful-fs": "npm:graceful-fs@4.1.11",
@@ -984,12 +981,12 @@ System.config({
       "path": "github:jspm/nodelibs-path@0.1.0"
     },
     "npm:glob-parent@2.0.0": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "is-glob": "npm:is-glob@2.0.1",
       "path": "github:jspm/nodelibs-path@0.1.0"
     },
     "npm:glob@3.1.21": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "events": "github:jspm/nodelibs-events@0.1.1",
       "graceful-fs": "npm:graceful-fs@1.2.3",
       "inherits": "npm:inherits@1.0.2",
@@ -999,7 +996,7 @@ System.config({
       "systemjs-json": "npm:systemjs-plugin-json@0.1.0"
     },
     "npm:glob@3.2.11": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "events": "github:jspm/nodelibs-events@0.1.1",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "inherits": "npm:inherits@2.0.3",
@@ -1009,7 +1006,7 @@ System.config({
       "systemjs-json": "npm:systemjs-plugin-json@0.1.0"
     },
     "npm:glob@7.1.2": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "events": "github:jspm/nodelibs-events@0.1.1",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "fs.realpath": "npm:fs.realpath@1.0.0",
@@ -1032,7 +1029,7 @@ System.config({
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:graceful-fs@4.1.11": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "constants": "github:jspm/nodelibs-constants@0.1.0",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "process": "github:jspm/nodelibs-process@0.1.2",
@@ -1261,7 +1258,7 @@ System.config({
       "is-extglob": "npm:is-extglob@1.0.0"
     },
     "npm:is-my-ip-valid@1.0.0": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "systemjs-json": "npm:systemjs-plugin-json@0.1.0"
     },
     "npm:is-my-json-valid@2.17.2": {
@@ -1327,7 +1324,7 @@ System.config({
       "is-buffer": "npm:is-buffer@1.1.6"
     },
     "npm:klaw@1.3.1": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "graceful-fs": "npm:graceful-fs@4.1.11",
       "path": "github:jspm/nodelibs-path@0.1.0",
@@ -1416,7 +1413,7 @@ System.config({
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:mime@1.3.4": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "path": "github:jspm/nodelibs-path@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2",
@@ -1447,7 +1444,7 @@ System.config({
       "yallist": "npm:yallist@3.0.2"
     },
     "npm:minizlib@1.1.0": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "buffer": "github:jspm/nodelibs-buffer@0.1.1",
       "minipass": "npm:minipass@2.3.3",
       "process": "github:jspm/nodelibs-process@0.1.2"
@@ -1519,7 +1516,7 @@ System.config({
     },
     "npm:nopt@1.0.10": {
       "abbrev": "npm:abbrev@1.1.1",
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "path": "github:jspm/nodelibs-path@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2",
       "stream": "github:jspm/nodelibs-stream@0.1.0",
@@ -1738,7 +1735,7 @@ System.config({
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:process@0.11.10": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "vm": "github:jspm/nodelibs-vm@0.1.0"
     },
@@ -1888,13 +1885,13 @@ System.config({
       "minimatch": "npm:minimatch@3.0.4"
     },
     "npm:rimraf@2.2.8": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "path": "github:jspm/nodelibs-path@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:rimraf@2.6.2": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "glob": "npm:glob@7.1.2",
       "path": "github:jspm/nodelibs-path@0.1.0",
@@ -1967,7 +1964,7 @@ System.config({
       "url": "github:jspm/nodelibs-url@0.1.0"
     },
     "npm:server-destroy@1.0.1": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "net": "github:jspm/nodelibs-net@0.1.2"
     },
     "npm:set-blocking@2.0.0": {
@@ -1985,7 +1982,7 @@ System.config({
       "util": "github:jspm/nodelibs-util@0.1.0"
     },
     "npm:signal-exit@3.0.2": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "events": "github:jspm/nodelibs-events@0.1.1",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
@@ -2156,7 +2153,7 @@ System.config({
       "util": "github:jspm/nodelibs-util@0.1.0"
     },
     "npm:tunnel-agent@0.4.3": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "buffer": "github:jspm/nodelibs-buffer@0.1.1",
       "events": "github:jspm/nodelibs-events@0.1.1",
       "http": "github:jspm/nodelibs-http@1.7.1",
@@ -2179,7 +2176,7 @@ System.config({
       "events": "github:jspm/nodelibs-events@0.1.1"
     },
     "npm:url@0.10.3": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "punycode": "npm:punycode@1.3.2",
       "querystring": "npm:querystring@0.2.0",
       "util": "github:jspm/nodelibs-util@0.1.0"
@@ -2274,7 +2271,7 @@ System.config({
       "util": "github:jspm/nodelibs-util@0.1.0"
     },
     "npm:yargs@3.29.0": {
-      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "assert": "npm:assert@1.4.1",
       "camelcase": "npm:camelcase@1.2.1",
       "cliui": "npm:cliui@3.2.0",
       "decamelize": "npm:decamelize@1.2.0",
