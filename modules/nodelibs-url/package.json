@@ -1,8 +1,0 @@
-{
-  "name": "jspm/nodelibs-url",
-  "version": "0.1.0",
-  "registry": "npm",
-  "dependencies": {
-    "url": "^0.10.1"
-  }
-}

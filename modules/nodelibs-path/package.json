@@ -1,8 +1,0 @@
-{
-  "name": "nodelibs-path",
-  "version": "0.1.0",
-  "registry": "npm",
-  "dependencies": {
-    "path-browserify": "0.0.0"
-  }
-}

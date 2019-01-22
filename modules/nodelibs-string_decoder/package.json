@@ -1,8 +1,0 @@
-{
-  "name": "jspm/nodelibs-string_decoder",
-  "version": "0.1.0",
-  "registry": "npm",
-  "dependencies": {
-    "string_decoder": "^0.10.31"
-  }
-}

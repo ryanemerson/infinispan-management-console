@@ -1,8 +1,0 @@
-{
-  "name": "jspm/nodelibs-events",
-  "version": "0.1.1",
-  "registry": "npm",
-  "dependencies": {
-    "events": "1.0.2"
-  }
-}

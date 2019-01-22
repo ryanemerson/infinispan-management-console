@@ -1,8 +1,0 @@
-{
-  "name": "jspm/nodelibs-crypto",
-  "version": "0.1.0",
-  "registry": "npm",
-  "dependencies": {
-    "crypto-browserify": "^3.7.2"
-  }
-}

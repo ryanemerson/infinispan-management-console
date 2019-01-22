@@ -1,0 +1,3 @@
+{
+  "crypto-browserify": "npm:crypto-browserify@^3.7.2"
+}

@@ -1,8 +1,0 @@
-{
-  "name": "jspm/nodelibs-process",
-  "version": "0.1.2",
-  "registry": "jspm",
-  "dependencies": {
-    "process": "npm:process@^0.11.0"
-  }
-}

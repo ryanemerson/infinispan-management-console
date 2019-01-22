@@ -1,8 +1,0 @@
-{
-  "name": "jspm/nodelibs-tty",
-  "version": "0.1.0",
-  "registry": "npm",
-  "dependencies": {
-    "tty-browserify": "0.0.0"
-  }
-}
