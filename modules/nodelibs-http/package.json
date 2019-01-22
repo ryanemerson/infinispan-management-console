@@ -1,0 +1,49 @@
+{
+  "name": "jspm/nodelibs-http",
+  "version": "1.7.1",
+  "description": "http module compatability for browserify",
+  "main": "index.js",
+  "browserify": "index.js",
+  "directories": {
+    "example": "example",
+    "lib": ".",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "tape test/*.js"
+  },
+  "registry": "npm",
+  "dependencies": {
+    "Base64": "~0.2.0",
+    "inherits": "~2.0.1"
+  },
+  "devDependencies": {
+    "babel": "babel-core@^5.8.24",
+    "babel-runtime": "^5.8.24",
+    "core-js": "^1.1.4",
+    "ecstatic": "~0.1.6",
+    "tape": "~2.3.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/substack/http-browserify.git"
+  },
+  "keywords": [
+    "http",
+    "browserify",
+    "compatible",
+    "meatless",
+    "browser"
+  ],
+  "author": {
+    "name": "James Halliday",
+    "email": "mail@substack.net",
+    "url": "http://substack.net"
+  },
+  "license": "MIT/X11",
+  "ignore": [
+    "test",
+    "example"
+  ],
+  "jspm": true
+}

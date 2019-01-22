@@ -1,0 +1,8 @@
+{
+  "name": "jspm/nodelibs-timers",
+  "version": "0.1.0",
+  "registry": "npm",
+  "dependencies": {
+    "timers-browserify": "^1.1.0"
+  }
+}

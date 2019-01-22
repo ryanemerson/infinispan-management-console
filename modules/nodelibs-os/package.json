@@ -1,0 +1,8 @@
+{
+  "name": "jspm/nodelibs-os",
+  "version": "0.1.0",
+  "registry": "npm",
+  "dependencies": {
+    "os-browserify": "^0.1.2"
+  }
+}
