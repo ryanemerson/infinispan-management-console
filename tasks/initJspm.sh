@@ -2,11 +2,12 @@
 set -e
 
 ROOT=$PWD
-LIB=$ROOT/modules
+JSPM_MODS=$ROOT/jspm-modules
 JSPM_REG=$ROOT/jspm-registry
 CACHE_DIR=~/.jspm/packages/github/jspm/
+
 mkdir -p $CACHE_DIR
-cp -R $LIB/* $CACHE_DIR
+cp -R $JSPM_MODS/* $CACHE_DIR
 
 cd $JSPM_REG
 rm -rf .git
