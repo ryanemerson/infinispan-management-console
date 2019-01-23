@@ -1,0 +1,11 @@
+{
+  "main": "release/angular-ui-router.js",
+  "shim": {
+    "release/angular-ui-router": {
+      "deps": ["angular"]
+    }
+  },
+  "dependencies": {
+    "angular": "*"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "directories": {
+    "lib": "src"
+  },
+  "shim": {
+    "wordcloud2.js": "npm:jquery"
+  }
+}

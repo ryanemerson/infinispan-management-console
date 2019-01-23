@@ -1,0 +1,12 @@
+{
+  "format": "global", 
+  "shim": { 
+    "nprogress": { 
+      "deps": ["./nprogress.css!"] 
+    } 
+  }, 
+  "registry": "jspm",
+  "dependencies": {
+    "css": "*" 
+  } 
+}

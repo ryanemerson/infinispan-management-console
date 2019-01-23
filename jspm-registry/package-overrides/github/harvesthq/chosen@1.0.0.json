@@ -1,0 +1,11 @@
+{
+  "main": "chosen.jquery",
+  "files": ["chosen.jquery.js","chosen.jquery.min.js", "chosen.min.css","chosen.css", "chosen-sprite.png", "chosen-sprite@2x.png"],
+  "dependencies": {
+  	"jquery": "*"
+  },
+  "shim": {
+    "chosen.jquery": ["./chosen.css!", "jquery"],
+    "chosen.jquery.min": ["jquery"]
+  }
+}

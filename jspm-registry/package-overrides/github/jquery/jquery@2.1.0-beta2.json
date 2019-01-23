@@ -1,0 +1,10 @@
+{
+  "main": "jquery",
+  "directories": {
+    "lib": "src"
+  },
+  "map": {
+    "sizzle": "./sizzle/dist/sizzle"
+  },
+  "ignore": ["src/intro.js", "src/outro.js"]
+}

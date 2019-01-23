@@ -1,0 +1,8 @@
+{
+  "format": "global",
+  "shim": {
+    "build/phaser": {
+      "exports": "Phaser"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "registry": "jspm",
+  "main": "dist/famous-global",
+  "dependencies": {
+    "css": "^0.1.6"
+  },
+  "shim": {
+    "dist/famous-global": {
+      "deps": [
+        "./famous.css!"
+      ]
+    }
+  }
+}

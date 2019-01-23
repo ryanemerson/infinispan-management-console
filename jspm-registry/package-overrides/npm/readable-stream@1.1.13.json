@@ -1,0 +1,15 @@
+{
+  "map": {
+    "stream": "stream-browserify/index"
+  },
+  "systemjs": {
+    "main": "readable.js"
+  },
+  "dependencies": {
+    "core-util-is": "~1.0.0",
+    "inherits": "~2.0.1",
+    "isarray": "0.0.1",
+    "string_decoder": "~0.10.0",
+    "stream-browserify": "^1.0.0"
+  }
+}

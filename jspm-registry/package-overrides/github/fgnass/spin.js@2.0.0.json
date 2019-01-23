@@ -1,0 +1,4 @@
+{
+  "main": "spin",
+  "files": ["spin.js"]
+}

@@ -1,0 +1,10 @@
+{
+    "main": "jquery.pjax",
+    "files": ["jquery.pjax.js"],
+    "shim": {
+        "jquery.pjax": {
+            "imports": ["jquery"],
+            "exports": "$"
+        }
+    }
+}

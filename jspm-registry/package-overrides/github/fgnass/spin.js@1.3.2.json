@@ -1,0 +1,7 @@
+{
+    "main": "spin",
+    "directories": {
+        "lib": "dist"
+    },
+    "files": ["dist/spin.js"]
+}

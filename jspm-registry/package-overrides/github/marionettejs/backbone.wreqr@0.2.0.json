@@ -1,0 +1,10 @@
+{
+    "main": "backbone.wreqr",
+    "directories": {
+        "lib": "lib/amd"
+    },
+    "shim": {
+        "backbone.wreqr": ["backbone@1.1"]
+    }
+}
+

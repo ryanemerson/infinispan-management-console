@@ -1,0 +1,12 @@
+{
+  "format": "global",
+  "dependencies": {
+    "jquery": "*"
+  },
+  "registry": "jspm",
+  "shim": {
+    "jquery.autosize": {
+      "deps": "jquery"
+    }
+  }
+}

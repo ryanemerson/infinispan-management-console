@@ -1,0 +1,17 @@
+{
+  "main": "threestrap",
+  "format": "global",
+  "directories": {
+    "dist": "build"
+  },
+  "registry": "jspm",
+  "dependencies": {
+    "three": "*"
+  },
+  "shim": {
+    "threestrap": {
+      "deps": ["three"],
+      "exports": "THREE"
+    }
+  }
+}

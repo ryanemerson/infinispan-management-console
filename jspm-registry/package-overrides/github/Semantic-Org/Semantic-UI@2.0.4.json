@@ -1,0 +1,21 @@
+{
+  "directories": {
+    "lib": "dist"
+  },
+  "main": "semantic",
+  "shim": {
+    "semantic": {
+      "deps": [
+        "jquery",
+        "./semantic.css!"
+      ],
+      "exports": "$"
+    }
+  },
+  "registry": "jspm",
+  "dependencies": {
+    "jquery": "^2.1.4",
+    "css": "*"
+  },
+  "peerDependencies": {}
+}

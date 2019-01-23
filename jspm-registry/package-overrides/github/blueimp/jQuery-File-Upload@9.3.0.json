@@ -1,0 +1,10 @@
+{
+    "main": "jquery.fileupload",
+    "files": ["js/jquery.fileupload.js"],
+    "shim": {
+        "js/jquery.fileupload": ["jquery"]
+    },
+    "map": {
+        "jquery": "jquery@2.0"
+    }
+}

@@ -1,0 +1,11 @@
+{
+  "main": "modernizr",
+  "format": "global",
+  "shim": {
+    "feature-detects/*": ["../modernizr"],
+    "modernizr": {
+      "exports": "Modernizr"
+    }
+  },
+  "files": ["modernizr.js", "feature-detects"]
+}

@@ -1,0 +1,6 @@
+{
+  "files": ["angularFire.js"],
+  "shim": {
+    "angularFire": ["angular"]
+  }
+}

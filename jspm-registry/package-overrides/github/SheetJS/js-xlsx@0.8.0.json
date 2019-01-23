@@ -1,0 +1,10 @@
+{
+  "format": "global",
+  "shim": {
+    "xlsx": {
+      "deps": [
+        "./jszip"
+      ]
+    }
+  }
+}

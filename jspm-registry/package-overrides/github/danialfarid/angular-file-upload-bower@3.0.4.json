@@ -1,0 +1,13 @@
+{
+  "format": "global",
+  "main": "angular-file-upload",
+  "dependencies": {
+    "angular": "^1"
+  },
+  "registry": "jspm",
+  "shim": {
+    "angular-file-upload": {
+      "deps": "angular"
+    }
+  }
+}

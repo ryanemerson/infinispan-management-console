@@ -1,0 +1,7 @@
+{
+  "browser": "mocha",
+  "shim": {
+    "mocha": ["./mocha.css!"]
+  },
+  "dependencies": {}
+}

@@ -1,0 +1,16 @@
+{
+    "main": "jquery.fancytree.js",
+    "registry": "jspm",
+    "directories": {
+        "lib": "dist"
+    },
+    "dependencies": {
+        "jquery": "npm:jquery",
+        "jquery-ui": "npm:jquery-ui"
+    },
+    "shim": {
+        "jquery-fancytree": {
+            "deps": ["jquery","jquery-ui"]
+        }
+    }
+}

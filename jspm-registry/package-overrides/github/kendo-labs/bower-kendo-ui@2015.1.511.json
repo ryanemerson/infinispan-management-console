@@ -1,0 +1,13 @@
+{
+    "main": "src/js/kendo.core",
+    "format": "amd",
+    "shim": {
+        "src/js/kendo.core": {
+            "deps": ["jquery"],
+            "exports": "kendo"
+        }
+    },
+    "dependencies": {
+        "jquery": "npm:jquery"
+    }
+}

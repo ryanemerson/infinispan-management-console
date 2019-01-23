@@ -1,0 +1,20 @@
+{
+  "browser": "mocha",
+  "main": "mocha",
+  "shim": {
+    "mocha": {
+      "deps": ["./mocha.css!"],
+      "exports": "mocha"
+    }
+  },
+  "meta": {
+    "mocha.js": {
+      "deps": ["./mocha.css!"],
+      "exports": "Mocha"
+    }
+  },
+  "dependencies": {
+    "css": "*"
+  },
+  "registry": "jspm"
+}

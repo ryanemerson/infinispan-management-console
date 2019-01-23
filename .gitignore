@@ -22,3 +22,5 @@ src/**/*.js.map
 src/**/*.css
 !src/jspm.conf.js
 old-source/
+jspm-registry/.git
+

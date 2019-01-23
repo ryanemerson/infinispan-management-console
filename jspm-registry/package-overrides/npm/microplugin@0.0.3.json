@@ -1,0 +1,10 @@
+{
+  "directories": {
+    "lib": "src"
+  },
+  "shim": {
+    "microplugin": {
+      "exports": "MicroPlugin"
+    }
+  }
+}

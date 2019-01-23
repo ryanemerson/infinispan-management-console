@@ -1,0 +1,19 @@
+{
+  "main": "js/jquery.Jcrop",
+  "registry": "jspm",
+  "dependencies": {
+    "jquery": "*",
+    "css": "*"
+  },
+  "shim": {
+    "js/jquery.Jcrop": [
+      "jquery",
+      "../css/jquery.Jcrop.css!"
+    ]
+  },
+  "files": [
+    "js/jquery.Jcrop.js",
+    "css/Jcrop.gif",
+    "css/jquery.Jcrop.css"
+  ]
+}

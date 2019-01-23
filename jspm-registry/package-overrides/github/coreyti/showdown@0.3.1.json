@@ -1,0 +1,11 @@
+{ 
+  "directories": { 
+    "lib": "src"
+  },
+  "main": "showdown",
+  "shim": {
+    "showdown": {
+      "exports": "Showdown"
+    }
+  }
+}

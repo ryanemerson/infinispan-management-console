@@ -1,0 +1,7 @@
+{
+  "directories": { 
+    "lib": "build"
+  },
+  "main": "breeze.debug.js",
+  "format": "global"
+}

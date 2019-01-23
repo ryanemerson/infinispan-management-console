@@ -1,0 +1,13 @@
+{
+    "main": "typeahead.bundle",
+    "directories": {
+        "lib": "dist"
+    },
+    "files": ["dist/typeahead.bundle.js"],
+    "shim": {
+        "typeahead": {
+            "imports": "jquery",
+            "exports": "$"
+        }
+    }
+}
