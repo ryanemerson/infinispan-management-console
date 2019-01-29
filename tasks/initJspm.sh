@@ -12,6 +12,8 @@ cp -R $JSPM_MODS/* $CACHE_DIR
 cd $JSPM_REG
 rm -rf .git
 git init
+git config user.email "ignore@infinispan.com"
+git config user.name "build"
 git add .
 git commit -m "Commit Registry"
 
