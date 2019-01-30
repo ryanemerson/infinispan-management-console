@@ -1,4 +1,5 @@
 #!/bin/bash
+set -o xtrace
 set -e
 
 ROOT=$PWD
@@ -8,6 +9,7 @@ CACHE_DIR=~/.jspm/packages/github/jspm/
 
 mkdir -p $CACHE_DIR
 cp -R $JSPM_MODS/* $CACHE_DIR
+ls -l $CACHE_DIR
 
 cd $JSPM_REG
 rm -rf .git
