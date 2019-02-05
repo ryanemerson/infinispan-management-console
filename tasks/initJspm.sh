@@ -21,5 +21,6 @@ git commit -m "Commit Registry"
 
 cd $ROOT
 jspm config registries.jspm.repo $ROOT/jspm-registry/.git
+jspm setmode local
 jspm install
 
