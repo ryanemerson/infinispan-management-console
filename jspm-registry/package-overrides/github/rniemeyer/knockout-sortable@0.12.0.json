@@ -7,7 +7,7 @@
     "dependencies": {
         "jquery": "npm:jquery@^2.1.4",
         "jquery-ui": "npm:jquery-ui@^1.11.4",
-        "knockout": "github:knockout/knockout@^3.3.0"
+        "knockout": "npm:knockout/knockout@^3.3.0"
     },
     "map": {
         "jquery-ui/draggable": "jquery-ui/ui/draggable",

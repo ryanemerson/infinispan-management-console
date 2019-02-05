@@ -3,6 +3,6 @@
   "format": "global",
   "registry": "github",
   "dependencies": {
-    "css": "github:systemjs/plugin-css"
+    "css": "npm:systemjs/plugin-css"
   }
 }

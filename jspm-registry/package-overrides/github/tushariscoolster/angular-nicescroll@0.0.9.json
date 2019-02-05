@@ -4,7 +4,7 @@
   "dependencies": {
     "angular": "jspm:angular@^1.4.8",
     "jquery": "jspm:jquery@^2.1.4",
-    "jquery.nicescroll": "github:inuyaksa/jquery.nicescroll@3.6.6"
+    "jquery.nicescroll": "npm:inuyaksa/jquery.nicescroll@3.6.6"
   },
   "shim":{
     "angular-nicescroll": {

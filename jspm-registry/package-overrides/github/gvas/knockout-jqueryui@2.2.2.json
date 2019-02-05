@@ -3,7 +3,7 @@
     "dependencies": {
         "jquery": "npm:jquery",
         "jqueryui": "npm:jquery-ui",
-        "knockout": "github:knockout/knockout"
+        "knockout": "npm:knockout/knockout"
     },
     "map": {
         "jquery-ui": "jqueryui/ui"

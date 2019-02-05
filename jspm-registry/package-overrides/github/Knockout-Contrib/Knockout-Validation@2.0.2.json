@@ -6,6 +6,6 @@
         }
     },
     "dependencies": {
-        "knockout": "github:knockout/knockout@^3.3.0"
+        "knockout": "npm:knockout/knockout@^3.3.0"
     }
 }

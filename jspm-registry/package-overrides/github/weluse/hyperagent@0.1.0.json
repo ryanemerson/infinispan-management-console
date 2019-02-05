@@ -4,7 +4,7 @@
   "dependencies": {
     "jquery": "*",
     "q": "npm:q",
-    "uri": "github:medialize/URI.js"
+    "uri": "npm:medialize/URI.js"
   },
   "shim": {
     "dist/hyperagent": {

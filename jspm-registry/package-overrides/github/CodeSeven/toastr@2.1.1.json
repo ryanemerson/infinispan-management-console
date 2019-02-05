@@ -3,7 +3,7 @@
   "format": "global",
   "dependencies": {
     "jquery": "npm:jquery",
-    "css": "github:systemjs/plugin-css"
+    "css": "npm:systemjs/plugin-css"
   },
   "files": ["toastr.js", "toastr.css", "build"],
   "shim": {

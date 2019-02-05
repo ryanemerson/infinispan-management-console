@@ -10,7 +10,7 @@
     }
   },
   "dependencies": {
-    "bootstrap": "github:twbs/bootstrap"
+    "bootstrap": "npm:twbs/bootstrap"
   },
   "files": ["dist/css", "dist/fonts", "dist/js"]
 }

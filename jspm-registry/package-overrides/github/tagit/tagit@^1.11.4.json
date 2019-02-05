@@ -6,6 +6,6 @@
      "exports":"$" } }, 
   "dependencies": { "jquery": "*",
                  "jquery-ui":"jspm:jqueryui@^1.8",
-                 "css":"github:systemjs/plugin-css"}, 
+                 "css":"npm:systemjs/plugin-css"}, 
   "format": "global" 
 }

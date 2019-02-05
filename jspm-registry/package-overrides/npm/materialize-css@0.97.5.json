@@ -3,7 +3,7 @@
   "main": "dist/js/materialize",
   "dependencies": {
     "jquery": "npm:jquery",
-    "css": "github:systemjs/plugin-css"
+    "css": "npm:systemjs/plugin-css"
   },
   "shim": {
     "dist/js/materialize": {

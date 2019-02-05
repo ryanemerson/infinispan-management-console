@@ -3,7 +3,7 @@
   "format": "global",
   "dependencies": {
     "jquery": "*",
-    "bootstrap": "github:twbs/bootstrap",
+    "bootstrap": "npm:twbs/bootstrap",
     "css": "*",
     "blueimp-canvas-to-blob":"npm:blueimp-canvas-to-blob"
   },
